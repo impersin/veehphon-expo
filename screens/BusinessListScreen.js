@@ -5,7 +5,7 @@ import {
   View,
   FlatList,
   Image,
-  TouchableOpacity,
+  TouchableWithoutFeedback,
   Dimensions
 } from 'react-native';
 import { Constants } from 'expo';
@@ -42,17 +42,15 @@ export default class BusinessListScreen extends React.Component {
 
   _renderItem = ({ item }) => {
     return (
-      <TouchableOpacity
-        id={item.id}
-        style={styles.listContainer}
-        onPress={e => this._redirectToProfile(item)}
-      >
-        <Image
-          style={styles.imgStyle}
-          source={{ uri: 'https://s3-us-west-1.amazonaws.com/veeh/kp-oak01.jpg' }}
-        />
-        <Text style={styles.businessTitle}>{item.business_name}</Text>
-      </TouchableOpacity>
+      <TouchableWithoutFeedback id={item.id} onPress={e => this._redirectToProfile(item)}>
+        <View style={styles.listContainer}>
+          <Image
+            style={styles.imgStyle}
+            source={{ uri: 'https://s3-us-west-1.amazonaws.com/veeh/kp-oak01.jpg' }}
+          />
+          <Text style={styles.businessTitle}>{item.business_name}</Text>
+        </View>
+      </TouchableWithoutFeedback>
     );
   };
 
@@ -77,7 +75,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ecf0f1',
     paddingTop: Constants.statusBarHeight
   },
-  listContainer: { width: width, height: height / 4, marginTop: 20 },
+  listContainer: { width: width, height: height / 3, marginTop: 20 },
   imgStyle: {
     flex: 1,
     height: null,

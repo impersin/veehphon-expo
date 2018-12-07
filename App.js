@@ -1,8 +1,13 @@
 import React from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import { Constants, Location, Permissions } from 'expo';
+import { createBottomTabNavigator } from 'react-navigation';
+import Explore from './Myscreen/Explore';
+import Trips from './Myscreen/Trips';
+import Saved from './Myscreen/Saved';
+import Inbox from './Myscreen/Inbox';
 
-export default class App extends React.Component {
+export class App extends React.Component {
   state = {
     location: null,
     errorMessage: null
@@ -48,13 +53,28 @@ export default class App extends React.Component {
   }
 }
 
+export default createBottomTabNavigator({
+  Explore: {
+    screen: Explore
+  },
+  Saved: {
+    screen: Saved
+  },
+  Trips: {
+    screen: Trips
+  },
+  Inbox: {
+    screen: Inbox
+  }
+});
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'center', //X-axis
+    justifyContent: 'center', //X-axis
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#ecf0f1'
+    backgroundColor: '#C2185B'
   },
   paragraph: {
     margin: 24,

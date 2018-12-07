@@ -1,6 +1,9 @@
 import React from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import { Constants, Location, Permissions } from 'expo';
+import { createStackNavigator } from 'react-navigation';
+import BusinessListScreen from './screens/BusinessListScreen';
+import BusinessProfileScreen from './screens/BusinessProfileScreen';
 
 export default class App extends React.Component {
   state = {
@@ -38,15 +41,21 @@ export default class App extends React.Component {
     } else if (this.state.location) {
       text = JSON.stringify(this.state.location);
     }
-    return (
-      <View style={styles.container}>
-        <Text style={styles.paragraph}>Coupon 1</Text>
-        <Text style={styles.paragraph}>Coupon 2</Text>
-        <Text style={styles.paragraph}>Coupon 3</Text>
-      </View>
-    );
+    return <AppStackNavigator />;
   }
 }
+
+const AppStackNavigator = createStackNavigator({
+  Businesses: {
+    screen: BusinessListScreen,
+    navigationOptions: {
+      header: null
+    }
+  },
+  BusinessProfile: {
+    screen: BusinessProfileScreen
+  }
+});
 
 const styles = StyleSheet.create({
   container: {

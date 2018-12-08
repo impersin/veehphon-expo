@@ -6,32 +6,49 @@ import {
   FlatList,
   Image,
   TouchableWithoutFeedback,
-  Dimensions
+  Dimensions,
+  ActivityIndicator
 } from 'react-native';
 import { Constants } from 'expo';
+import axios from 'axios';
+import { NODE_ENV } from 'react-native-dotenv';
+import * as Progress from 'react-native-progress';
 import tempData from '../mockdata.json';
 
 const { height, width } = Dimensions.get('window');
 
 export default class BusinessListScreen extends React.Component {
   state = {
-    data: tempData
+    data: [],
+    isLoading: true
   };
 
   componentWillMount() {}
 
   componentDidMount() {
-    const url = 'https://picsum.photos/list';
-    // fetch(url)
-    //   .then(response => response.json())
-    //   .then(responseJson => {
-    //     this.setState({
-    //       data: tempData
-    //     });
-    //   })
-    //   .catch(error => {
-    //     console.log(err);
-    //   });
+    const url =
+      NODE_ENV === 'localhost'
+        ? 'http://192.168.86.243:3000/api/businesses'
+        : 'https://veeh-coupon.herokuapp.com/api/businesses';
+    console.log(url);
+    axios
+      .get(url)
+      .then(res => {
+        const data = res.data;
+        this.setState({
+          data
+        });
+        console.log(data);
+        setTimeout(() => {
+          this.setState({
+            isLoading: false
+          });
+        }, 1000);
+        console.log(data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   _keyExtractor = (item, index) => `list-item-${index}`;
@@ -42,19 +59,23 @@ export default class BusinessListScreen extends React.Component {
 
   _renderItem = ({ item }) => {
     return (
-      <TouchableWithoutFeedback id={item.id} onPress={e => this._redirectToProfile(item)}>
+      <TouchableWithoutFeedback id={item.userid} onPress={e => this._redirectToProfile(item)}>
         <View style={styles.listContainer}>
-          <Image
-            style={styles.imgStyle}
-            source={{ uri: 'https://s3-us-west-1.amazonaws.com/veeh/kp-oak01.jpg' }}
-          />
-          <Text style={styles.businessTitle}>{item.business_name}</Text>
+          <Image style={styles.imgStyle} source={{ uri: item.businessImage[0] }} />
+          <Text style={styles.businessTitle}>{item.businessName}</Text>
         </View>
       </TouchableWithoutFeedback>
     );
   };
 
   render() {
+    if (this.state.isLoading) {
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator size="large" color="#f96a00" />
+        </View>
+      );
+    }
     return (
       <View style={styles.container}>
         <FlatList
@@ -82,5 +103,9 @@ const styles = StyleSheet.create({
     width: null,
     resizeMode: 'cover'
   },
-  businessTitle: { fontSize: 24 }
+  businessTitle: { fontSize: 24 },
+  circles: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  }
 });

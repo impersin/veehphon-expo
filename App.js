@@ -22,6 +22,8 @@ export default class App extends React.Component {
     }
   }
 
+  componentDidMount() {}
+
   _getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {

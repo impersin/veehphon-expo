@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Platform,
   StyleSheet,
   Text,
   View,
@@ -8,28 +9,32 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
   ActivityIndicator,
-  Button,
-  Platform
+  Button
 } from 'react-native';
-import { Constants } from 'expo';
 import axios from 'axios';
+import { Constants, Location, Permissions } from 'expo';
 import { NODE_ENV } from 'react-native-dotenv';
-import { NavigationActions } from 'react-navigation';
 
 const { height, width } = Dimensions.get('window');
 
-export default class BusinessListScreen extends React.Component {
+export default class Home extends React.Component {
   state = {
+    location: null,
+    errorMessage: null,
     data: [],
     isLoading: true
   };
-  // static navigationOptions = ({ navigation }) => {
-  //   return {
-  //     headerTitle: <MyHeaderComponent />
-  //   };
-  // };
 
-  componentWillMount() {}
+  componentWillMount() {
+    if (Platform.OS === 'android' && !Constants.isDevice) {
+      this.setState({
+        errorMessage:
+          'Oops, this will not work on Sketch in an Android emulator. Try it on your device!'
+      });
+    } else {
+      this._getLocationAsync();
+    }
+  }
 
   componentDidMount() {
     const url =
@@ -57,6 +62,18 @@ export default class BusinessListScreen extends React.Component {
       });
   }
 
+  _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied'
+      });
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    this.setState({ location });
+  };
+
   _keyExtractor = (item, index) => `list-item-${index}`;
 
   _redirectToProfile(data) {
@@ -75,7 +92,14 @@ export default class BusinessListScreen extends React.Component {
   };
 
   render() {
-    // console.log(this.props.screenProps);
+    let text = 'Waiting..';
+    console.log(this.props);
+    if (this.state.errorMessage) {
+      text = this.state.errorMessage;
+    } else if (this.state.location) {
+      text = JSON.stringify(this.state.location);
+    }
+
     if (this.state.isLoading) {
       return (
         <View style={styles.container}>
@@ -83,6 +107,7 @@ export default class BusinessListScreen extends React.Component {
         </View>
       );
     }
+
     return (
       <View style={styles.container}>
         <FlatList

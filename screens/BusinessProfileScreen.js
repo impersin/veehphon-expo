@@ -10,6 +10,7 @@ export default class BusinessProfileScreen extends React.Component {
 
   render() {
     // console.log(this.props.navigation.state.params.data);
+    console.log('Stack nav business profile props', this.props);
     return (
       <View style={styles.container}>
         <Text>Businesse profile screen</Text>

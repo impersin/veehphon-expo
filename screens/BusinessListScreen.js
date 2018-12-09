@@ -7,13 +7,14 @@ import {
   Image,
   TouchableWithoutFeedback,
   Dimensions,
-  ActivityIndicator
+  ActivityIndicator,
+  Button,
+  Platform
 } from 'react-native';
 import { Constants } from 'expo';
 import axios from 'axios';
 import { NODE_ENV } from 'react-native-dotenv';
-import * as Progress from 'react-native-progress';
-import tempData from '../mockdata.json';
+import { NavigationActions } from 'react-navigation';
 
 const { height, width } = Dimensions.get('window');
 
@@ -22,6 +23,11 @@ export default class BusinessListScreen extends React.Component {
     data: [],
     isLoading: true
   };
+  // static navigationOptions = ({ navigation }) => {
+  //   return {
+  //     headerTitle: <MyHeaderComponent />
+  //   };
+  // };
 
   componentWillMount() {}
 
@@ -30,7 +36,7 @@ export default class BusinessListScreen extends React.Component {
       NODE_ENV === 'localhost'
         ? 'http://192.168.86.243:3000/api/businesses'
         : 'https://veeh-coupon.herokuapp.com/api/businesses';
-    console.log(url);
+    // console.log(url);
     axios
       .get(url)
       .then(res => {
@@ -38,13 +44,13 @@ export default class BusinessListScreen extends React.Component {
         this.setState({
           data
         });
-        console.log(data);
+        // console.log(data);
         setTimeout(() => {
           this.setState({
             isLoading: false
           });
         }, 1000);
-        console.log(data);
+        // console.log(data);
       })
       .catch(err => {
         console.log(err);
@@ -69,6 +75,7 @@ export default class BusinessListScreen extends React.Component {
   };
 
   render() {
+    // console.log(this.props.screenProps);
     if (this.state.isLoading) {
       return (
         <View style={styles.container}>

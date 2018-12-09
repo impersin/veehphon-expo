@@ -4,10 +4,12 @@ import { Constants, Location, Permissions } from 'expo';
 import { createStackNavigator } from 'react-navigation';
 
 export default class BusinessProfileScreen extends React.Component {
-  componentWillMount() {}
+  componentWillMount() {
+    // console.log(this.props.navigation);
+  }
 
   render() {
-    console.log(this.props.navigation.state.params.data);
+    // console.log(this.props.navigation.state.params.data);
     return (
       <View style={styles.container}>
         <Text>Businesse profile screen</Text>

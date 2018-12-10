@@ -13,10 +13,10 @@ export default class temp extends React.Component {
   componentDidMount() {}
 
   render() {
-    console.log('Tab nav temp props', this.props);
+    console.log('Signup Tapnav props', this.props);
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="#f96a00" />
+        <Text>Sign</Text>
       </View>
     );
   }

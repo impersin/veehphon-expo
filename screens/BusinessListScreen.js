@@ -17,7 +17,10 @@ import { NODE_ENV } from 'react-native-dotenv';
 
 const { height, width } = Dimensions.get('window');
 
-export default class Home extends React.Component {
+export default class BusinessListScreen extends React.Component {
+  static navigationOptions = {
+    header: null
+  };
   state = {
     location: null,
     errorMessage: null,
@@ -125,10 +128,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#ecf0f1',
-    paddingTop: Constants.statusBarHeight
+    backgroundColor: '#ecf0f1'
   },
-  listContainer: { width: width, height: height / 3, marginTop: 20 },
+  listContainer: { width: width, height: height / 3 },
   imgStyle: {
     flex: 1,
     height: null,

@@ -6,7 +6,8 @@ import { Ionicons, AntDesign } from '@expo/vector-icons/';
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
 import BusinessListScreen from '../screens/BusinessListScreen';
 import BusinessProfileScreen from '../screens/BusinessProfileScreen';
-import Signup from '../tabs/signup';
+import Signup from '../screens/signup';
+import Login from '../tabs/login';
 
 const { height, width } = Dimensions.get('window');
 
@@ -17,8 +18,9 @@ class Home extends React.Component {
   state = {
     auth: true
   };
+
   render() {
-    console.log('Home props', this.props);
+    // console.log('Home props', this.props);
     return (
       <View style={styles.container}>
         {/* <View style={styles.topMenu}>
@@ -56,6 +58,30 @@ const AppStackNavigator = createStackNavigator({
         ? { title: 'Profile', header: null }
         : { title: 'Profile', header: null }
   }
+  // Signup: {
+  //   screen: Signup,
+  //   navigationOptions:
+  //     Platform.OS === 'ios'
+  //       ? { title: 'Profile', header: null }
+  //       : { title: 'Profile', header: null }
+  // }
+});
+
+const LoginStackNavigator = createStackNavigator({
+  Signup: {
+    screen: Signup,
+    navigationOptions:
+      Platform.OS === 'ios'
+        ? { title: 'Profile', header: null }
+        : { title: 'Profile', header: null }
+  },
+  Login: {
+    screen: Login,
+    navigationOptions:
+      Platform.OS === 'ios'
+        ? { title: 'Profile', header: null }
+        : { title: 'Profile', header: null }
+  }
 });
 
 AppStackNavigator.navigationOptions = ({ navigation }) => {
@@ -85,8 +111,8 @@ const AppBottomTabNavigator = createBottomTabNavigator({
     //   }
     // }
   },
-  Signup: {
-    screen: Signup,
+  Login: {
+    screen: LoginStackNavigator,
     navigationOptions: {
       tabBarLabel: 'LOG IN',
       tabBarIcon: () => <AntDesign name="user" size={20} />

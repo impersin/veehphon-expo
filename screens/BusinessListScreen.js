@@ -22,6 +22,7 @@ export default class BusinessListScreen extends React.Component {
     header: null
   };
   state = {
+    address: null,
     location: null,
     errorMessage: null,
     data: [],
@@ -73,8 +74,15 @@ export default class BusinessListScreen extends React.Component {
       });
     }
 
-    let location = await Location.getCurrentPositionAsync({});
-    this.setState({ location });
+    let location = await Location.getCurrentPositionAsync({
+      enableHighAccuracy: true,
+      maximumAge: 1000
+    });
+    let address = await Location.reverseGeocodeAsync({
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude
+    });
+    this.setState({ location, address });
   };
 
   _keyExtractor = (item, index) => `list-item-${index}`;
@@ -96,7 +104,7 @@ export default class BusinessListScreen extends React.Component {
 
   render() {
     let text = 'Waiting..';
-    console.log(this.props);
+    console.log(this.state);
     if (this.state.errorMessage) {
       text = this.state.errorMessage;
     } else if (this.state.location) {

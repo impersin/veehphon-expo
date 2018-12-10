@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Image, Text, View, TouchableHighlight } from 'react-native';
+import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
 import { Constants } from 'expo';
 import { Ionicons, AntDesign, EvilIcons } from '@expo/vector-icons/';
 
@@ -26,15 +26,15 @@ export default class temp extends React.Component {
           <Text style={{ fontSize: 14 }}>Log in to start planning your next trip</Text>
         </View>
         <View style={styles.body}>
-          <TouchableHighlight style={[styles.buttonWrapper, styles.facebook]}>
+          <TouchableOpacity style={[styles.buttonWrapper, styles.facebook]}>
             <View style={styles.buttonTextWrapper}>
               <EvilIcons name="sc-facebook" color="white" size={25} />
               <Text style={[styles.buttonText, styles.facebookButtonFont]}>
                 Continue with Facebook
               </Text>
             </View>
-          </TouchableHighlight>
-          <TouchableHighlight style={[styles.buttonWrapper, styles.google]}>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.buttonWrapper, styles.google]}>
             <View style={styles.buttonTextWrapper}>
               <Image
                 source={require('../assets/icons/google_login.png')}
@@ -42,8 +42,8 @@ export default class temp extends React.Component {
               />
               <Text style={[styles.buttonText, styles.googleButtonFont]}>Continue with Google</Text>
             </View>
-          </TouchableHighlight>
-          <TouchableHighlight
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={e => this._redirectToLoginPage()}
             style={[styles.buttonWrapper]}
           >
@@ -52,7 +52,7 @@ export default class temp extends React.Component {
                 Don't have an account? <Text style={styles.innerFont}>Log in</Text>
               </Text>
             </View>
-          </TouchableHighlight>
+          </TouchableOpacity>
         </View>
       </View>
     );

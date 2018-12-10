@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Platform, StyleSheet, Text, View, Dimensions } from 'react-native';
+import { Platform, StyleSheet, Button, Text, View, Dimensions } from 'react-native';
 import { Constants } from 'expo';
 import { Ionicons, AntDesign } from '@expo/vector-icons/';
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
@@ -16,19 +16,47 @@ class Home extends React.Component {
   //   header: null
   // };
   state = {
-    auth: true
+    auth: false
   };
 
+  _login() {
+    this.setState({
+      auth: true
+    });
+  }
+
+  _logout() {
+    this.setState({
+      auth: false
+    });
+  }
+
   render() {
-    // console.log('Home props', this.props);
+    let tabNav;
+    if (this.state.auth) {
+      console.log('=========================>', this.state);
+      tabNav = <AppBottomTabNavigatorLoggedin screenProps={this.state} />;
+    } else {
+      tabNav = <AppBottomTabNavigator screenProps={this.state} />;
+    }
     return (
       <View style={styles.container}>
         {/* <View style={styles.topMenu}>
           <Text>Top menu</Text>
         </View> */}
-        <View style={styles.main}>
-          <AppBottomTabNavigator screenProps={this.state} />
-        </View>
+        {/* <Button
+          title="login"
+          onPress={e => {
+            this._login();
+          }}
+        />
+        <Button
+          title="logout"
+          onPress={e => {
+            this._logout();
+          }}
+        /> */}
+        <View style={styles.main}>{tabNav}</View>
       </View>
     );
   }
@@ -58,13 +86,6 @@ const AppStackNavigator = createStackNavigator({
         ? { title: 'Profile', header: null }
         : { title: 'Profile', header: null }
   }
-  // Signup: {
-  //   screen: Signup,
-  //   navigationOptions:
-  //     Platform.OS === 'ios'
-  //       ? { title: 'Profile', header: null }
-  //       : { title: 'Profile', header: null }
-  // }
 });
 
 const LoginStackNavigator = createStackNavigator({
@@ -85,8 +106,6 @@ const LoginStackNavigator = createStackNavigator({
 });
 
 AppStackNavigator.navigationOptions = ({ navigation }) => {
-  console.log(Platform.OS);
-  // console.log();
   if (navigation.state.index === 1) {
     return {
       tabBarVisible: false
@@ -104,17 +123,28 @@ const AppBottomTabNavigator = createBottomTabNavigator({
       tabBarLabel: 'EXPLORE',
       tabBarIcon: () => <Ionicons name="ios-search" size={20} />
     }
-    // navigationOptions: {
-    //   tabBarLabel: 'Home',
-    //   tabBarIcon: ({ tintColor }) => {
-    //     <Icon name="ios-search-outline" color={tintColor} />;
-    //   }
-    // }
   },
   Login: {
     screen: LoginStackNavigator,
     navigationOptions: {
       tabBarLabel: 'LOG IN',
+      tabBarIcon: () => <AntDesign name="user" size={20} />
+    }
+  }
+});
+
+const AppBottomTabNavigatorLoggedin = createBottomTabNavigator({
+  Home: {
+    screen: AppStackNavigator,
+    navigationOptions: {
+      tabBarLabel: 'EXPLORE',
+      tabBarIcon: () => <Ionicons name="ios-search" size={20} />
+    }
+  },
+  Login: {
+    screen: LoginStackNavigator,
+    navigationOptions: {
+      tabBarLabel: 'Profile',
       tabBarIcon: () => <AntDesign name="user" size={20} />
     }
   }

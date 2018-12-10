@@ -3,7 +3,7 @@ import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
 import { Constants } from 'expo';
 import { Ionicons, AntDesign, EvilIcons } from '@expo/vector-icons/';
 
-export default class temp extends React.Component {
+export default class Login extends React.Component {
   state = {
     data: [],
     isLoading: true

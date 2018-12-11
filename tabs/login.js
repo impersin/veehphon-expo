@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Constants } from 'expo';
-import { Ionicons, AntDesign, EvilIcons } from '@expo/vector-icons/';
+import FacebookLoginButton from '../components/FacebookLoginButton';
+import GoogleLoginButton from '../components/GoogleLoginButton';
 
 export default class Login extends React.Component {
   state = {
@@ -26,23 +27,8 @@ export default class Login extends React.Component {
           <Text style={{ fontSize: 14 }}>Log in to start planning your next trip</Text>
         </View>
         <View style={styles.body}>
-          <TouchableOpacity style={[styles.buttonWrapper, styles.facebook]}>
-            <View style={styles.buttonTextWrapper}>
-              <EvilIcons name="sc-facebook" color="white" size={25} />
-              <Text style={[styles.buttonText, styles.facebookButtonFont]}>
-                Continue with Facebook
-              </Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.buttonWrapper, styles.google]}>
-            <View style={styles.buttonTextWrapper}>
-              <Image
-                source={require('../assets/icons/google_login.png')}
-                style={{ width: 22, height: 22 }}
-              />
-              <Text style={[styles.buttonText, styles.googleButtonFont]}>Continue with Google</Text>
-            </View>
-          </TouchableOpacity>
+          <FacebookLoginButton />
+          <GoogleLoginButton />
           <TouchableOpacity
             onPress={e => this._redirecToLoginPage()}
             style={[styles.buttonWrapper]}

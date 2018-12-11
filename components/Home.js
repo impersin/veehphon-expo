@@ -89,15 +89,15 @@ const AppStackNavigator = createStackNavigator({
 });
 
 const LoginStackNavigator = createStackNavigator({
-  Signup: {
-    screen: Signup,
+  Login: {
+    screen: Login,
     navigationOptions:
       Platform.OS === 'ios'
         ? { title: 'Profile', header: null }
         : { title: 'Profile', header: null }
   },
-  Login: {
-    screen: Login,
+  Signup: {
+    screen: Signup,
     navigationOptions:
       Platform.OS === 'ios'
         ? { title: 'Profile', header: null }

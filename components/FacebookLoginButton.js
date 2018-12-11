@@ -2,10 +2,8 @@ import React from 'react';
 import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
 import { Constants } from 'expo';
 import { EvilIcons } from '@expo/vector-icons/';
-import FacebookLoginButton from '../components/FacebookLoginButton';
-import GoogleLoginButton from '../components/GoogleLoginButton';
 
-export default class Signup extends React.Component {
+export default class GoogleLoginButton extends React.Component {
   state = {
     data: [],
     isLoading: true
@@ -15,33 +13,19 @@ export default class Signup extends React.Component {
 
   componentDidMount() {}
 
-  _redirectToLoginPage() {
-    this.props.navigation.navigate('Login');
+  _redirecToLoginPage() {
+    this.props.navigation.navigate('Signup');
   }
 
   render() {
     console.log('Signup Tapnav props', this.props);
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={{ fontSize: 24, marginBottom: 5 }}>Your profile</Text>
-          <Text style={{ fontSize: 14 }}>Log in to start planning your next trip</Text>
+      <TouchableOpacity style={[styles.buttonWrapper, styles.facebook]}>
+        <View style={styles.buttonTextWrapper}>
+          <EvilIcons name="sc-facebook" color="white" size={25} />
+          <Text style={[styles.buttonText, styles.facebookButtonFont]}>Continue with Facebook</Text>
         </View>
-        <View style={styles.body}>
-          <FacebookLoginButton />
-          <GoogleLoginButton />
-          <TouchableOpacity
-            onPress={e => this._redirectToLoginPage()}
-            style={[styles.buttonWrapper]}
-          >
-            <View style={styles.buttonTextWrapper}>
-              <Text style={[styles.buttonText]}>
-                Don't have an account? <Text style={styles.innerFont}>Log in</Text>
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 }

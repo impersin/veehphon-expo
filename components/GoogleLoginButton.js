@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
-import { Google } from 'expo';
+import Expo, { Google } from 'expo';
 export default class GoogleButton extends React.Component {
   state = {
     data: [],
@@ -20,7 +20,8 @@ export default class GoogleButton extends React.Component {
       const result = await Google.logInAsync({
         androidClientId: '358804249552-lc95ffcg9ks5sk6k70smr5p296v8iqi6.apps.googleusercontent.com',
         iosClientId: '358804249552-pp9p30ke7f755ma1iubbun209aqt7cpr.apps.googleusercontent.com',
-        scopes: ['profile', 'email']
+        scopes: ['profile', 'email'],
+        behavior: 'web'
       });
 
       if (result.type === 'success') {

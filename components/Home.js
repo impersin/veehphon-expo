@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Platform, ActivityIndicator, StyleSheet, View, Dimensions } from 'react-native';
+import { Platform, ActivityIndicator, StyleSheet, View } from 'react-native';
 import { Constants, SecureStore } from 'expo';
 import { Ionicons, AntDesign } from '@expo/vector-icons/';
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
@@ -10,8 +10,6 @@ import BusinessProfileScreen from '../screens/BusinessProfileScreen';
 import Signup from '../screens/signup';
 import Logout from '../screens/Logout';
 import Login from '../tabs/login';
-
-const { height, width } = Dimensions.get('window');
 
 class Home extends React.Component {
   state = {
@@ -200,7 +198,8 @@ const AppBottomTabNavigator = createBottomTabNavigator(
         fontSize: 12
       },
       style: {
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        paddingTop: 10
       }
     }
   }

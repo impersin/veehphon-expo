@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Platform, ActivityIndicator, StyleSheet, View } from 'react-native';
-import { Constants, SecureStore } from 'expo';
+import { NODE_ENV } from 'react-native-dotenv';
+import { Constants, SecureStore, Location, Permissions } from 'expo';
 import { Ionicons, AntDesign } from '@expo/vector-icons/';
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
 import axios from 'axios';
@@ -13,8 +14,23 @@ import Login from '../tabs/login';
 
 class Home extends React.Component {
   state = {
-    isLoading: true
+    isLoading: true,
+    initialData: [],
+    address: null,
+    location: null,
+    errorMessage: null
   };
+
+  async componentWillMount() {
+    if (Platform.OS === 'android' && !Constants.isDevice) {
+      this.setState({
+        errorMessage:
+          'Oops, this will not work on Sketch in an Android emulator. Try it on your device!'
+      });
+    } else {
+      this._getLocationAsync();
+    }
+  }
 
   async componentDidMount() {
     this._checkAuthentication();
@@ -44,31 +60,85 @@ class Home extends React.Component {
           email,
           token
         }
-      }).then(res => {
-        this.setState(
-          {
-            isLoading: false
-          },
-          () => {
-            return this.props.updateAuth(true);
-          }
-        );
-      });
+      })
+        .then(res => {
+          return this._initializeData(true);
+        })
+        .then(res => {
+          console.log(res);
+        });
     } else {
-      this.setState(
-        {
-          isLoading: false
-        },
-        () => {
-          return this.props.updateAuth(false);
-        }
-      );
+      this._initializeData(false);
     }
   };
 
+  _initializeData(auth) {
+    const url =
+      NODE_ENV === 'localhost'
+        ? 'http://10.0.0.166:3000/api/businesses'
+        : 'http://veeh-coupon.herokuapp.com/api/businesses';
+    // console.log(url);
+    axios
+      .get(url)
+      .then(res => {
+        if (auth) {
+          setTimeout(() => {
+            this.setState(
+              {
+                isLoading: false,
+                initialData: res.data
+              },
+              () => {
+                this.props.updateAuth(true);
+              }
+            );
+          }, 1500);
+        } else {
+          setTimeout(() => {
+            this.setState(
+              {
+                isLoading: false,
+                initialData: res.data
+              },
+              () => {
+                this.props.updateAuth(false);
+              }
+            );
+          }, 1500);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied'
+      });
+    }
+
+    let location = await Location.getCurrentPositionAsync({
+      enableHighAccuracy: true,
+      maximumAge: 1000
+    });
+    let address = await Location.reverseGeocodeAsync({
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude
+    });
+    this.setState({ location, address });
+  };
+
   render() {
-    let tabNav;
-    // console.log('========== home props ============>', this.state);
+    let tabNav, text;
+    if (this.state.errorMessage) {
+      text = this.state.errorMessage;
+    } else if (this.state.location) {
+      text = JSON.stringify(this.state.location);
+    }
+    console.log('========== home props ============>', this.state);
     if (this.state.isLoading) {
       return (
         <View style={[styles.container, styles.ActivityIndicatorContainer]}>
@@ -86,18 +156,6 @@ class Home extends React.Component {
         {/* <View style={styles.topMenu}>
           <Text>Top menu</Text>
         </View> */}
-        {/* <Button
-          title="login"
-          onPress={e => {
-            this._login();
-          }}
-        />
-        <Button
-          title="logout"
-          onPress={e => {
-            this._logout();
-          }}
-        /> */}
         <View style={styles.main}>{tabNav}</View>
       </View>
     );

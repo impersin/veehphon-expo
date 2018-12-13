@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { NODE_ENV } from 'react-native-dotenv';
 import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { Constants, SecureStore } from 'expo';
@@ -9,10 +10,6 @@ class Logout extends React.Component {
     data: [],
     isLoading: false
   };
-
-  componentWillMount() {}
-
-  componentDidMount() {}
 
   _redirecToLoginPage() {
     this.props.navigation.navigate('Signup');
@@ -25,9 +22,24 @@ class Logout extends React.Component {
   }
 
   _logOut = async () => {
+    this._handleLoading(true);
+    const url =
+      NODE_ENV === 'localhost'
+        ? 'http://10.0.0.166:3000/api/'
+        : 'http://veeh-coupon.herokuapp.com/api/businesses';
     await SecureStore.deleteItemAsync('token');
     await SecureStore.deleteItemAsync('email');
-    this.props.updateAuth(false);
+
+    axios
+      .get(url + 'logout')
+      .then(res => {
+        setTimeout(() => {
+          return this.props.updateAuth(false);
+        }, 1000);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   render() {

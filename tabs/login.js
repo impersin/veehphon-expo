@@ -12,10 +12,6 @@ class Login extends React.Component {
     isLoading: false
   };
 
-  componentWillMount() {}
-
-  componentDidMount() {}
-
   _redirecToLoginPage() {
     this.props.navigation.navigate('Signup');
   }
@@ -58,7 +54,6 @@ class Login extends React.Component {
         }, 1500);
       })
       .catch(err => {
-        console.log(' error ================');
         console.log(err);
       });
   }

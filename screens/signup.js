@@ -12,10 +12,6 @@ class Signup extends React.Component {
     isLoading: false
   };
 
-  componentWillMount() {}
-
-  componentDidMount() {}
-
   _redirectToLoginPage() {
     this.props.navigation.navigate('Login');
   }

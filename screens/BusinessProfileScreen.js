@@ -2,32 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Platform, StyleSheet, Text, View, Button } from 'react-native';
 
-let option;
-
-// if (platform.OS === 'ios') {
-//   option = {
-//     title: 'Home'
-//   };
-// } else {
-//   option = {
-//     title: 'Home',
-//     header: null
-//   };
-// }
-
 class BusinessProfileScreen extends React.Component {
   // static navigationOptions = {
   //   title: 'Home'
   // };
-  componentWillMount() {
-    // console.log(this.props.navigation);
-  }
   _goToPrevious() {
     this.props.navigation.goBack();
   }
   render() {
-    // console.log(this.props.navigation.state.params.data);
-    // console.log('Business profile props', this.props);
     return (
       <View style={styles.container}>
         <View style={styles.topMenu}>

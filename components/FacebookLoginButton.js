@@ -9,10 +9,6 @@ export default class GoogleLoginButton extends React.Component {
     isLoading: true
   };
 
-  componentWillMount() {}
-
-  componentDidMount() {}
-
   _redirecToLoginPage() {
     this.props.navigation.navigate('Signup');
   }

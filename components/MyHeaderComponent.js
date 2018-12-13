@@ -3,10 +3,6 @@ import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 import { Constants } from 'expo';
 
 export default class MyHeaderComponent extends React.Component {
-  componentWillMount() {}
-
-  componentDidMount() {}
-
   render() {
     return <Text>working.........</Text>;
   }

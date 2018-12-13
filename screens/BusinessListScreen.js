@@ -8,8 +8,7 @@ import {
   Image,
   TouchableWithoutFeedback,
   Dimensions,
-  ActivityIndicator,
-  Button
+  ActivityIndicator
 } from 'react-native';
 import axios from 'axios';
 import { Constants, Location, Permissions } from 'expo';
@@ -18,9 +17,6 @@ import { NODE_ENV } from 'react-native-dotenv';
 const { height, width } = Dimensions.get('window');
 
 export default class BusinessListScreen extends React.Component {
-  static navigationOptions = {
-    header: null
-  };
   state = {
     address: null,
     location: null,
@@ -43,8 +39,8 @@ export default class BusinessListScreen extends React.Component {
   componentDidMount() {
     const url =
       NODE_ENV === 'localhost'
-        ? 'http://192.168.86.243:3000/api/businesses'
-        : 'https://veeh-coupon.herokuapp.com/api/businesses';
+        ? 'http://10.0.0.166:3000/api/businesses'
+        : 'http://veeh-coupon.herokuapp.com/api/businesses';
     // console.log(url);
     axios
       .get(url)
@@ -104,7 +100,7 @@ export default class BusinessListScreen extends React.Component {
 
   render() {
     let text = 'Waiting..';
-    console.log(this.state);
+    // console.log(this.state);
     if (this.state.errorMessage) {
       text = this.state.errorMessage;
     } else if (this.state.location) {
@@ -136,7 +132,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#ecf0f1'
+    backgroundColor: 'white'
   },
   listContainer: { width: width, height: height / 3 },
   imgStyle: {

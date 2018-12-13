@@ -1,13 +1,15 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { Constants } from 'expo';
+import { connect } from 'react-redux';
+import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import axios from 'axios';
+import { Constants, SecureStore } from 'expo';
 import FacebookLoginButton from '../components/FacebookLoginButton';
 import GoogleLoginButton from '../components/GoogleLoginButton';
 
-export default class Login extends React.Component {
+class Login extends React.Component {
   state = {
     data: [],
-    isLoading: true
+    isLoading: false
   };
 
   componentWillMount() {}
@@ -18,17 +20,75 @@ export default class Login extends React.Component {
     this.props.navigation.navigate('Signup');
   }
 
+  _handleLoading(isLoading) {
+    this.setState({
+      isLoading
+    });
+  }
+
+  _handleWebAuth(type, data) {
+    this._handleLoading(true);
+    let userInfo;
+    if (type === 'google') {
+      userInfo = {
+        firstName: data.user.givenName,
+        lastName: data.user.familyName,
+        email: data.user.email,
+        profileImage: data.user.photoUrl
+      };
+    } else if (type === 'facebook') {
+      userInfo = {
+        firstName: data.first_name,
+        lastName: data.last_name,
+        email: data.email,
+        profileImage: data.picture.data.url
+      };
+    }
+    axios({
+      method: 'post',
+      url: 'http://10.0.0.166:3000/api/signup',
+      data: userInfo
+    })
+      .then(res => {
+        SecureStore.setItemAsync('token', res.data.token);
+        SecureStore.setItemAsync('email', res.data.userInfo.email);
+        setTimeout(() => {
+          this.props.updateAuth(true);
+          this._handleLoading(false);
+        }, 1500);
+      })
+      .catch(err => {
+        console.log(' error ================');
+        console.log(err);
+      });
+  }
+
   render() {
-    console.log('Signup Tapnav props', this.props);
+    // console.log('login Tapnav props', this.props);
+
+    if (this.state.isLoading) {
+      return (
+        <View style={styles.ActivityIndicatorContainer}>
+          <ActivityIndicator size="large" color="#f96a00" />
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={{ fontSize: 24, marginBottom: 5 }}>Your profile</Text>
-          <Text style={{ fontSize: 14 }}>Log in to start planning your next trip</Text>
+          <Text style={{ fontSize: 14 }}>Log in placeholder</Text>
         </View>
         <View style={styles.body}>
-          <FacebookLoginButton />
-          <GoogleLoginButton />
+          <FacebookLoginButton
+            handleWebAuth={this._handleWebAuth.bind(this)}
+            handleLoading={this._handleLoading.bind(this)}
+          />
+          <GoogleLoginButton
+            handleWebAuth={this._handleWebAuth.bind(this)}
+            handleLoading={this._handleLoading.bind(this)}
+          />
           <TouchableOpacity
             onPress={e => this._redirecToLoginPage()}
             style={[styles.buttonWrapper]}
@@ -45,25 +105,42 @@ export default class Login extends React.Component {
   }
 }
 
+const mapStateToProps = state => state;
+
+const mapDispatchToProps = dispatch => {
+  return {
+    updateAuth: status => {
+      dispatch({ type: 'AUTH', payload: status });
+    }
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Login);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    backgroundColor: '#ecf0f1',
+    backgroundColor: 'white',
     paddingTop: Constants.statusBarHeight,
     paddingLeft: 20,
     paddingRight: 20
+  },
+  ActivityIndicatorContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white'
   },
   header: {
     flex: 1,
     alignItems: 'flex-start',
     justifyContent: 'center'
-    // backgroundColor: 'green'
   },
   body: {
     flex: 4
-    // backgroundColor: 'red'
   },
   buttonWrapper: {
     display: 'flex',
@@ -85,9 +162,7 @@ const styles = StyleSheet.create({
   },
   googleButtonFont: {
     paddingTop: 2
-    // backgroundColor: 'red'
   },
-  icons: {},
   facebook: {
     backgroundColor: '#4267b2'
   },

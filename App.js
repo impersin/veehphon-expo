@@ -7,10 +7,7 @@ import Home from './components/Home';
 import { Provider } from 'react-redux';
 import configureStore from './redux/store';
 
-const initialState = {
-  auth: 'false'
-};
-const store = configureStore(initialState);
+const store = configureStore();
 const { height, width } = Dimensions.get('window');
 
 export default class App extends React.Component {

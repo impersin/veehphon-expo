@@ -1,7 +1,11 @@
 import React from 'react';
 import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
-import Expo, { Google } from 'expo';
+import { Google } from 'expo';
+
 export default class GoogleButton extends React.Component {
+  constructor(props) {
+    super(props);
+  }
   state = {
     data: [],
     isLoading: true
@@ -15,7 +19,7 @@ export default class GoogleButton extends React.Component {
     this.props.navigation.navigate('Signup');
   }
 
-  async signInWithGoogleAsync() {
+  async logIn() {
     try {
       const result = await Google.logInAsync({
         androidClientId: '358804249552-lc95ffcg9ks5sk6k70smr5p296v8iqi6.apps.googleusercontent.com',
@@ -25,8 +29,7 @@ export default class GoogleButton extends React.Component {
       });
 
       if (result.type === 'success') {
-        console.log(result);
-        return result.accessToken;
+        return this.props.handleWebAuth('google', result);
       } else {
         return { cancelled: true };
       }
@@ -36,10 +39,11 @@ export default class GoogleButton extends React.Component {
   }
 
   render() {
-    console.log('Signup Tapnav props', this.props);
+    // console.log('google login button props', this.props);
     return (
       <TouchableOpacity
-        onPress={this.signInWithGoogleAsync}
+        //this.signInWithGoogleAsync need to be binded to this component
+        onPress={this.logIn.bind(this)}
         style={[styles.buttonWrapper, styles.google]}
       >
         <View style={styles.buttonTextWrapper}>
@@ -69,13 +73,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   buttonText: { width: '100%', fontSize: 14, textAlign: 'center' },
-  facebookButtonFont: {
-    color: 'white',
-    paddingTop: 2
-  },
   googleButtonFont: {
     paddingTop: 2
-    // backgroundColor: 'red'
   },
   google: {
     backgroundColor: 'white',

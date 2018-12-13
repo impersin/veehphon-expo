@@ -1,23 +1,26 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Platform, StyleSheet, Button, Text, View, Dimensions } from 'react-native';
-import { Constants } from 'expo';
+import { Platform, ActivityIndicator, StyleSheet, View, Dimensions } from 'react-native';
+import { Constants, SecureStore } from 'expo';
 import { Ionicons, AntDesign } from '@expo/vector-icons/';
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
+import axios from 'axios';
 import BusinessListScreen from '../screens/BusinessListScreen';
 import BusinessProfileScreen from '../screens/BusinessProfileScreen';
 import Signup from '../screens/signup';
+import Logout from '../screens/Logout';
 import Login from '../tabs/login';
 
 const { height, width } = Dimensions.get('window');
 
 class Home extends React.Component {
-  // static navigationOptions = {
-  //   header: null
-  // };
   state = {
-    auth: false
+    isLoading: true
   };
+
+  async componentDidMount() {
+    this._checkAuthentication();
+  }
 
   _login() {
     this.setState({
@@ -31,10 +34,51 @@ class Home extends React.Component {
     });
   }
 
+  _checkAuthentication = async () => {
+    const token = await SecureStore.getItemAsync('token');
+    const email = await SecureStore.getItemAsync('email');
+
+    if (token && email) {
+      axios({
+        method: 'post',
+        url: 'http://10.0.0.166:3000/api/auth',
+        data: {
+          email,
+          token
+        }
+      }).then(res => {
+        this.setState(
+          {
+            isLoading: false
+          },
+          () => {
+            return this.props.updateAuth(true);
+          }
+        );
+      });
+    } else {
+      this.setState(
+        {
+          isLoading: false
+        },
+        () => {
+          return this.props.updateAuth(false);
+        }
+      );
+    }
+  };
+
   render() {
     let tabNav;
-    if (this.state.auth) {
-      console.log('=========================>', this.state);
+    // console.log('========== home props ============>', this.state);
+    if (this.state.isLoading) {
+      return (
+        <View style={[styles.container, styles.ActivityIndicatorContainer]}>
+          <ActivityIndicator size="large" color="#f96a00" />
+        </View>
+      );
+    }
+    if (this.props.auth) {
       tabNav = <AppBottomTabNavigatorLoggedin screenProps={this.state} />;
     } else {
       tabNav = <AppBottomTabNavigator screenProps={this.state} />;
@@ -64,7 +108,13 @@ class Home extends React.Component {
 
 const mapStateToProps = state => state;
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => {
+  return {
+    updateAuth: status => {
+      dispatch({ type: 'AUTH', payload: status });
+    }
+  };
+};
 
 export default connect(
   mapStateToProps,
@@ -91,13 +141,23 @@ const AppStackNavigator = createStackNavigator({
 const LoginStackNavigator = createStackNavigator({
   Login: {
     screen: Login,
-    navigationOptions:
-      Platform.OS === 'ios'
-        ? { title: 'Profile', header: null }
-        : { title: 'Profile', header: null }
+    navigationOptions: { title: 'Profile', header: null }
+    // Platform.OS === 'ios'
+    //   ? { title: 'Profile', header: null }
+    //   : { title: 'Profile', header: null }
   },
   Signup: {
     screen: Signup,
+    navigationOptions: { title: 'Profile', header: null }
+    // Platform.OS === 'ios'
+    //   ? { title: 'Profile', header: null }
+    //   : { title: 'Profile', header: null }
+  }
+});
+
+const ProfileStackNavigator = createStackNavigator({
+  Logout: {
+    screen: Logout,
     navigationOptions:
       Platform.OS === 'ios'
         ? { title: 'Profile', header: null }
@@ -116,46 +176,73 @@ AppStackNavigator.navigationOptions = ({ navigation }) => {
   };
 };
 
-const AppBottomTabNavigator = createBottomTabNavigator({
-  Home: {
-    screen: AppStackNavigator,
-    navigationOptions: {
-      tabBarLabel: 'EXPLORE',
-      tabBarIcon: () => <Ionicons name="ios-search" size={20} />
+const AppBottomTabNavigator = createBottomTabNavigator(
+  {
+    Home: {
+      screen: AppStackNavigator,
+      navigationOptions: {
+        tabBarLabel: 'EXPLORE',
+        tabBarIcon: () => <Ionicons name="ios-search" size={20} />
+      }
+    },
+    Login: {
+      screen: LoginStackNavigator,
+      navigationOptions: {
+        tabBarLabel: 'LOG IN',
+        tabBarIcon: () => <AntDesign name="user" size={20} />
+      }
     }
   },
-  Login: {
-    screen: LoginStackNavigator,
-    navigationOptions: {
-      tabBarLabel: 'LOG IN',
-      tabBarIcon: () => <AntDesign name="user" size={20} />
+  {
+    tabBarOptions: {
+      activeTintColor: '#f96a00',
+      labelStyle: {
+        fontSize: 12
+      },
+      style: {
+        backgroundColor: 'white'
+      }
     }
   }
-});
+);
 
-const AppBottomTabNavigatorLoggedin = createBottomTabNavigator({
-  Home: {
-    screen: AppStackNavigator,
-    navigationOptions: {
-      tabBarLabel: 'EXPLORE',
-      tabBarIcon: () => <Ionicons name="ios-search" size={20} />
+const AppBottomTabNavigatorLoggedin = createBottomTabNavigator(
+  {
+    Home: {
+      screen: AppStackNavigator,
+      navigationOptions: {
+        tabBarLabel: 'EXPLORE',
+        tabBarIcon: () => <Ionicons name="ios-search" size={20} />
+      }
+    },
+    Login: {
+      screen: ProfileStackNavigator,
+      navigationOptions: {
+        tabBarLabel: 'MY PAGE',
+        tabBarIcon: () => <AntDesign name="user" size={20} />
+      }
     }
   },
-  Login: {
-    screen: LoginStackNavigator,
-    navigationOptions: {
-      tabBarLabel: 'Profile',
-      tabBarIcon: () => <AntDesign name="user" size={20} />
+  {
+    tabBarOptions: {
+      activeTintColor: '#f96a00',
+      labelStyle: {
+        fontSize: 12
+      },
+      style: {
+        backgroundColor: 'white'
+      }
     }
   }
-});
+);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#ecf0f1'
+    backgroundColor: 'white'
   },
+  ActivityIndicatorContainer: { alignItems: 'center', justifyContent: 'center' },
   topMenu: { flex: 1, backgroundColor: 'yellow' },
   main: {
     flex: 11

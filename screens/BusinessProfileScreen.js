@@ -27,7 +27,7 @@ class BusinessProfileScreen extends React.Component {
   }
   render() {
     // console.log(this.props.navigation.state.params.data);
-    console.log('Business profile props', this.props);
+    // console.log('Business profile props', this.props);
     return (
       <View style={styles.container}>
         <View style={styles.topMenu}>

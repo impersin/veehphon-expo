@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { ImageBackground, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import { Ionicons, AntDesign } from '@expo/vector-icons/';
+import { LinearGradient } from 'expo';
 
 const remote = 'https://s15.postimg.org/tw2qkvmcb/400px.png';
 
@@ -10,17 +11,19 @@ export default class BackgroundImage extends Component {
     console.log(this.props.uri);
     return (
       <ImageBackground style={styles.background} source={{ uri }}>
-        <View style={styles.topMenu}>
-          <TouchableOpacity onPress={this.props.goToPrevious} style={styles.topMenuOne}>
-            <Ionicons name="ios-arrow-back" color={'white'} size={30} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.topMenuTwo}>
-            <Ionicons name="ios-share-alt" color={'white'} size={30} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.topMenuThree}>
-            <Ionicons name="ios-heart-empty" color={'white'} size={30} />
-          </TouchableOpacity>
-        </View>
+        <LinearGradient style={{ height: 400 }} colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.1)']}>
+          <View style={styles.topMenu}>
+            <TouchableOpacity onPress={this.props.goToPrevious} style={styles.topMenuOne}>
+              <Ionicons name="ios-arrow-back" color={'white'} size={30} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.topMenuTwo}>
+              <Ionicons name="ios-share-alt" color={'white'} size={30} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.topMenuThree}>
+              <Ionicons name="ios-heart-empty" color={'white'} size={30} />
+            </TouchableOpacity>
+          </View>
+        </LinearGradient>
       </ImageBackground>
     );
   }
@@ -28,12 +31,11 @@ export default class BackgroundImage extends Component {
 
 const styles = StyleSheet.create({
   background: {
-    backgroundColor: '#ccc',
-    flex: 1,
-    resizeMode: 'center',
-    position: 'absolute',
-    width: '100%',
-    height: '100%'
+    // backgroundColor: '#ccc',
+    // resizeMode: 'center',
+    // position: 'absolute',
+    // width: '100%',
+    height: 400
     // justifyContent: 'center'
   },
   topMenu: {

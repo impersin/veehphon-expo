@@ -14,23 +14,27 @@ class BusinessProfileScreen extends React.Component {
   render() {
     let uri = this.props.navigation.state.params.data.businessImage[0];
     return (
-      <View style={styles.container}>
-        <View style={styles.topMenu}>
-          <BackgroundImage uri={uri} goToPrevious={this._goToPrevious.bind(this)} />
+      <ScrollView>
+        <BackgroundImage uri={uri} goToPrevious={this._goToPrevious.bind(this)} />
+        <View style={styles.description}>
+          <Text>Business description</Text>
         </View>
-        <View style={styles.main}>
-          <Text>Main contents</Text>
-          <MapView
-            style={{ flex: 1 }}
-            initialRegion={{
-              latitude: 37.78825,
-              longitude: -122.4324,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421
-            }}
+        <MapView
+          style={{ height: 300 }}
+          initialRegion={{
+            latitude: 37.78825,
+            longitude: -122.4324,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421
+          }}
+        >
+          <MapView.Marker
+            coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
+            title={'marker.title'}
+            description={'desss'}
           />
-        </View>
-      </View>
+        </MapView>
+      </ScrollView>
     );
   }
 }
@@ -43,8 +47,10 @@ const styles = StyleSheet.create({
     // backgroundColor: '#ecf0f1'
   },
   topMenu: { flex: 3, alignSelf: 'stretch', backgroundColor: 'yellow' },
-  main: {
-    flex: 2
+  description: {
+    flex: 1,
+    minHeight: 400,
+    padding: 20
     // alignSelf: 'stretch',
     // backgroundColor: 'blue'
   }

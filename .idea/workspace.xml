@@ -7,17 +7,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c163e48b-48a1-4868-a900-c5c667b3870e" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/app.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FacebookLoginButton.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/FacebookLoginButton.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/GoogleLoginButton.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/GoogleLoginButton.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/Home.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/redux/reducers.js" beforeDir="false" afterPath="$PROJECT_DIR$/redux/reducers.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/redux/store.js" beforeDir="false" afterPath="$PROJECT_DIR$/redux/store.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/BusinessListScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/BusinessListScreen.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/screens/BusinessProfileScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/BusinessProfileScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/signup.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/signup.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tabs/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/tabs/login.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -41,10 +33,10 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane" />
       <pane id="AndroidView" />
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">

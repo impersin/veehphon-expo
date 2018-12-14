@@ -68,7 +68,7 @@ class Home extends React.Component {
           console.log(res);
         });
     } else {
-      this._initializeData(false);
+      return this._initializeData(false);
     }
   };
 
@@ -76,11 +76,12 @@ class Home extends React.Component {
     const url =
       NODE_ENV === 'localhost'
         ? 'http://10.0.0.166:3000/api/businesses'
-        : 'http://veeh-coupon.herokuapp.com/api/businesses';
+        : 'https://veeh-coupon.herokuapp.com/api/businesses';
     // console.log(url);
     axios
       .get(url)
       .then(res => {
+        console.log(res.data);
         if (auth) {
           setTimeout(() => {
             this.setState(

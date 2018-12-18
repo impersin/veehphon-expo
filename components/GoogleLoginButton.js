@@ -3,9 +3,6 @@ import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
 import { Google } from 'expo';
 
 export default class GoogleButton extends React.Component {
-  constructor(props) {
-    super(props);
-  }
   state = {
     data: [],
     isLoading: true
@@ -35,7 +32,6 @@ export default class GoogleButton extends React.Component {
   }
 
   render() {
-    // console.log('google login button props', this.props);
     return (
       <TouchableOpacity
         //this.signInWithGoogleAsync need to be binded to this component

@@ -46,22 +46,17 @@ class Signup extends React.Component {
       data: userInfo
     })
       .then(res => {
-        console.log('1');
         SecureStore.setItemAsync('token', res.data.token);
         SecureStore.setItemAsync('email', res.data.userInfo.email);
         setTimeout(() => {
-          console.log('2');
           this.props.updateAuth(true);
           this._handleLoading(false);
         }, 1500);
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .catch(err => {});
   }
 
   render() {
-    // console.log('Signup Tapnav props', this.props);
     if (this.state.isLoading) {
       return (
         <View style={styles.ActivityIndicatorContainer}>

@@ -25,7 +25,7 @@ class Logout extends React.Component {
     this._handleLoading(true);
     const url =
       NODE_ENV === 'localhost'
-        ? 'http://10.0.0.166:3000/api/'
+        ? 'http://192.168.0.107:3000/api/'
         : 'http://veeh-coupon.herokuapp.com/api/businesses';
     await SecureStore.deleteItemAsync('token');
     await SecureStore.deleteItemAsync('email');
@@ -43,8 +43,6 @@ class Logout extends React.Component {
   };
 
   render() {
-    // console.log('login Tapnav props', this.props);
-
     if (this.state.isLoading) {
       return (
         <View style={styles.ActivityIndicatorContainer}>

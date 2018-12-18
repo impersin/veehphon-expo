@@ -12,6 +12,12 @@ import Signup from '../screens/signup';
 import Logout from '../screens/Logout';
 import Login from '../tabs/login';
 
+// const headerOption = {
+//   headers: {
+//     Authorization: 'Bearer ' + AUTH_TOKEN
+//   }
+// };
+
 class Home extends React.Component {
   state = {
     isLoading: true,
@@ -55,33 +61,27 @@ class Home extends React.Component {
     if (token && email) {
       axios({
         method: 'post',
-        url: 'http://10.0.0.166:3000/api/auth',
+        url: 'http://192.168.0.107:3000/api/auth',
         data: {
           email,
           token
         }
-      })
-        .then(res => {
-          return this._initializeData(true);
-        })
-        .then(res => {
-          console.log(res);
-        });
+      }).then(res => {
+        this._initializeData(true);
+      });
     } else {
-      return this._initializeData(false);
+      this._initializeData(false);
     }
   };
 
   _initializeData(auth) {
     const url =
       NODE_ENV === 'localhost'
-        ? 'http://10.0.0.166:3000/api/businesses'
+        ? 'http://192.168.0.107:3000/api/businesses'
         : 'https://veeh-coupon.herokuapp.com/api/businesses';
-    // console.log(url);
     axios
       .get(url)
       .then(res => {
-        console.log(res.data);
         if (auth) {
           setTimeout(() => {
             this.setState(
@@ -93,7 +93,7 @@ class Home extends React.Component {
                 this.props.updateAuth(true);
               }
             );
-          }, 1500);
+          }, 1000);
         } else {
           setTimeout(() => {
             this.setState(
@@ -105,7 +105,7 @@ class Home extends React.Component {
                 this.props.updateAuth(false);
               }
             );
-          }, 1500);
+          }, 1000);
         }
       })
       .catch(err => {
@@ -139,7 +139,6 @@ class Home extends React.Component {
     } else if (this.state.location) {
       text = JSON.stringify(this.state.location);
     }
-    console.log('========== home props ============>', this.state);
     if (this.state.isLoading) {
       return (
         <View style={[styles.container, styles.ActivityIndicatorContainer]}>

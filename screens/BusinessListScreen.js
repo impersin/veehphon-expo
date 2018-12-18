@@ -43,7 +43,6 @@ export default class BusinessListScreen extends React.Component {
 
   render() {
     let text = 'Waiting..';
-    console.log(this.props);
     if (this.state.errorMessage) {
       text = this.state.errorMessage;
     } else if (this.state.location) {

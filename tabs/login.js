@@ -40,31 +40,25 @@ class Login extends React.Component {
         profileImage: data.picture.data.url
       };
     }
-    console.log('1');
+
     axios({
       method: 'post',
-      url: 'http://10.0.0.166:3000/api/signup',
+      url: 'http://192.168.0.107:3000/api/signup',
       data: userInfo
     })
       .then(res => {
-        console.log('2');
         SecureStore.setItemAsync('token', res.data.token);
         SecureStore.setItemAsync('email', res.data.userInfo.email);
-        console.log('3');
+
         setTimeout(() => {
-          console.log('4');
           this.props.updateAuth(true);
           this._handleLoading(false);
         }, 1500);
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .catch(err => {});
   }
 
   render() {
-    // console.log('login Tapnav props', this.props);
-
     if (this.state.isLoading) {
       return (
         <View style={styles.ActivityIndicatorContainer}>

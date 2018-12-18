@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
 import axios from 'axios';
 import { Constants, SecureStore } from 'expo';
 import FacebookLoginButton from '../components/FacebookLoginButton';
@@ -61,8 +61,19 @@ class Login extends React.Component {
   render() {
     if (this.state.isLoading) {
       return (
-        <View style={styles.ActivityIndicatorContainer}>
-          <ActivityIndicator size="large" color="#f96a00" />
+        <View style={styles.container}>
+          <Modal
+            animationType="slide"
+            transparent={false}
+            visible={this.state.modalVisible}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.');
+            }}
+          >
+            <View style={styles.ActivityIndicatorContainer}>
+              <ActivityIndicator size="large" color="#f96a00" />
+            </View>
+          </Modal>
         </View>
       );
     }

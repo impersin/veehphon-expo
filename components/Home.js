@@ -8,7 +8,7 @@ import { createBottomTabNavigator, createStackNavigator } from 'react-navigation
 import axios from 'axios';
 import BusinessListScreen from '../screens/BusinessListScreen';
 import BusinessProfileScreen from '../screens/BusinessProfileScreen';
-import Signup from '../screens/signup';
+import Signup from '../screens/Signup';
 import Logout from '../screens/Logout';
 import Login from '../tabs/login';
 

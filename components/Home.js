@@ -47,10 +47,15 @@ class Home extends React.Component {
     const token = await SecureStore.getItemAsync('token');
     const email = await SecureStore.getItemAsync('email');
 
+    const url =
+      NODE_ENV === 'localhost'
+        ? `http://192.168.0.105:3000/api/auth`
+        : 'https://veeh-coupon.herokuapp.com/api/auth';
+
     if (token && email) {
       axios({
         method: 'post',
-        url: 'http://192.168.0.107:3000/api/auth',
+        url,
         data: {
           email,
           token
@@ -104,17 +109,19 @@ class Home extends React.Component {
   };
 
   _locationChanged = location => {
-    (region = {
+    region = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
       latitudeDelta: 0.1,
       longitudeDelta: 0.05
-    }),
-      this.setState({ location, region });
+    };
+    console.log(location);
+    this.setState({ location, region });
   };
 
   render() {
     let tabNav, text;
+    // console.log(this.state)
     if (this.state.errorMessage) {
       text = this.state.errorMessage;
     } else if (this.state.location) {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
+import { NODE_ENV } from 'react-native-dotenv';
 import axios from 'axios';
 import { Constants, SecureStore } from 'expo';
 import FacebookLoginButton from '../components/FacebookLoginButton';
@@ -41,9 +42,14 @@ class Login extends React.Component {
       };
     }
 
+    const url =
+      NODE_ENV === 'localhost'
+        ? `http://192.168.0.105:3000/api/signup`
+        : 'https://veeh-coupon.herokuapp.com/api/signup';
+
     axios({
       method: 'post',
-      url: 'http://192.168.0.107:3000/api/signup',
+      url,
       data: userInfo
     })
       .then(res => {

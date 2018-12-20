@@ -25,8 +25,8 @@ class Logout extends React.Component {
     this._handleLoading(true);
     const url =
       NODE_ENV === 'localhost'
-        ? 'http://192.168.0.107:3000/api/'
-        : 'http://veeh-coupon.herokuapp.com/api/businesses';
+        ? 'http://192.168.0.105:3000/api/'
+        : 'http://veeh-coupon.herokuapp.com/api/';
     await SecureStore.deleteItemAsync('token');
     await SecureStore.deleteItemAsync('email');
 

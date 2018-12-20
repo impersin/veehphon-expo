@@ -10,8 +10,8 @@ import {
   Dimensions,
   ActivityIndicator
 } from 'react-native';
-import axios from 'axios';
 import { NODE_ENV } from 'react-native-dotenv';
+import axios from 'axios';
 import Tags from './../components/Tags';
 
 const { height, width } = Dimensions.get('window');
@@ -21,11 +21,23 @@ class BusinessListScreen extends React.Component {
     address: null,
     location: null,
     errorMessage: null,
-    isLoading: true
+    isLoading: true,
+    refreshing: false
   };
 
   componentDidMount() {
     this._initializeData();
+  }
+
+  _fetchData() {
+    this.setState(
+      {
+        refreshing: true
+      },
+      () => {
+        this._initializeData();
+      }
+    );
   }
 
   _initializeData(auth) {
@@ -34,19 +46,21 @@ class BusinessListScreen extends React.Component {
 
     const url =
       NODE_ENV === 'localhost'
-        ? `http://192.168.0.107:3000/api/businesses?lat=${lat}&lng=${lng}`
-        : 'https://veeh-coupon.herokuapp.com/api/businesses';
+        ? `http://192.168.0.105:3000/api/businesses?lat=${lat}&lng=${lng}`
+        : `https://veeh-coupon.herokuapp.com/api/businesses?lat=${lat}&lng=${lng}`;
+
     axios
       .get(url)
       .then(res => {
         const businesses = res.data.map(business => {
           return (business.dist.calculated = (business.dist.calculated * 0.62).toFixed(1));
         });
-        console.log(businesses);
+
         setTimeout(() => {
           this.setState({
             isLoading: false,
-            initialData: res.data
+            initialData: res.data,
+            refreshing: false
           });
         }, 500);
       })
@@ -102,6 +116,8 @@ class BusinessListScreen extends React.Component {
     return (
       <View style={styles.container}>
         <FlatList
+          onRefresh={this._fetchData.bind(this)}
+          refreshing={this.state.refreshing}
           keyExtractor={this._keyExtractor}
           // data={this.props.screenProps.initialData}
           data={this.state.initialData}

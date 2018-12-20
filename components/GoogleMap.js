@@ -16,6 +16,9 @@ export default class Map extends React.Component {
   }
 
   render() {
+    console.log(this.props.location);
+    const latitude = this.props.location.coordinates[1];
+    const longitude = this.props.location.coordinates[0];
     if (this.state.isLoading) {
       return (
         <View style={styles.ActivityIndicatorContainer}>
@@ -27,16 +30,16 @@ export default class Map extends React.Component {
       <MapView
         style={styles.map}
         initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
+          latitude,
+          longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421
         }}
       >
         <MapView.Marker
-          coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
-          title={'marker.title'}
-          description={'desss'}
+          coordinate={{ latitude, longitude }}
+          title={this.props.businessName}
+          description={''}
         />
       </MapView>
     );

@@ -34,24 +34,13 @@ class Home extends React.Component {
           'Oops, this will not work on Sketch in an Android emulator. Try it on your device!'
       });
     } else {
+      console.log('component will mount');
       this._getLocationAsync();
     }
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this._checkAuthentication();
-  }
-
-  _login() {
-    this.setState({
-      auth: true
-    });
-  }
-
-  _logout() {
-    this.setState({
-      auth: false
-    });
   }
 
   _checkAuthentication = async () => {
@@ -67,53 +56,38 @@ class Home extends React.Component {
           token
         }
       }).then(res => {
-        this._initializeData(true);
+        setTimeout(() => {
+          this.setState(
+            {
+              isLoading: false
+            },
+            () => {
+              this.props.updateAuth(true);
+            }
+          );
+        }, 1000);
       });
     } else {
-      this._initializeData(false);
+      setTimeout(() => {
+        this.setState(
+          {
+            isLoading: false
+          },
+          () => {
+            this.props.updateAuth(false);
+          }
+        );
+      }, 1000);
     }
   };
 
-  _initializeData(auth) {
-    const url =
-      NODE_ENV === 'localhost'
-        ? 'http://192.168.0.107:3000/api/businesses'
-        : 'https://veeh-coupon.herokuapp.com/api/businesses';
-    axios
-      .get(url)
-      .then(res => {
-        if (auth) {
-          setTimeout(() => {
-            this.setState(
-              {
-                isLoading: false,
-                initialData: res.data
-              },
-              () => {
-                this.props.updateAuth(true);
-              }
-            );
-          }, 1000);
-        } else {
-          setTimeout(() => {
-            this.setState(
-              {
-                isLoading: false,
-                initialData: res.data
-              },
-              () => {
-                this.props.updateAuth(false);
-              }
-            );
-          }, 1000);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
-
   _getLocationAsync = async () => {
+    const GEOLOCATION_OPTIONS = {
+      enableHighAccuracy: true,
+      timeInterval: 1,
+      distanceInterval: 10
+    };
+
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
       this.setState({
@@ -121,15 +95,22 @@ class Home extends React.Component {
       });
     }
 
-    let location = await Location.getCurrentPositionAsync({
-      enableHighAccuracy: true,
-      maximumAge: 1000
-    });
-    let address = await Location.reverseGeocodeAsync({
+    // let location = await Location.getCurrentPositionAsync({
+    //   enableHighAccuracy: true,
+    //   maximumAge: 1000
+    // });
+
+    Location.watchPositionAsync(GEOLOCATION_OPTIONS, this._locationChanged);
+  };
+
+  _locationChanged = location => {
+    (region = {
       latitude: location.coords.latitude,
-      longitude: location.coords.longitude
-    });
-    this.setState({ location, address });
+      longitude: location.coords.longitude,
+      latitudeDelta: 0.1,
+      longitudeDelta: 0.05
+    }),
+      this.setState({ location, region });
   };
 
   render() {
@@ -139,7 +120,7 @@ class Home extends React.Component {
     } else if (this.state.location) {
       text = JSON.stringify(this.state.location);
     }
-    if (this.state.isLoading) {
+    if (this.state.isLoading || !this.state.location) {
       return (
         <View style={[styles.container, styles.ActivityIndicatorContainer]}>
           <ActivityIndicator size="large" color="#f96a00" />

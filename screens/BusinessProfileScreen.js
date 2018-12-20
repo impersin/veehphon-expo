@@ -25,8 +25,10 @@ class BusinessProfileScreen extends React.Component {
     });
   }
   render() {
-    let uri = this.props.navigation.state.params.data.businessImage[0];
+    let business = this.props.navigation.state.params.data;
+    let uri = business.photos[0];
     let topMenu;
+    console.log(business);
     if (this.state.yOffset !== 0 && this.state.yOffset > 330) {
       topMenu = null;
     } else {
@@ -52,7 +54,7 @@ class BusinessProfileScreen extends React.Component {
           <View style={styles.description}>
             <Text>Business description</Text>
           </View>
-          <GoogleMap />
+          <GoogleMap businessName={business.businessName} location={business.geometry} />
         </ScrollView>
       </View>
     );

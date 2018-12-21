@@ -34,7 +34,6 @@ class Home extends React.Component {
           'Oops, this will not work on Sketch in an Android emulator. Try it on your device!'
       });
     } else {
-      console.log('component will mount');
       this._getLocationAsync();
     }
   }
@@ -49,7 +48,7 @@ class Home extends React.Component {
 
     const url =
       NODE_ENV === 'localhost'
-        ? `http://192.168.0.105:3000/api/auth`
+        ? `http://10.0.0.166:3000/api/auth`
         : 'https://veeh-coupon.herokuapp.com/api/auth';
 
     if (token && email) {
@@ -115,13 +114,11 @@ class Home extends React.Component {
       latitudeDelta: 0.1,
       longitudeDelta: 0.05
     };
-    console.log(location);
     this.setState({ location, region });
   };
 
   render() {
     let tabNav, text;
-    // console.log(this.state)
     if (this.state.errorMessage) {
       text = this.state.errorMessage;
     } else if (this.state.location) {

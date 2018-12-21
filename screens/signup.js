@@ -43,7 +43,7 @@ class Signup extends React.Component {
     }
     const url =
       NODE_ENV === 'localhost'
-        ? `http://192.168.0.105:3000/api/signup`
+        ? `http://10.0.0.166:3000/api/signup`
         : 'https://veeh-coupon.herokuapp.com/api/signup';
 
     axios({

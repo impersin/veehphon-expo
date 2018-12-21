@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     // resizeMode: 'center',
     // position: 'absolute',
     // width: '100%',
-    height: 400
+    height: 300
     // justifyContent: 'center'
   }
 });

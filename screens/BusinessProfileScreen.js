@@ -25,13 +25,10 @@ class BusinessProfileScreen extends React.Component {
     });
   }
   render() {
-    let business = this.props.navigation.state.params.data;
-    let uri = business.photos[0];
-    let topMenu;
-    console.log(business);
-    if (this.state.yOffset !== 0 && this.state.yOffset > 330) {
-      topMenu = null;
-    } else {
+    let business = this.props.navigation.state.params.data,
+      topMenu = null,
+      adImage = null;
+    if (this.state.yOffset === 0 || this.state.yOffset < 330) {
       topMenu = (
         <View style={styles.topMenu}>
           <TouchableOpacity onPress={this._goToPrevious.bind(this)} style={styles.topMenuOne}>
@@ -46,12 +43,23 @@ class BusinessProfileScreen extends React.Component {
         </View>
       );
     }
+    if (business.type === 'Advertiser') {
+      adImage = (
+        <BackgroundImage uri={business.photos[0]} goToPrevious={this._goToPrevious.bind(this)} />
+      );
+    }
     return (
       <View>
         {topMenu}
         <ScrollView scrollEventThrottle={16} onScroll={e => this._handleScroll(e)}>
-          <BackgroundImage uri={uri} goToPrevious={this._goToPrevious.bind(this)} />
-          <View style={styles.description}>
+          {adImage}
+          <View
+            style={
+              business.type === 'Advertiser'
+                ? styles.description
+                : [styles.description, styles.paddingTop]
+            }
+          >
             <Text>Business description</Text>
           </View>
           <GoogleMap businessName={business.businessName} location={business.geometry} />
@@ -105,6 +113,9 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     justifyContent: 'center',
     paddingLeft: 20
+  },
+  paddingTop: {
+    paddingTop: 50
   }
 });
 

@@ -53,13 +53,13 @@ class BusinessListScreen extends React.Component {
       .get(url)
       .then(res => {
         const businesses = res.data.map(business => {
-          return (business.dist.calculated = (business.dist.calculated * 0.62).toFixed(1));
+          business.dist.calculated = (business.dist.calculated * 0.62).toFixed(1);
+          return business;
         });
-
         setTimeout(() => {
           this.setState({
             isLoading: false,
-            initialData: res.data,
+            initialData: businesses,
             refreshing: false
           });
         }, 500);
@@ -76,23 +76,50 @@ class BusinessListScreen extends React.Component {
   }
 
   _renderItem = ({ item }) => {
+    let adImage = null,
+      footerRight = null;
+    if (item.type === 'Advertiser') {
+      adImage = <Image style={styles.imgStyle} source={{ uri: item.photos[0] }} />;
+    } else {
+      footerRight = (
+        <View style={styles.footerRight}>
+          <Text style={styles.innerText}>{item.dist.calculated}mi</Text>
+        </View>
+      );
+    }
     return (
       <TouchableWithoutFeedback id={item.userid} onPress={e => this._redirectToProfile(item)}>
-        <View style={styles.listContainer}>
-          <Image style={styles.imgStyle} source={{ uri: item.photos[0] }} />
+        <View
+          style={
+            item.type === 'Advertiser'
+              ? styles.listContainer
+              : [styles.listContainer, styles.borderTop]
+          }
+        >
+          {adImage}
           <View style={styles.summaryContainer}>
             <Text style={styles.summaryHeader}>{`${item.businessName} - ${item.addressCity}, ${
               item.addressState
             }`}</Text>
             <Tags tags={item.tags} />
-            <Text>
-              Deal: <Text style={styles.innerText}>{`${item.coupons[0].deal}`}</Text>
-            </Text>
-            <View style={styles.distanceContainer}>
+            <View style={styles.summaryFooter}>
+              <View style={styles.footerLeft}>
+                <Text>
+                  Deal: <Text style={styles.innerText}>{`${item.coupons[0].dealName}`}</Text>
+                </Text>
+              </View>
+              {footerRight}
+            </View>
+            <View
+              style={
+                item.type === 'Advertiser' ? styles.distanceContainer : styles.distanceContainerHide
+              }
+            >
               <Text style={styles.distanceFont}>{item.dist.calculated}mi</Text>
             </View>
           </View>
         </View>
+        {/* <Text>mi</Text> */}
       </TouchableWithoutFeedback>
     );
   };
@@ -168,7 +195,12 @@ const styles = StyleSheet.create({
     // backgroundColor: 'red'
     // height: '100%'
   },
-  summaryHeader: { color: '#444', fontSize: 18, fontWeight: 'bold', marginBottom: 10 },
+  summaryHeader: {
+    color: '#444',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10
+  },
   circles: {
     flexDirection: 'row',
     alignItems: 'center'
@@ -178,12 +210,34 @@ const styles = StyleSheet.create({
     right: 0,
     top: -30
   },
+  distanceContainerHide: {
+    display: 'none'
+  },
   distanceFont: {
     color: 'white',
+    fontWeight: 'bold'
+  },
+  distanceFontTwo: {
     fontWeight: 'bold'
   },
   innerText: {
     color: '#444',
     fontWeight: 'bold'
+  },
+  borderTop: {
+    borderTopWidth: 1,
+    borderTopColor: '#ccc'
+  },
+  summaryFooter: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  footerLeft: {
+    flex: 5
+    // backgroundColor: 'red'
+  },
+  footerRight: {
+    flex: 1
+    // backgroundColor: 'blue'
   }
 });

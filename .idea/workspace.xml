@@ -6,13 +6,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c163e48b-48a1-4868-a900-c5c667b3870e" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/components/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/Home.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/BusinessListScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/BusinessListScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/Logout.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/Logout.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/signup.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/signup.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tabs/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/tabs/login.js" afterDir="false" />
-    </list>
+    <list default="true" id="c163e48b-48a1-4868-a900-c5c667b3870e" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

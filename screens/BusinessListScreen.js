@@ -46,7 +46,7 @@ class BusinessListScreen extends React.Component {
 
     const url =
       NODE_ENV === 'localhost'
-        ? `http://192.168.0.105:3000/api/businesses?lat=${lat}&lng=${lng}`
+        ? `http://10.0.0.166:3000/api/businesses?lat=${lat}&lng=${lng}`
         : `https://veeh-coupon.herokuapp.com/api/businesses?lat=${lat}&lng=${lng}`;
 
     axios
@@ -76,26 +76,13 @@ class BusinessListScreen extends React.Component {
   }
 
   _renderItem = ({ item }) => {
-    let adImage = null,
-      footerRight = null;
+    let adImage = null;
     if (item.type === 'Advertiser') {
       adImage = <Image style={styles.imgStyle} source={{ uri: item.photos[0] }} />;
-    } else {
-      footerRight = (
-        <View style={styles.footerRight}>
-          <Text style={styles.innerText}>{item.dist.calculated}mi</Text>
-        </View>
-      );
     }
     return (
       <TouchableWithoutFeedback id={item.userid} onPress={e => this._redirectToProfile(item)}>
-        <View
-          style={
-            item.type === 'Advertiser'
-              ? styles.listContainer
-              : [styles.listContainer, styles.borderTop]
-          }
-        >
+        <View style={item.type === 'Advertiser' ? styles.listContainer : styles.listContainer}>
           {adImage}
           <View style={styles.summaryContainer}>
             <Text style={styles.summaryHeader}>{`${item.businessName} - ${item.addressCity}, ${
@@ -108,18 +95,12 @@ class BusinessListScreen extends React.Component {
                   Deal: <Text style={styles.innerText}>{`${item.coupons[0].dealName}`}</Text>
                 </Text>
               </View>
-              {footerRight}
-            </View>
-            <View
-              style={
-                item.type === 'Advertiser' ? styles.distanceContainer : styles.distanceContainerHide
-              }
-            >
-              <Text style={styles.distanceFont}>{item.dist.calculated}mi</Text>
+              <View style={styles.footerRight}>
+                <Text style={styles.innerText}>{item.dist.calculated}mi</Text>
+              </View>
             </View>
           </View>
         </View>
-        {/* <Text>mi</Text> */}
       </TouchableWithoutFeedback>
     );
   };
@@ -178,7 +159,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   listContainer: {
-    width: width
+    width: width,
+    padding: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#ccc'
     // backgroundColor: 'green'
   },
   imgStyle: {
@@ -189,7 +173,7 @@ const styles = StyleSheet.create({
   },
   summaryContainer: {
     // flex: 1,
-    margin: 10,
+    marginTop: 10,
     marginBottom: 20,
     justifyContent: 'center'
     // backgroundColor: 'red'

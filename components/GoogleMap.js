@@ -37,7 +37,7 @@ export default class Map extends React.Component {
       >
         <MapView.Marker
           coordinate={{ latitude, longitude }}
-          title={this.props.businessName}
+          title={this.props.title}
           description={''}
         />
       </MapView>
@@ -46,7 +46,9 @@ export default class Map extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  map: { height: 300 },
+  map: {
+    height: 200
+  },
   ActivityIndicatorContainer: {
     display: 'flex',
     height: 300,

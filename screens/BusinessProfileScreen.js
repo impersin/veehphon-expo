@@ -1,19 +1,23 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
+  Platform,
+  Linking,
   StyleSheet,
   Text,
   ScrollView,
   View,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
+  Modal
 } from 'react-native';
-import { Ionicons, AntDesign } from '@expo/vector-icons/';
-import { MapView } from 'expo';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons/';
 import axios from 'axios';
 import BackgroundImage from './../components/BackgroundImage';
 import GoogleMap from './../components/GoogleMap';
 import Tags from './../components/Tags';
+import Coupons from './../components/Coupons';
+import BlockMenu from './../components/BlockMenu';
 import { NODE_ENV } from 'react-native-dotenv';
 
 class BusinessProfileScreen extends React.Component {
@@ -34,7 +38,7 @@ class BusinessProfileScreen extends React.Component {
     const url =
       NODE_ENV === 'localhost'
         ? `http://10.0.0.166:3000/api/business?id=${id}`
-        : `https://veeh-coupon.herokuapp.com/api/businesse?id=${id}`;
+        : `https://veeh-coupon.herokuapp.com/api/business?id=${id}`;
 
     axios.get(url).then(res => {
       const business = res.data;
@@ -52,6 +56,10 @@ class BusinessProfileScreen extends React.Component {
     this.props.navigation.goBack();
   }
 
+  _redirectToCarousel(coupon) {
+    this.props.navigation.navigate('CouponCarousel', coupon);
+  }
+
   _handleScroll(e) {
     const nativeEvent = e.nativeEvent;
     const yOffset = nativeEvent.contentOffset.y;
@@ -60,9 +68,22 @@ class BusinessProfileScreen extends React.Component {
     });
   }
 
-  _renderDetails() {
+  _handleDirection() {
+    let { addressStreet, addressZipcode, addressCity } = this.state.business;
+
+    let daddr = encodeURIComponent(`${addressStreet} ${addressZipcode}, ${addressCity}`);
+
+    if (Platform.OS === 'ios') {
+      Linking.openURL(`http://maps.apple.com/?daddr=${daddr}`);
+    } else {
+      Linking.openURL(`http://maps.google.com/?daddr=${daddr}`);
+    }
+  }
+
+  _renderDetails(type) {
     const business = this.state.business;
-    const address = `${business.addressStreet}, ${business.addressCity}, ${business.addressState} ${
+    const addressOne = `${business.addressStreet}`;
+    const addressTwo = `${business.addressCity}, ${business.addressState} ${
       business.addressZipcode
     }`;
     const website = business.website === '' ? null : business.website;
@@ -70,29 +91,48 @@ class BusinessProfileScreen extends React.Component {
       business.hours[2]
     }`;
     return (
-      <View>
-        <Text>{business.businessName}</Text>
-        <Text>{`${address}`}</Text>
-        <Text>Business Hours</Text>
-        <Text>{businessHours}</Text>
-        <Text>{business.phoneNumber}</Text>
-        <Text>{website}</Text>
-        <Text>{`${this.state.dist}mi`}</Text>
-        <Text>{`Details page`}</Text>
+      <View style={type === 'nonAdvertiser' ? [styles.details, styles.paddingTop] : styles.details}>
+        <View style={[styles.detailsContent]}>
+          <Text style={[styles.detailsFont, styles.detailsTitle]}>{business.businessName}</Text>
+        </View>
+        <View style={[styles.detailsContent]}>
+          <Text style={[styles.detailsFont, styles.detialsSubtitle]}>Business Hours</Text>
+          <Text style={styles.detailsFont}>{businessHours}</Text>
+        </View>
         <Tags tags={this.state.business.tags} />
-        <Text>{`Deal ${this.state.business.coupons[0].dealName}`}</Text>
-        <Text>{`Deal details`}</Text>
-        <Text>{business.businessName}</Text>
-        <Text>{`${address}`}</Text>
-        <Text>Business Hours</Text>
-        <Text>{businessHours}</Text>
-        <Text>{business.phoneNumber}</Text>
-        <Text>{website}</Text>
-        <Text>{`${this.state.dist}mi`}</Text>
-        <Text>{`Details page`}</Text>
-        <Tags tags={this.state.business.tags} />
-        <Text>{`Deal ${this.state.business.coupons[0].dealName}`}</Text>
-        <Text>{`Deal details`}</Text>
+        <Text style={[styles.detailsFont, styles.detialsSubtitle]}>Coupons</Text>
+        <ScrollView horizontal={true}>
+          <Coupons
+            coupons={business.coupons}
+            goToPrevious={this._goToPrevious.bind(this)}
+            redirectToCarousel={this._redirectToCarousel.bind(this)}
+          />
+          {/* <Coupons coupons={business.coupons} />
+          <Coupons coupons={business.coupons} />
+          <Coupons coupons={business.coupons} /> */}
+        </ScrollView>
+        <GoogleMap location={this.state.coordinates} title={business.businessName} />
+        <View style={[styles.detailsContent, styles.addressContainer]}>
+          <View style={styles.addressLeft}>
+            <Text style={styles.detailsFont}>{`${addressOne}`}</Text>
+            <Text style={styles.detailsFont}>{`${addressTwo}`}</Text>
+          </View>
+          <View style={styles.addressRight}>
+            {/* <Text style={styles.detailsFont}>Get direction button.</Text> */}
+            <TouchableOpacity
+              onPress={this._handleDirection.bind(this)}
+              style={styles.directionIconContainer}
+            >
+              <MaterialIcons name="directions" size={35} color="#f96a00" />
+            </TouchableOpacity>
+            <Text style={[styles.detailsFont, { fontSize: 12, fontWeight: 'bold' }]}>
+              Directions
+            </Text>
+            <Text style={[styles.detailsFont, { fontSize: 12 }]}>{`${this.state.dist}mi`}</Text>
+          </View>
+        </View>
+        <BlockMenu icon={'phone'} title={business.phoneNumber} subTitle={'Subtitle'} />
+        <BlockMenu icon={'home'} title={business.website} subTitle={'Subtitle'} />
       </View>
     );
   }
@@ -149,8 +189,7 @@ class BusinessProfileScreen extends React.Component {
           {topMenu}
           <ScrollView scrollEventThrottle={16} onScroll={e => this._handleScroll(e)}>
             {adImage}
-            <View style={styles.details}>{details}</View>
-            <GoogleMap location={this.state.coordinates} />
+            {details}
           </ScrollView>
         </View>
       );
@@ -162,7 +201,7 @@ class BusinessProfileScreen extends React.Component {
           </View>
         );
       }
-      details = this._renderDetails();
+      details = this._renderDetails('nonAdvertiser');
       return (
         <View>
           <View style={styles.topMenuWhite}>
@@ -177,12 +216,9 @@ class BusinessProfileScreen extends React.Component {
             </TouchableOpacity>
           </View>
           <ScrollView scrollEventThrottle={16} onScroll={e => this._handleScroll(e)}>
-            {adImage}
-            <View style={[styles.details, styles.paddingTop]}>
-              <View style={styles.detailsContainer} />
-              {details}
-            </View>
-            <GoogleMap location={this.state.coordinates} />
+            {/* {adImage} */}
+            <View style={styles.paddingTop}>{details}</View>
+            {/* <GoogleMap location={this.state.coordinates} /> */}
           </ScrollView>
         </View>
       );
@@ -197,7 +233,11 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     // backgroundColor: '#ecf0f1'
   },
-  ActivityIndicatorContainer: { alignItems: 'center', justifyContent: 'center' },
+  ActivityIndicatorContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white'
+  },
   topMenu: {
     display: 'flex',
     alignSelf: 'stretch',
@@ -223,19 +263,58 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
     backgroundColor: 'white',
-    // borderBottomWidth: 1,
     shadowOpacity: 0.5,
     shadowRadius: 4,
     shadowColor: 'black'
-    // shadowOffset: { height: 0, width: 0 }
   },
   details: {
     flex: 1,
     minHeight: 400,
-    padding: 20,
+    padding: 10,
     // justifyContent: 'center'
     // alignSelf: 'stretch',
     backgroundColor: 'white'
+  },
+  detailsContent: {
+    marginBottom: 20
+  },
+  detailsFont: {
+    color: '#444',
+    fontSize: 14
+  },
+  detailsTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginTop: 10
+  },
+  detialsSubtitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10
+  },
+  addressContainer: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  addressLeft: {
+    flex: 5,
+    // borderWidth: 1,
+    justifyContent: 'center'
+  },
+  addressRight: {
+    flex: 2,
+    // borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  directionIconContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 40,
+    height: 40,
+    borderRadius: 50,
+    borderColor: '#ccc'
   },
   topMenuOne: {
     flex: 6,
@@ -256,7 +335,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20
   },
   paddingTop: {
-    paddingTop: 70
+    paddingTop: 30
   }
 });
 

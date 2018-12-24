@@ -48,7 +48,6 @@ class BusinessListScreen extends React.Component {
       NODE_ENV === 'localhost'
         ? `http://10.0.0.166:3000/api/businesses?lat=${lat}&lng=${lng}`
         : `https://veeh-coupon.herokuapp.com/api/businesses?lat=${lat}&lng=${lng}`;
-
     axios
       .get(url)
       .then(res => {
@@ -173,7 +172,7 @@ const styles = StyleSheet.create({
   },
   summaryContainer: {
     // flex: 1,
-    marginTop: 10,
+    marginTop: 20,
     marginBottom: 20,
     justifyContent: 'center'
     // backgroundColor: 'red'
@@ -183,7 +182,7 @@ const styles = StyleSheet.create({
     color: '#444',
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10
+    marginBottom: 20
   },
   circles: {
     flexDirection: 'row',
@@ -214,7 +213,8 @@ const styles = StyleSheet.create({
   },
   summaryFooter: {
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    marginTop: 10
   },
   footerLeft: {
     flex: 5

@@ -8,6 +8,7 @@ import { createBottomTabNavigator, createStackNavigator } from 'react-navigation
 import axios from 'axios';
 import BusinessListScreen from '../screens/BusinessListScreen';
 import BusinessProfileScreen from '../screens/BusinessProfileScreen';
+import CouponCarousel from '../screens/CouponCarousel';
 import Signup from '../screens/Signup';
 import Logout from '../screens/Logout';
 import Login from '../tabs/login';
@@ -176,6 +177,13 @@ const AppStackNavigator = createStackNavigator({
       Platform.OS === 'ios'
         ? { title: 'Profile', header: null }
         : { title: 'Profile', header: null }
+  },
+  CouponCarousel: {
+    screen: CouponCarousel,
+    navigationOptions: {
+      title: 'Coupons',
+      header: null //this will hide the header
+    }
   }
 });
 
@@ -207,7 +215,7 @@ const ProfileStackNavigator = createStackNavigator({
 });
 
 AppStackNavigator.navigationOptions = ({ navigation }) => {
-  if (navigation.state.index === 1) {
+  if (navigation.state.index === 1 || navigation.state.index === 2) {
     return {
       tabBarVisible: false
     };

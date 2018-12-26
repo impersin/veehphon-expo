@@ -1,46 +1,50 @@
 import React from 'react';
-import { StyleSheet, Text, View, Linking } from 'react-native';
+import { StyleSheet, Text, View, Linking, TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons/';
 
 export default class BlockMenu extends React.Component {
   _openHomepage = () => {
-    Linking.openURL('https://www.veeh.co');
+    // Linking.openURL(`http://${this.props.title}`);
+    Linking.openURL(`http://www.veeh.co`);
   };
 
   _pressCall = () => {
-    Linking.openURL('tel:+123456789');
+    Linking.openURL(`tel:+${this.props.title}`);
   };
 
   render() {
     if (this.props.icon === 'phone') {
+      const areaCode = this.props.title.slice(0, 3);
+      const middleNumber = this.props.title.slice(3, 6);
+      const lastNumber = this.props.title.slice(6);
       return (
-        <View style={styles.blockWrapper}>
+        <TouchableOpacity style={styles.blockWrapper}>
           <View style={styles.blockLeft}>
             <View style={styles.iconContainer}>
               <AntDesign name={this.props.icon} size={25} color="#444" />
             </View>
             <View style={styles.titleContainer}>
               <Text onPress={this._pressCall} style={styles.blockFont}>
-                {this.props.title}
+                {`Call (${areaCode})${middleNumber}-${lastNumber}`}
               </Text>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       );
     } else if (this.props.icon === 'home') {
       return (
-        <View style={styles.blockWrapper}>
+        <TouchableOpacity style={styles.blockWrapper}>
           <View style={styles.blockLeft}>
             <View style={styles.iconContainer}>
               <AntDesign name={this.props.icon} size={25} color="#444" />
             </View>
             <View style={styles.titleContainer}>
               <Text onPress={this._openHomepage} style={styles.blockFont}>
-                {this.props.title}
+                {`Visit Website`}
               </Text>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       );
     }
   }
@@ -76,18 +80,16 @@ export default class BlockMenu extends React.Component {
 
 const styles = StyleSheet.create({
   blockWrapper: {
-    display: 'flex',
+    flex: 1,
     flexWrap: 'wrap',
-    flexDirection: 'row',
-    height: 25,
-    marginBottom: 10
+    flexDirection: 'row'
   },
   blockLeft: {
-    flex: 2,
+    flex: 1,
     flexDirection: 'row'
   },
   blockRight: {
-    flex: 3,
+    flex: 1,
     flexDirection: 'row'
   },
   iconContainer: {

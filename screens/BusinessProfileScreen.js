@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   Modal
 } from 'react-native';
+import { Constants } from 'expo';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons/';
 import axios from 'axios';
 import BackgroundImage from './../components/BackgroundImage';
@@ -29,7 +30,8 @@ class BusinessProfileScreen extends React.Component {
     yOffset: 0,
     type: this.props.navigation.state.params.data.type,
     coordinates: this.props.navigation.state.params.data.coordinates,
-    dist: this.props.navigation.state.params.data.dist.calculated
+    dist: this.props.navigation.state.params.data.dist.calculated,
+    isModalOpen: false
   };
 
   componentDidMount() {
@@ -67,6 +69,18 @@ class BusinessProfileScreen extends React.Component {
       yOffset
     });
   }
+
+  _handleMapMoal() {
+    this.setState({
+      isModalOpen: true
+    });
+  }
+
+  _closeModal = () => {
+    this.setState({
+      isModalOpen: false
+    });
+  };
 
   _handleDirection() {
     let { addressStreet, addressZipcode, addressCity } = this.state.business;
@@ -107,11 +121,12 @@ class BusinessProfileScreen extends React.Component {
             goToPrevious={this._goToPrevious.bind(this)}
             redirectToCarousel={this._redirectToCarousel.bind(this)}
           />
-          {/* <Coupons coupons={business.coupons} />
-          <Coupons coupons={business.coupons} />
-          <Coupons coupons={business.coupons} /> */}
         </ScrollView>
-        <GoogleMap location={this.state.coordinates} title={business.businessName} />
+        <GoogleMap
+          handleMapMoal={this._handleMapMoal.bind(this)}
+          location={this.state.coordinates}
+          title={business.businessName}
+        />
         <View style={[styles.detailsContent, styles.addressContainer]}>
           <View style={styles.addressLeft}>
             <Text style={styles.detailsFont}>{`${addressOne}`}</Text>
@@ -131,8 +146,10 @@ class BusinessProfileScreen extends React.Component {
             <Text style={[styles.detailsFont, { fontSize: 12 }]}>{`${this.state.dist}mi`}</Text>
           </View>
         </View>
-        <BlockMenu icon={'phone'} title={business.phoneNumber} subTitle={'Subtitle'} />
-        <BlockMenu icon={'home'} title={business.website} subTitle={'Subtitle'} />
+        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 20 }}>
+          <BlockMenu icon={'phone'} title={business.phoneNumber} subTitle={'Subtitle'} />
+          <BlockMenu icon={'home'} title={business.website} subTitle={'Subtitle'} />
+        </View>
       </View>
     );
   }
@@ -167,6 +184,71 @@ class BusinessProfileScreen extends React.Component {
           <TouchableOpacity style={styles.topMenuThree}>
             <Ionicons name="ios-heart-empty" color={'#444'} size={30} />
           </TouchableOpacity>
+        </View>
+      );
+    }
+
+    if (this.state.isModalOpen) {
+      const business = this.state.business;
+      const addressOne = `${business.addressStreet}`;
+      const addressTwo = `${business.addressCity}, ${business.addressState} ${
+        business.addressZipcode
+      }`;
+      return (
+        <View style={styles.modalContainer}>
+          <Modal
+            animationType="slide"
+            transparent={false}
+            visible={this.state.modalVisible}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.');
+            }}
+          >
+            <View style={{ paddingTop: Constants.statusBarHeight }} />
+            <View style={styles.topMenuModal}>
+              <TouchableOpacity
+                onPress={this._closeModal.bind(this)}
+                style={[styles.topMenuOne, { flex: 1 }]}
+              >
+                <Ionicons name="ios-arrow-back" color={'#444'} size={30} />
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.topMenuTwo, { flex: 2 }]}>
+                <Text style={{ color: '#444', fontSize: 18, fontWeight: 'bold' }}>Location</Text>
+              </TouchableOpacity>
+            </View>
+            <GoogleMap
+              handleMapMoal={this._handleMapMoal.bind(this)}
+              location={this.state.coordinates}
+              title={business.businessName}
+              type="modal"
+            />
+            <View style={{ flex: 1, paddingTop: 10, paddingLeft: 10, paddingRight: 10 }}>
+              <View style={[styles.detailsContent, styles.addressContainer]}>
+                <View style={styles.addressLeft}>
+                  <Text style={[styles.detailsFont, { fontWeight: 'bold', paddingBottom: 5 }]}>{`${
+                    business.businessName
+                  }`}</Text>
+                  <Text style={styles.detailsFont}>{`${addressOne}`}</Text>
+                  <Text style={styles.detailsFont}>{`${addressTwo}`}</Text>
+                </View>
+                <View style={styles.addressRight}>
+                  {/* <Text style={styles.detailsFont}>Get direction button.</Text> */}
+                  <TouchableOpacity
+                    onPress={this._handleDirection.bind(this)}
+                    style={styles.directionIconContainer}
+                  >
+                    <MaterialIcons name="directions" size={35} color="#f96a00" />
+                  </TouchableOpacity>
+                  <Text style={[styles.detailsFont, { fontSize: 12, fontWeight: 'bold' }]}>
+                    Directions
+                  </Text>
+                  <Text style={[styles.detailsFont, { fontSize: 12 }]}>{`${
+                    this.state.dist
+                  }mi`}</Text>
+                </View>
+              </View>
+            </View>
+          </Modal>
         </View>
       );
     }
@@ -228,10 +310,16 @@ class BusinessProfileScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: 'white'
     // alignItems: 'center',
     // justifyContent: 'center',
-    // backgroundColor: '#ecf0f1'
+    // backgroundColor: '#ecf0f1',
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'white',
+    paddingTop: Constants.statusBarHeight
   },
   ActivityIndicatorContainer: {
     alignItems: 'center',
@@ -267,13 +355,27 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowColor: 'black'
   },
+  topMenuModal: {
+    display: 'flex',
+    alignSelf: 'stretch',
+    position: 'absolute',
+    top: 44,
+    height: 200,
+    zIndex: 1,
+    flexDirection: 'row',
+    width: '100%',
+    height: 50,
+    justifyContent: 'center',
+    backgroundColor: 'white'
+  },
   details: {
     flex: 1,
-    minHeight: 400,
+    minHeight: 500,
     padding: 10,
     // justifyContent: 'center'
     // alignSelf: 'stretch',
     backgroundColor: 'white'
+    // paddingBottom: 50
   },
   detailsContent: {
     marginBottom: 20

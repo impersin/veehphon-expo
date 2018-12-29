@@ -6,7 +6,7 @@ const logger = createLogger();
 
 const finalCreateStore = compose(applyMiddleware(logger))(createStore);
 
-const configure = (initialState = { auth: 'false' }) =>
+const configure = (initialState = { auth: 'false', user: null }) =>
   finalCreateStore(
     reducer,
     initialState

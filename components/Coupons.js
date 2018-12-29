@@ -35,8 +35,8 @@ export default class Coupons extends React.Component {
 
 const styles = StyleSheet.create({
   couponWrapper: {
+    width: 160,
     height: 140,
-    width: 150,
     marginRight: 10,
     marginBottom: 20,
     borderWidth: 1,
@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
   },
   couponFont: {
     color: '#444',
-    fontSize: 14
+    fontSize: 12,
+    fontWeight: 'bold'
   }
 });

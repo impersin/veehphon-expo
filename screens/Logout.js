@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { NODE_ENV } from 'react-native-dotenv';
+import { NODE_ENV, URL } from 'react-native-dotenv';
 import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
 import axios from 'axios';
 import { Constants, SecureStore } from 'expo';
@@ -23,15 +23,12 @@ class Logout extends React.Component {
 
   _logOut = async () => {
     this._handleLoading(true);
-    const url =
-      NODE_ENV === 'localhost'
-        ? 'http://10.0.0.166:3000/api/'
-        : 'http://veeh-coupon.herokuapp.com/api/';
+    const url = URL + '/logout';
     await SecureStore.deleteItemAsync('token');
     await SecureStore.deleteItemAsync('email');
 
     axios
-      .get(url + 'logout')
+      .get(url)
       .then(res => {
         setTimeout(() => {
           return this.props.updateAuth(false);
@@ -63,15 +60,9 @@ class Logout extends React.Component {
     }
 
     return (
-      <View style={styles.container}>
-        <TouchableOpacity onPress={e => this._logOut()} style={[styles.buttonWrapper]}>
-          <View style={styles.buttonTextWrapper}>
-            <Text style={[styles.buttonText]}>
-              <Text style={styles.innerFont}>Log out</Text>
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity onPress={e => this._logOut()} style={[styles.buttonWrapper]}>
+        <Text style={[styles.veehFont]}>Sign out</Text>
+      </TouchableOpacity>
     );
   }
 }
@@ -105,43 +96,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'white'
   },
-  header: {
-    flex: 1,
-    alignItems: 'flex-start',
-    justifyContent: 'center'
-  },
-  body: {
-    flex: 4
-  },
-  buttonWrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-    height: 50,
-    marginBottom: 10,
-    paddingLeft: 30,
-    paddingRight: 30,
-    borderRadius: 5
-  },
-  buttonTextWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'center'
-  },
-  buttonText: { width: '100%', fontSize: 14, textAlign: 'center' },
-  facebookButtonFont: {
-    color: 'white',
-    paddingTop: 2
-  },
-  googleButtonFont: {
-    paddingTop: 2
-  },
-  facebook: {
-    backgroundColor: '#4267b2'
-  },
-  google: {
-    backgroundColor: 'white',
-    borderWidth: 1
-  },
-  innerFont: {
-    color: '#337ab7'
+  veehFont: {
+    color: '#444'
   }
 });

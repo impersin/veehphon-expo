@@ -10,7 +10,7 @@ import {
   Dimensions,
   ActivityIndicator
 } from 'react-native';
-import { NODE_ENV } from 'react-native-dotenv';
+import { NODE_ENV, URL } from 'react-native-dotenv';
 import axios from 'axios';
 import Tags from './../components/Tags';
 
@@ -43,11 +43,7 @@ class BusinessListScreen extends React.Component {
   _initializeData(auth) {
     const lat = this.props.screenProps.location.coords.latitude;
     const lng = this.props.screenProps.location.coords.longitude;
-
-    const url =
-      NODE_ENV === 'localhost'
-        ? `http://10.0.0.166:3000/api/businesses?lat=${lat}&lng=${lng}`
-        : `https://veeh-coupon.herokuapp.com/api/businesses?lat=${lat}&lng=${lng}`;
+    const url = URL + `/businesses?lat=${lat}&lng=${lng}`;
     axios
       .get(url)
       .then(res => {

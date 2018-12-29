@@ -9,7 +9,9 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
-  Modal
+  Modal,
+  Image,
+  FlatList
 } from 'react-native';
 import { Constants } from 'expo';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons/';
@@ -19,7 +21,7 @@ import GoogleMap from './../components/GoogleMap';
 import Tags from './../components/Tags';
 import Coupons from './../components/Coupons';
 import BlockMenu from './../components/BlockMenu';
-import { NODE_ENV } from 'react-native-dotenv';
+import { NODE_ENV, URL } from 'react-native-dotenv';
 
 class BusinessProfileScreen extends React.Component {
   // static navigationOptions = {
@@ -37,25 +39,52 @@ class BusinessProfileScreen extends React.Component {
   componentDidMount() {
     const id = this.props.navigation.state.params.data.id,
       dist = this.props.navigation.state.params.data.dist.calculated;
-    const url =
-      NODE_ENV === 'localhost'
-        ? `http://10.0.0.166:3000/api/business?id=${id}`
-        : `https://veeh-coupon.herokuapp.com/api/business?id=${id}`;
-
+    const url = URL + `/business?id=${id}`;
+    const sponsoredUrl = URL + `/sponsored/businesses?`;
+    // console.log(this.state.coordinates);
     axios.get(url).then(res => {
       const business = res.data;
       business.dist = dist;
-      setTimeout(() => {
-        this.setState({
-          business,
-          isLoading: false
-        });
-      }, 1000);
+      if (business.type === 'Non-advertiser') {
+        axios
+          .get(
+            sponsoredUrl +
+              `category=${business.businessCategory}&lat=${this.state.coordinates[1]}&lng=${
+                this.state.coordinates[0]
+              }`
+          )
+          .then(res => {
+            const sponsoredBusiness = res.data.map(business => {
+              business.dist.calculated = (business.dist.calculated * 0.62).toFixed(1);
+              return business;
+            });
+            // console.log('=====================> 1', sponsoredBusiness);
+            setTimeout(() => {
+              this.setState({
+                business,
+                sponsoredBusiness,
+                isLoading: false
+              });
+            }, 1000);
+          });
+      } else {
+        setTimeout(() => {
+          this.setState({
+            business,
+            isLoading: false
+          });
+        }, 1000);
+      }
     });
   }
 
   _goToPrevious() {
     this.props.navigation.goBack();
+  }
+
+  _redirectToProfile(data) {
+    // console.log('=====================> 1', data);
+    this.props.navigation.navigate('SponsoredBusinessProfile', { data });
   }
 
   _redirectToCarousel(coupon) {
@@ -94,6 +123,125 @@ class BusinessProfileScreen extends React.Component {
     }
   }
 
+  _renderSponsores() {
+    const businesses = this.state.sponsoredBusiness.slice();
+    return (
+      <View style={{ marginBottom: 50 }}>
+        <Text style={[styles.detailsFont, styles.detialsSubtitle]}>Sponsored businesses</Text>
+        <ScrollView horizontal={true}>
+          {businesses.map((business, index) => {
+            return (
+              <TouchableOpacity onPress={e => this._redirectToProfile(business)} key={index}>
+                <View
+                  style={{
+                    width: 160,
+                    height: 140,
+                    marginRight: 10,
+                    borderColor: '#ccc',
+                    borderWidth: 1
+                  }}
+                >
+                  <Image
+                    style={{ flex: 2, width: null, height: null, resizeMode: 'cover' }}
+                    source={{ uri: business.photos[0] }}
+                  />
+                  <View style={{ flex: 1, justifyContent: 'center', paddingLeft: 5 }}>
+                    <Text
+                      style={{
+                        color: '#444',
+                        fontSize: 12,
+                        fontWeight: 'bold',
+                        marginBottom: 5
+                      }}
+                    >
+                      {business.businessName}
+                    </Text>
+                    <Text
+                      style={{
+                        color: '#444',
+                        fontSize: 12
+                      }}
+                    >
+                      {business.coupons[0].dealName}
+                    </Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            );
+          })}
+          <TouchableOpacity>
+            <View
+              style={{
+                width: 160,
+                height: 140,
+                marginRight: 10,
+                borderColor: '#ccc',
+                borderWidth: 1
+              }}
+            >
+              <Image
+                style={{ flex: 2, width: null, height: null, resizeMode: 'cover' }}
+                source={{ uri: 'https://s3-us-west-1.amazonaws.com/veeh/kyopo-1.jpg' }}
+              />
+              <View style={{ flex: 1, justifyContent: 'center', paddingLeft: 5 }}>
+                <Text
+                  style={{
+                    color: '#444',
+                    fontSize: 12,
+                    fontWeight: 'bold',
+                    marginBottom: 5
+                  }}
+                >
+                  Super Kyo-po Plaza
+                </Text>
+                <Text
+                  style={{
+                    color: '#444',
+                    fontSize: 12
+                  }}
+                >{`coupon.dealName`}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <View
+              style={{
+                width: 160,
+                height: 140,
+                marginRight: 10,
+                borderColor: '#ccc',
+                borderWidth: 1
+              }}
+            >
+              <Image
+                style={{ flex: 2, width: null, height: null, resizeMode: 'cover' }}
+                source={{ uri: 'https://s3-us-west-1.amazonaws.com/veeh/kyopo-1.jpg' }}
+              />
+              <View style={{ flex: 1, justifyContent: 'center', paddingLeft: 5 }}>
+                <Text
+                  style={{
+                    color: '#444',
+                    fontSize: 12,
+                    fontWeight: 'bold',
+                    marginBottom: 5
+                  }}
+                >
+                  Super Kyo-po Plaza
+                </Text>
+                <Text
+                  style={{
+                    color: '#444',
+                    fontSize: 12
+                  }}
+                >{`coupon.dealName`}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+    );
+  }
+
   _renderDetails(type) {
     const business = this.state.business;
     const addressOne = `${business.addressStreet}`;
@@ -104,6 +252,10 @@ class BusinessProfileScreen extends React.Component {
     const businessHours = `Mon-Thu ${business.hours[0]}, Fri-Sat ${business.hours[1]}, Sun ${
       business.hours[2]
     }`;
+    let sponsores = null;
+    if (type === 'nonAdvertiser') {
+      sponsores = this._renderSponsores();
+    }
     return (
       <View style={type === 'nonAdvertiser' ? [styles.details, styles.paddingTop] : styles.details}>
         <View style={[styles.detailsContent]}>
@@ -150,6 +302,7 @@ class BusinessProfileScreen extends React.Component {
           <BlockMenu icon={'phone'} title={business.phoneNumber} subTitle={'Subtitle'} />
           <BlockMenu icon={'home'} title={business.website} subTitle={'Subtitle'} />
         </View>
+        {sponsores}
       </View>
     );
   }
@@ -205,15 +358,25 @@ class BusinessProfileScreen extends React.Component {
             }}
           >
             <View style={{ paddingTop: Constants.statusBarHeight }} />
-            <View style={styles.topMenuModal}>
+            <View
+              style={Platform.OS === 'ios' ? styles.topMenuModalIos : styles.topMenuModalAndroid}
+            >
               <TouchableOpacity
                 onPress={this._closeModal.bind(this)}
-                style={[styles.topMenuOne, { flex: 1 }]}
+                style={[
+                  styles.topMenuOne,
+                  {
+                    flex: 1,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start'
+                  }
+                ]}
               >
                 <Ionicons name="ios-arrow-back" color={'#444'} size={30} />
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.topMenuTwo, { flex: 2 }]}>
-                <Text style={{ color: '#444', fontSize: 18, fontWeight: 'bold' }}>Location</Text>
+                <Text style={{ color: '#444', fontSize: 18, fontWeight: 'bold', paddingLeft: 20 }}>
+                  Location
+                </Text>
               </TouchableOpacity>
             </View>
             <GoogleMap
@@ -285,7 +448,7 @@ class BusinessProfileScreen extends React.Component {
       }
       details = this._renderDetails('nonAdvertiser');
       return (
-        <View>
+        <View style={{ backgroundColor: 'white' }}>
           <View style={styles.topMenuWhite}>
             <TouchableOpacity onPress={this._goToPrevious.bind(this)} style={styles.topMenuOne}>
               <Ionicons name="ios-arrow-back" color={'#444'} size={30} />
@@ -298,9 +461,7 @@ class BusinessProfileScreen extends React.Component {
             </TouchableOpacity>
           </View>
           <ScrollView scrollEventThrottle={16} onScroll={e => this._handleScroll(e)}>
-            {/* {adImage} */}
             <View style={styles.paddingTop}>{details}</View>
-            {/* <GoogleMap location={this.state.coordinates} /> */}
           </ScrollView>
         </View>
       );
@@ -318,8 +479,8 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: 'white',
-    paddingTop: Constants.statusBarHeight
+    backgroundColor: 'white'
+    // paddingTop: Constants.statusBarHeight
   },
   ActivityIndicatorContainer: {
     alignItems: 'center',
@@ -355,11 +516,24 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowColor: 'black'
   },
-  topMenuModal: {
+  topMenuModalAndroid: {
     display: 'flex',
     alignSelf: 'stretch',
     position: 'absolute',
-    top: 44,
+    // top: 44,
+    height: 200,
+    zIndex: 1,
+    flexDirection: 'row',
+    width: '100%',
+    height: 50,
+    justifyContent: 'center',
+    backgroundColor: 'white'
+  },
+  topMenuModalIos: {
+    display: 'flex',
+    alignSelf: 'stretch',
+    position: 'absolute',
+    top: Constants.statusBarHeight,
     height: 200,
     zIndex: 1,
     flexDirection: 'row',

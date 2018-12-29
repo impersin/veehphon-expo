@@ -28,10 +28,12 @@ export default class Carousel extends Component {
           <View style={styles.topMenuWhite}>
             <TouchableOpacity onPress={this._goToPrevious.bind(this)} style={styles.topMenuOne}>
               <Ionicons name="ios-close" color={'white'} size={40} />
+              <Text style={{ fontSize: 20, color: 'white', fontWeight: 'bold', paddingLeft: 20 }}>
+                {/* Coupon */}
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={this._goToPrevious.bind(this)} style={styles.topMenuTwo}>
-              <Text style={{ fontSize: 20, color: 'white', fontWeight: 'bold' }}>Coupon</Text>
-            </TouchableOpacity>
+            {/* <TouchableOpacity onPress={this._goToPrevious.bind(this)} style={styles.topMenuTwo}>
+            </TouchableOpacity> */}
           </View>
           <View style={{ flex: 1, backgroundColor: 'black' }}>
             <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
@@ -80,15 +82,13 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
     backgroundColor: 'black'
-    // borderWidth: 1
-    // shadowOpacity: 0.5,
-    // shadowRadius: 4,
-    // shadowColor: 'black'
   },
   topMenuOne: {
     flex: 1,
     // borderWidth: 1,
-    justifyContent: 'center',
+    flexDirection: 'row',
+    // justifyContent: 'center',
+    alignItems: 'center',
     paddingLeft: 20
   },
   topMenuTwo: {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
-import { NODE_ENV } from 'react-native-dotenv';
+import { NODE_ENV, URL } from 'react-native-dotenv';
 import axios from 'axios';
 import { Constants, SecureStore } from 'expo';
 import FacebookLoginButton from '../components/FacebookLoginButton';
@@ -42,10 +42,7 @@ class Login extends React.Component {
       };
     }
 
-    const url =
-      NODE_ENV === 'localhost'
-        ? `http://10.0.0.166:3000/api/signup`
-        : 'https://veeh-coupon.herokuapp.com/api/signup';
+    const url = URL + `/signup`;
 
     axios({
       method: 'post',
@@ -54,10 +51,10 @@ class Login extends React.Component {
     })
       .then(res => {
         SecureStore.setItemAsync('token', res.data.token);
-        SecureStore.setItemAsync('email', res.data.userInfo.email);
+        SecureStore.setItemAsync('user', JSON.stringify(res.data.userInfo));
 
         setTimeout(() => {
-          this.props.updateAuth(true);
+          this.props.updateAuth({ auth: true, user: res.data.userInfo });
           this._handleLoading(false);
         }, 1500);
       })

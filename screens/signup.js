@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
-import { NODE_ENV } from 'react-native-dotenv';
+import { NODE_ENV, URL } from 'react-native-dotenv';
 import axios from 'axios';
 import { Constants, SecureStore } from 'expo';
 import FacebookLoginButton from '../components/FacebookLoginButton';
@@ -15,6 +15,12 @@ class Signup extends React.Component {
 
   _redirectToLoginPage() {
     this.props.navigation.navigate('Login');
+  }
+  _redirectToTermsPage() {
+    this.props.navigation.navigate('TermsOfService');
+  }
+  _redirectToPolicyPage() {
+    this.props.navigation.navigate('PrivacyPolicy');
   }
 
   _handleLoading(isLoading) {
@@ -41,10 +47,7 @@ class Signup extends React.Component {
         profileImage: data.picture.data.url
       };
     }
-    const url =
-      NODE_ENV === 'localhost'
-        ? `http://10.0.0.166:3000/api/signup`
-        : 'https://veeh-coupon.herokuapp.com/api/signup';
+    const url = URL + `/signup`;
 
     axios({
       method: 'post',
@@ -53,9 +56,9 @@ class Signup extends React.Component {
     })
       .then(res => {
         SecureStore.setItemAsync('token', res.data.token);
-        SecureStore.setItemAsync('email', res.data.userInfo.email);
+        SecureStore.setItemAsync('user', JSON.stringify(res.data.userInfo));
         setTimeout(() => {
-          this.props.updateAuth(true);
+          this.props.updateAuth({ auth: true, user: res.data.userInfo });
           this._handleLoading(false);
         }, 1500);
       })
@@ -96,16 +99,26 @@ class Signup extends React.Component {
             handleWebAuth={this._handleWebAuth.bind(this)}
             handleLoading={this._handleLoading.bind(this)}
           />
-          <TouchableOpacity
-            onPress={e => this._redirectToLoginPage()}
-            style={[styles.buttonWrapper]}
-          >
-            <View style={styles.buttonTextWrapper}>
-              <Text style={[styles.buttonText]}>
-                Already have a Veeh account? <Text style={styles.innerFont}>Log in</Text>
+          <View style={[styles.buttonWrapper]}>
+            <Text style={[styles.buttonText, { color: '#777', marginBottom: 15 }]}>
+              By using Veeh Coupon, you agree to our
+              <Text style={styles.innerFont} onPress={this._redirectToTermsPage.bind(this)}>
+                {' '}
+                Terms
+              </Text>{' '}
+              &
+              <Text style={styles.innerFont} onPress={this._redirectToPolicyPage.bind(this)}>
+                {' '}
+                Privacy Policy
               </Text>
-            </View>
-          </TouchableOpacity>
+            </Text>
+            <Text style={[styles.buttonText, { color: '#444' }]}>
+              Already have a Veeh account?{' '}
+              <Text onPress={e => this._redirectToLoginPage()} style={styles.innerFont}>
+                Log in
+              </Text>
+            </Text>
+          </View>
         </View>
       </View>
     );
@@ -151,18 +164,16 @@ const styles = StyleSheet.create({
   },
   buttonWrapper: {
     display: 'flex',
-    justifyContent: 'center',
-    height: 50,
-    marginBottom: 10,
-    paddingLeft: 30,
-    paddingRight: 30,
-    borderRadius: 5
+    justifyContent: 'center'
+    // height: 50,
+    // marginBottom: 10,
+    // borderRadius: 5
   },
   buttonTextWrapper: {
-    flexDirection: 'row',
+    // flexDirection: 'row',
     justifyContent: 'center'
   },
-  buttonText: { width: '100%', fontSize: 14, textAlign: 'center' },
+  buttonText: { fontSize: 14, textAlign: 'center' },
   facebookButtonFont: {
     color: 'white',
     paddingTop: 2

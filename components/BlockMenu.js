@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Linking, TouchableOpacity } from 'react-native'
 import { AntDesign } from '@expo/vector-icons/';
 
 export default class BlockMenu extends React.Component {
-  _openHomepage = () => {
+  _pressHomepage = () => {
     // Linking.openURL(`http://${this.props.title}`);
     Linking.openURL(`http://www.veeh.co`);
   };
@@ -32,6 +32,9 @@ export default class BlockMenu extends React.Component {
         </TouchableOpacity>
       );
     } else if (this.props.icon === 'home') {
+      if (this.props.title === '') {
+        return null;
+      }
       return (
         <TouchableOpacity style={styles.blockWrapper}>
           <View style={styles.blockLeft}>
@@ -39,7 +42,7 @@ export default class BlockMenu extends React.Component {
               <AntDesign name={this.props.icon} size={25} color="#444" />
             </View>
             <View style={styles.titleContainer}>
-              <Text onPress={this._openHomepage} style={styles.blockFont}>
+              <Text onPress={this._pressHomepage} style={styles.blockFont}>
                 {`Visit Website`}
               </Text>
             </View>
@@ -48,34 +51,6 @@ export default class BlockMenu extends React.Component {
       );
     }
   }
-  // render() {
-  //   let homepage = null;
-  //   if (this.props.title.length > 0) {
-  //     homepage = (
-  //       <View style={styles.blockRight}>
-  //         <View style={styles.iconContainer}>
-  //           <AntDesign name={this.props.icon[1]} size={25} color="#444" />
-  //         </View>
-  //         <View style={styles.titleContainer}>
-  //           <Text style={styles.blockFont}>{this.props.title[1]}</Text>
-  //         </View>
-  //       </View>
-  //     );
-  //   }
-  //   return (
-  //     <View style={styles.blockWrapper}>
-  //       <View style={styles.blockLeft}>
-  //         <View style={styles.iconContainer}>
-  //           <AntDesign name={this.props.icon[0]} size={25} color="#444" />
-  //         </View>
-  //         <View style={styles.titleContainer}>
-  //           <Text style={styles.blockFont}>{this.props.title[0]}</Text>
-  //         </View>
-  //       </View>
-  //       {homepage}
-  //     </View>
-  //   );
-  // }
 }
 
 const styles = StyleSheet.create({

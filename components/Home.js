@@ -1,18 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Platform, ActivityIndicator, StyleSheet, View } from 'react-native';
-import { NODE_ENV } from 'react-native-dotenv';
+import { NODE_ENV, URL } from 'react-native-dotenv';
 import { Constants, SecureStore, Location, Permissions } from 'expo';
-import { Ionicons, AntDesign } from '@expo/vector-icons/';
+import { Ionicons, AntDesign, MaterialIcons } from '@expo/vector-icons/';
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
 import axios from 'axios';
 import BusinessListScreen from '../screens/BusinessListScreen';
 import BusinessProfileScreen from '../screens/BusinessProfileScreen';
+import SponsoredBusinessProfileScreen from '../screens/SponsoredBusinessProfileScreen';
 import CouponCarousel from '../screens/CouponCarousel';
 import Signup from '../screens/Signup';
-import Logout from '../screens/Logout';
+import UserProfile from '../screens/UserProfileScreen';
 import Login from '../tabs/login';
-
+import PrivacyPolicyScreen from '../screens/PrivacyPolicyScreen';
+import TermsOfServiceScreen from '../screens/TermsOfServiceScreen';
 // const headerOption = {
 //   headers: {
 //     Authorization: 'Bearer ' + AUTH_TOKEN
@@ -45,19 +47,16 @@ class Home extends React.Component {
 
   _checkAuthentication = async () => {
     const token = await SecureStore.getItemAsync('token');
-    const email = await SecureStore.getItemAsync('email');
+    const user = await SecureStore.getItemAsync('user');
+    const url = URL + '/auth';
+    // user = JSON.parse(user);
 
-    const url =
-      NODE_ENV === 'localhost'
-        ? `http://10.0.0.166:3000/api/auth`
-        : 'https://veeh-coupon.herokuapp.com/api/auth';
-
-    if (token && email) {
+    if (token && user) {
       axios({
         method: 'post',
         url,
         data: {
-          email,
+          user,
           token
         }
       }).then(res => {
@@ -67,7 +66,7 @@ class Home extends React.Component {
               isLoading: false
             },
             () => {
-              this.props.updateAuth(true);
+              this.props.updateAuth({ auth: true, user: res.data.userInfo });
             }
           );
         }, 1000);
@@ -79,7 +78,7 @@ class Home extends React.Component {
             isLoading: false
           },
           () => {
-            this.props.updateAuth(false);
+            this.props.updateAuth({ auth: false, user: null });
           }
         );
       }, 1000);
@@ -132,6 +131,7 @@ class Home extends React.Component {
         </View>
       );
     }
+    // console.log(this.props.auth);
     if (this.props.auth) {
       tabNav = <AppBottomTabNavigatorLoggedin screenProps={this.state} />;
     } else {
@@ -178,6 +178,13 @@ const AppStackNavigator = createStackNavigator({
         ? { title: 'Profile', header: null }
         : { title: 'Profile', header: null }
   },
+  SponsoredBusinessProfile: {
+    screen: SponsoredBusinessProfileScreen,
+    navigationOptions:
+      Platform.OS === 'ios'
+        ? { title: 'Profile', header: null }
+        : { title: 'Profile', header: null }
+  },
   CouponCarousel: {
     screen: CouponCarousel,
     navigationOptions: {
@@ -191,27 +198,56 @@ const LoginStackNavigator = createStackNavigator({
   Login: {
     screen: Login,
     navigationOptions: { title: 'Profile', header: null }
-    // Platform.OS === 'ios'
-    //   ? { title: 'Profile', header: null }
-    //   : { title: 'Profile', header: null }
   },
   Signup: {
     screen: Signup,
     navigationOptions: { title: 'Profile', header: null }
-    // Platform.OS === 'ios'
-    //   ? { title: 'Profile', header: null }
-    //   : { title: 'Profile', header: null }
-  }
-});
-
-const ProfileStackNavigator = createStackNavigator({
-  Logout: {
-    screen: Logout,
+  },
+  PrivacyPolicy: {
+    screen: PrivacyPolicyScreen,
+    navigationOptions:
+      Platform.OS === 'ios'
+        ? { title: 'Profile', header: null }
+        : { title: 'Profile', header: null }
+  },
+  TermsOfService: {
+    screen: TermsOfServiceScreen,
     navigationOptions:
       Platform.OS === 'ios'
         ? { title: 'Profile', header: null }
         : { title: 'Profile', header: null }
   }
+});
+
+const ProfileStackNavigator = createStackNavigator({
+  UserProfile: {
+    screen: UserProfile,
+    navigationOptions:
+      Platform.OS === 'ios'
+        ? { title: 'Profile', header: null }
+        : { title: 'Profile', header: null }
+  },
+  PrivacyPolicy: {
+    screen: PrivacyPolicyScreen,
+    navigationOptions:
+      Platform.OS === 'ios'
+        ? { title: 'Profile', header: null }
+        : { title: 'Profile', header: null }
+  },
+  TermsOfService: {
+    screen: TermsOfServiceScreen,
+    navigationOptions:
+      Platform.OS === 'ios'
+        ? { title: 'Profile', header: null }
+        : { title: 'Profile', header: null }
+  }
+  // Logout: {
+  //   screen: Logout,
+  //   navigationOptions:
+  //     Platform.OS === 'ios'
+  //       ? { title: 'Profile', header: null }
+  //       : { title: 'Profile', header: null }
+  // }
 });
 
 AppStackNavigator.navigationOptions = ({ navigation }) => {
@@ -231,14 +267,14 @@ const AppBottomTabNavigator = createBottomTabNavigator(
       screen: AppStackNavigator,
       navigationOptions: {
         tabBarLabel: 'EXPLORE',
-        tabBarIcon: () => <Ionicons name="ios-search" size={20} />
+        tabBarIcon: () => <Ionicons name="ios-search" color="#444" size={25} />
       }
     },
     Login: {
       screen: LoginStackNavigator,
       navigationOptions: {
         tabBarLabel: 'LOG IN',
-        tabBarIcon: () => <AntDesign name="user" size={20} />
+        tabBarIcon: () => <AntDesign name="user" color="#444" size={25} />
       }
     }
   },
@@ -246,7 +282,7 @@ const AppBottomTabNavigator = createBottomTabNavigator(
     tabBarOptions: {
       activeTintColor: '#f96a00',
       labelStyle: {
-        fontSize: 12
+        fontSize: 10
       },
       style: {
         backgroundColor: 'white',
@@ -262,14 +298,14 @@ const AppBottomTabNavigatorLoggedin = createBottomTabNavigator(
       screen: AppStackNavigator,
       navigationOptions: {
         tabBarLabel: 'EXPLORE',
-        tabBarIcon: () => <Ionicons name="ios-search" size={20} />
+        tabBarIcon: () => <Ionicons name="ios-search" color="#444" size={25} />
       }
     },
     Login: {
       screen: ProfileStackNavigator,
       navigationOptions: {
         tabBarLabel: 'MY PAGE',
-        tabBarIcon: () => <AntDesign name="user" size={20} />
+        tabBarIcon: () => <AntDesign name="user" color="#444" size={25} />
       }
     }
   },
@@ -277,10 +313,11 @@ const AppBottomTabNavigatorLoggedin = createBottomTabNavigator(
     tabBarOptions: {
       activeTintColor: '#f96a00',
       labelStyle: {
-        fontSize: 12
+        fontSize: 10
       },
       style: {
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        paddingTop: 10
       }
     }
   }

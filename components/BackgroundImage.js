@@ -10,7 +10,7 @@ export default class BackgroundImage extends Component {
     const uri = this.props.uri;
     return (
       <ImageBackground style={styles.background} source={{ uri }}>
-        <LinearGradient style={{ height: 400 }} colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.1)']} />
+        <LinearGradient style={{ height: 250 }} colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.1)']} />
       </ImageBackground>
     );
   }
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     // resizeMode: 'center',
     // position: 'absolute',
     // width: '100%',
-    height: 300
+    height: 250
     // justifyContent: 'center'
   }
 });

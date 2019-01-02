@@ -16,14 +16,14 @@ export default class Coupons extends React.Component {
             <Image
               style={{
                 flex: 1,
-                width: null,
-                height: null,
-                resizeMode: 'cover'
+                width: 300,
+                height: 190,
+                resizeMode: 'contain'
               }}
               source={{ uri: coupon.photoUri }}
             />
           </View>
-          <View style={{ flex: 1, justifyContent: 'center', paddingLeft: 5 }}>
+          <View style={{ flex: 1, justifyContent: 'center', padding: 10 }}>
             <Text style={styles.couponFont}>{coupon.dealName}</Text>
           </View>
         </TouchableOpacity>
@@ -35,8 +35,8 @@ export default class Coupons extends React.Component {
 
 const styles = StyleSheet.create({
   couponWrapper: {
-    width: 160,
-    height: 140,
+    // width: 320,
+    // height: 280,
     marginRight: 10,
     marginBottom: 20,
     borderWidth: 1,
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   },
   couponFont: {
     color: '#444',
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: 'bold'
   }
 });

@@ -71,16 +71,19 @@ class UserProfile extends React.Component {
           }`}</Text>
         </View>
         <View style={[styles.body]}>
-          <View>
+          <View
+            style={{
+              borderBottomColor: '#ccc',
+              borderBottomWidth: 1
+            }}
+          >
             <TouchableOpacity
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 height: 50,
-                flexDirection: 'row',
-                borderBottomColor: '#ccc',
-                borderBottomWidth: 1
+                flexDirection: 'row'
               }}
               onPress={e => this._redirecToLoginPage('PrivacyPolicy')}
             >
@@ -138,8 +141,8 @@ class UserProfile extends React.Component {
               alignItems: 'center',
               justifyContent: 'space-between',
               height: 50,
-              borderBottomColor: '#ccc'
-              // borderBottomWidth: 1
+              borderBottomColor: '#ccc',
+              borderBottomWidth: 1
             }}
           >
             <View>

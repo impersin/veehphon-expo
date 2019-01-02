@@ -6,9 +6,9 @@ export default class Tags extends React.Component {
   render() {
     return (
       <View style={styles.tagsWrapper}>
-        <View>
+        {/* <View>
           <Ionicons name="ios-pricetags" size={25} color="#f96a00" />
-        </View>
+        </View> */}
         <View style={styles.tagsContainer}>
           {this.props.tags.map((tag, index) => {
             return (
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#f96a00',
     padding: 5,
-    marginLeft: 5,
+    marginRight: 5,
     marginBottom: 5,
     borderRadius: 5
   },

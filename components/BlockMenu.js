@@ -33,7 +33,18 @@ export default class BlockMenu extends React.Component {
       );
     } else if (this.props.icon === 'home') {
       if (this.props.title === '') {
-        return null;
+        return (
+          <View opacity={0.5} style={styles.blockWrapperDisabled}>
+            <View style={styles.blockLeft}>
+              <View style={styles.iconContainer}>
+                <AntDesign name={this.props.icon} size={25} color="#444" />
+              </View>
+              <View style={styles.titleContainer}>
+                <Text style={styles.blockFont}>{`No website`}</Text>
+              </View>
+            </View>
+          </View>
+        );
       }
       return (
         <TouchableOpacity style={styles.blockWrapper}>
@@ -55,6 +66,11 @@ export default class BlockMenu extends React.Component {
 
 const styles = StyleSheet.create({
   blockWrapper: {
+    flex: 1,
+    flexWrap: 'wrap',
+    flexDirection: 'row'
+  },
+  blockWrapperDisabled: {
     flex: 1,
     flexWrap: 'wrap',
     flexDirection: 'row'

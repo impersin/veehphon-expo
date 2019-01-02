@@ -267,7 +267,7 @@ class BusinessProfileScreen extends React.Component {
         </View>
         <Tags tags={this.state.business.tags} />
         <Text style={[styles.detailsFont, styles.detialsSubtitle]}>Coupons</Text>
-        <ScrollView horizontal={true}>
+        <ScrollView style={{ marginBottom: 20 }} horizontal={false}>
           <Coupons
             coupons={business.coupons}
             goToPrevious={this._goToPrevious.bind(this)}

@@ -49,7 +49,6 @@ class Home extends React.Component {
     const token = await SecureStore.getItemAsync('token');
     const user = await SecureStore.getItemAsync('user');
     const url = URL + '/auth';
-    // user = JSON.parse(user);
 
     if (token && user) {
       axios({
@@ -88,7 +87,7 @@ class Home extends React.Component {
   _getLocationAsync = async () => {
     const GEOLOCATION_OPTIONS = {
       enableHighAccuracy: true,
-      timeInterval: 1,
+      timeInterval: 1000,
       distanceInterval: 10
     };
 
@@ -131,7 +130,7 @@ class Home extends React.Component {
         </View>
       );
     }
-    // console.log(this.props.auth);
+
     if (this.props.auth) {
       tabNav = <AppBottomTabNavigatorLoggedin screenProps={this.state} />;
     } else {

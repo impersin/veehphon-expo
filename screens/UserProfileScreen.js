@@ -41,6 +41,7 @@ class UserProfile extends React.Component {
   _logOut = async () => {
     this._handleLoading(true);
     const url = URL + '/logout';
+    // console.log(URL);
     await SecureStore.deleteItemAsync('token');
     await SecureStore.deleteItemAsync('email');
 
@@ -70,25 +71,27 @@ class UserProfile extends React.Component {
           }`}</Text>
         </View>
         <View style={[styles.body]}>
-          <TouchableOpacity
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              height: 50,
-              flexDirection: 'row',
-              borderBottomColor: '#ccc',
-              borderBottomWidth: 1
-            }}
-            onPress={e => this._redirecToLoginPage('PrivacyPolicy')}
-          >
-            <View>
-              <Text style={[styles.userProfileFont]}>Privacy Policy</Text>
-            </View>
-            <View>
-              <MaterialCommunityIcons name="security" color="#444" size={25} />
-            </View>
-          </TouchableOpacity>
+          <View>
+            <TouchableOpacity
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                height: 50,
+                flexDirection: 'row',
+                borderBottomColor: '#ccc',
+                borderBottomWidth: 1
+              }}
+              onPress={e => this._redirecToLoginPage('PrivacyPolicy')}
+            >
+              <View>
+                <Text style={[styles.userProfileFont]}>Privacy Policy</Text>
+              </View>
+              <View>
+                <MaterialCommunityIcons name="security" color="#444" size={25} />
+              </View>
+            </TouchableOpacity>
+          </View>
           <TouchableOpacity
             style={{
               display: 'flex',
@@ -102,7 +105,7 @@ class UserProfile extends React.Component {
             onPress={e => this._redirecToLoginPage('TermsOfService')}
           >
             <View>
-              <Text style={[styles.userProfileFont]}>Terms Terms Of Service</Text>
+              <Text style={[styles.userProfileFont]}>Terms Of Service</Text>
             </View>
             <View>
               <MaterialCommunityIcons name="file-document-outline" color="#444" size={25} />

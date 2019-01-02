@@ -87,7 +87,7 @@ class BusinessListScreen extends React.Component {
             <View style={styles.summaryFooter}>
               <View style={styles.footerLeft}>
                 <Text>
-                  Deal: <Text style={styles.innerText}>{`${item.coupons[0].dealName}`}</Text>
+                  <Text style={styles.innerText}>{`${item.coupons[0].dealName}`}</Text>
                 </Text>
               </View>
               <View style={styles.footerRight}>
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
   },
   imgStyle: {
     // flex: 3,
-    height: 250,
+    height: 200,
     width: null,
     resizeMode: 'cover'
   },

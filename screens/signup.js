@@ -48,7 +48,7 @@ class Signup extends React.Component {
       };
     }
     const url = URL + `/signup`;
-
+    // console.log(URL);
     axios({
       method: 'post',
       url,
@@ -87,8 +87,8 @@ class Signup extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={{ fontSize: 24, marginBottom: 5 }}>Your profile</Text>
-          <Text style={{ fontSize: 14 }}>Sign in placeholder</Text>
+          <Text style={{ fontSize: 24, marginBottom: 5 }}>Sign Up</Text>
+          {/* <Text style={{ fontSize: 14 }}>Sign in to use this coupon</Text> */}
         </View>
         <View style={styles.body}>
           <FacebookLoginButton

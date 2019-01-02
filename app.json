@@ -13,7 +13,7 @@
     "splash": {
       "image": "./assets/veeh_splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#f96a00"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

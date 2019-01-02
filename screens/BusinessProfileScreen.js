@@ -41,7 +41,7 @@ class BusinessProfileScreen extends React.Component {
       dist = this.props.navigation.state.params.data.dist.calculated;
     const url = URL + `/business?id=${id}`;
     const sponsoredUrl = URL + `/sponsored/businesses?`;
-    // console.log(this.state.coordinates);
+    // console.log(URL);
     axios.get(url).then(res => {
       const business = res.data;
       business.dist = dist;
@@ -311,17 +311,17 @@ class BusinessProfileScreen extends React.Component {
       topMenu = null,
       adImage = null,
       details;
-    if (this.state.yOffset < 250) {
+    if (this.state.yOffset < 200) {
       topMenu = (
         <View style={styles.topMenu}>
           <TouchableOpacity onPress={this._goToPrevious.bind(this)} style={styles.topMenuOne}>
             <Ionicons name="ios-arrow-back" color={'white'} size={30} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.topMenuTwo}>
-            <Ionicons name="ios-share-alt" color={'white'} size={30} />
+            {/* <Ionicons name="ios-share-alt" color={'white'} size={30} /> */}
           </TouchableOpacity>
           <TouchableOpacity style={styles.topMenuThree}>
-            <Ionicons name="ios-heart-empty" color={'white'} size={30} />
+            {/* <Ionicons name="ios-heart-empty" color={'white'} size={30} /> */}
           </TouchableOpacity>
         </View>
       );
@@ -332,10 +332,10 @@ class BusinessProfileScreen extends React.Component {
             <Ionicons name="ios-arrow-back" color={'#444'} size={30} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.topMenuTwo}>
-            <Ionicons name="ios-share-alt" color={'#444'} size={30} />
+            {/* <Ionicons name="ios-share-alt" color={'#444'} size={30} /> */}
           </TouchableOpacity>
           <TouchableOpacity style={styles.topMenuThree}>
-            <Ionicons name="ios-heart-empty" color={'#444'} size={30} />
+            {/* <Ionicons name="ios-heart-empty" color={'#444'} size={30} /> */}
           </TouchableOpacity>
         </View>
       );

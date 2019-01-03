@@ -8,18 +8,25 @@ import {
   View,
   Image,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Linking,
-  Modal
+  Modal,
+  Dimensions
 } from 'react-native';
 import axios from 'axios';
 import { Constants, SecureStore } from 'expo';
 import { MaterialCommunityIcons } from '@expo/vector-icons/';
 import Logout from './Logout';
 
+const { height, width } = Dimensions.get('window');
+const logoutContainerWidth = (width * 2) / 3;
+
 class UserProfile extends React.Component {
   state = {
     data: [],
-    isLoading: false
+    isLoading: false,
+    isModalOpen: false,
+    modalType: null
   };
 
   componentWillMount() {
@@ -41,7 +48,7 @@ class UserProfile extends React.Component {
   _logOut = async () => {
     this._handleLoading(true);
     const url = URL + '/logout';
-    // console.log(URL);
+
     await SecureStore.deleteItemAsync('token');
     await SecureStore.deleteItemAsync('email');
 
@@ -57,8 +64,104 @@ class UserProfile extends React.Component {
       });
   };
 
+  _openModal() {
+    this.setState({
+      modalType: 'logout',
+      isModalOpen: true
+    });
+  }
+
+  _closeModal() {
+    console.log('closing modal..........');
+    this.setState({
+      modalType: null,
+      isModalOpen: false
+    });
+  }
+  _clickInnerBox() {}
+  _handleModal() {
+    if (this.state.modalType === 'logout') {
+      let body;
+      if (this.state.isLoading) {
+        body = (
+          <View style={styles.ActivityIndicatorContainer}>
+            <ActivityIndicator size="large" color="#f96a00" />
+          </View>
+        );
+      } else {
+        body = (
+          <View
+            style={{
+              flex: 1,
+              width: '100%',
+              height: '100%',
+              backgroundColor: 'white'
+            }}
+          >
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <Text style={styles.userProfileFont}>Are you sure want to logout?</Text>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-evenly'
+              }}
+            >
+              <TouchableOpacity onPress={this._closeModal.bind(this)}>
+                <Text style={[styles.userProfileFont, { fontSize: 12 }]}>CANCEL</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={this._logOut}>
+                <Text style={[styles.userProfileFont, { color: '#f96a00', fontSize: 12 }]}>
+                  LOG OUT
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        );
+      }
+
+      return (
+        <Modal
+          animationType="none"
+          transparent={true}
+          visible={this.state.isModalOpen}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}
+        >
+          <TouchableWithoutFeedback onPress={this._closeModal.bind(this)}>
+            <View
+              style={[styles.ActivityIndicatorContainer, { backgroundColor: 'rgba(0,0,0,0.6)' }]}
+            >
+              <View
+                style={{
+                  width: logoutContainerWidth,
+                  height: logoutContainerWidth / 2,
+                  backgroundColor: 'white'
+                }}
+              >
+                <TouchableWithoutFeedback onPress={this._clickInnerBox.bind(this)}>
+                  {body}
+                </TouchableWithoutFeedback>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
+      );
+    }
+  }
+
   render() {
     const user = this.props.user;
+    let modal = this._handleModal();
     return (
       <View style={styles.container}>
         <View style={[styles.header]}>
@@ -134,7 +237,7 @@ class UserProfile extends React.Component {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={e => this._logOut()}
+            onPress={e => this._openModal()}
             style={{
               display: 'flex',
               flexDirection: 'row',
@@ -153,18 +256,7 @@ class UserProfile extends React.Component {
             </View>
           </TouchableOpacity>
         </View>
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={this.state.isLoading}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-          }}
-        >
-          <View style={styles.ActivityIndicatorContainer}>
-            <ActivityIndicator size="large" color="#f96a00" />
-          </View>
-        </Modal>
+        {modal}
       </View>
     );
   }

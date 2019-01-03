@@ -44,6 +44,7 @@ class BusinessListScreen extends React.Component {
     const lat = this.props.screenProps.location.coords.latitude;
     const lng = this.props.screenProps.location.coords.longitude;
     const url = URL + `/businesses?lat=${lat}&lng=${lng}`;
+
     axios
       .get(url)
       .then(res => {

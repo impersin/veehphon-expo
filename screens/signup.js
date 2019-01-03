@@ -48,7 +48,7 @@ class Signup extends React.Component {
       };
     }
     const url = URL + `/signup`;
-    // console.log(URL);
+
     axios({
       method: 'post',
       url,

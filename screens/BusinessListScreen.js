@@ -41,28 +41,59 @@ class BusinessListScreen extends React.Component {
   }
 
   _initializeData(auth) {
-    const lat = this.props.screenProps.location.coords.latitude;
-    const lng = this.props.screenProps.location.coords.longitude;
-    const url = URL + `/businesses?lat=${lat}&lng=${lng}`;
-
-    axios
-      .get(url)
-      .then(res => {
-        const businesses = res.data.map(business => {
-          business.dist.calculated = (business.dist.calculated * 0.62).toFixed(1);
-          return business;
-        });
-        setTimeout(() => {
-          this.setState({
-            isLoading: false,
-            initialData: businesses,
-            refreshing: false
+    if (Object.keys(this.props.screenProps.location).length !== 0) {
+      const lat = this.props.screenProps.location.coords.latitude;
+      const lng = this.props.screenProps.location.coords.longitude;
+      const url = URL + `/businesses?lat=${lat}&lng=${lng}`;
+      console.log(url);
+      axios
+        .get(url)
+        .then(res => {
+          // console.log('================================================================ 2');
+          const businesses = res.data.map(business => {
+            business.dist.calculated = (business.dist.calculated * 0.62).toFixed(1);
+            return business;
           });
-        }, 500);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+          setTimeout(() => {
+            this.setState({
+              isLoading: false,
+              initialData: businesses,
+              refreshing: false
+            });
+          }, 500);
+          // console.log('================================================================ 3');
+        })
+        .catch(err => {
+          // console.log('================================================================ 4');
+          console.log(err);
+        });
+    } else {
+      const url = URL + `/businesses`;
+      console.log(url);
+      axios
+        .get(url)
+        .then(res => {
+          // console.log('================================================================ 2');
+          const businesses = res.data;
+          console.log(businesses);
+          // .map(business => {
+          //   business.dist.calculated = (business.dist.calculated * 0.62).toFixed(1);
+          //   return business;
+          // });
+          setTimeout(() => {
+            this.setState({
+              isLoading: false,
+              initialData: businesses,
+              refreshing: false
+            });
+          }, 500);
+          // console.log('================================================================ 3');
+        })
+        .catch(err => {
+          // console.log('================================================================ 4');
+          console.log(err);
+        });
+    }
   }
 
   _keyExtractor = (item, index) => `list-item-${index}`;
@@ -72,9 +103,13 @@ class BusinessListScreen extends React.Component {
   }
 
   _renderItem = ({ item }) => {
-    let adImage = null;
+    let adImage = null,
+      distance = null;
     if (item.type === 'Advertiser') {
       adImage = <Image style={styles.imgStyle} source={{ uri: item.photos[0] }} />;
+    }
+    if (item.dist) {
+      distance = <Text style={styles.innerText}>{item.dist.calculated}mi</Text>;
     }
     return (
       <TouchableWithoutFeedback id={item.userid} onPress={e => this._redirectToProfile(item)}>
@@ -91,9 +126,7 @@ class BusinessListScreen extends React.Component {
                   <Text style={styles.innerText}>{`${item.coupons[0].dealName}`}</Text>
                 </Text>
               </View>
-              <View style={styles.footerRight}>
-                <Text style={styles.innerText}>{item.dist.calculated}mi</Text>
-              </View>
+              <View style={styles.footerRight}>{distance}</View>
             </View>
           </View>
         </View>

@@ -78,7 +78,9 @@ class UserProfile extends React.Component {
       isModalOpen: false
     });
   }
+
   _clickInnerBox() {}
+
   _handleModal() {
     if (this.state.modalType === 'logout') {
       let body;

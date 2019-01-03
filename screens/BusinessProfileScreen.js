@@ -21,6 +21,8 @@ import GoogleMap from './../components/GoogleMap';
 import Tags from './../components/Tags';
 import Coupons from './../components/Coupons';
 import BlockMenu from './../components/BlockMenu';
+import FacebookLoginButton from '../components/FacebookLoginButton';
+import GoogleLoginButton from '../components/GoogleLoginButton';
 import { NODE_ENV, URL } from 'react-native-dotenv';
 
 class BusinessProfileScreen extends React.Component {
@@ -32,19 +34,20 @@ class BusinessProfileScreen extends React.Component {
     yOffset: 0,
     type: this.props.navigation.state.params.data.type,
     coordinates: this.props.navigation.state.params.data.coordinates,
-    dist: this.props.navigation.state.params.data.dist.calculated,
+    // dist: this.props.navigation.state.params.data.dist.calculated,
     isModalOpen: false
   };
 
   componentDidMount() {
-    const id = this.props.navigation.state.params.data.id,
-      dist = this.props.navigation.state.params.data.dist.calculated;
+    const id = this.props.navigation.state.params.data.id;
     const url = URL + `/business?id=${id}`;
     const sponsoredUrl = URL + `/sponsored/businesses?`;
 
     axios.get(url).then(res => {
       const business = res.data;
-      business.dist = dist;
+      if (this.props.navigation.state.params.data.dist) {
+        business.dist = this.props.navigation.state.params.data.dist.calculated;
+      }
       if (business.type === 'Non-advertiser') {
         axios
           .get(
@@ -58,7 +61,7 @@ class BusinessProfileScreen extends React.Component {
               business.dist.calculated = (business.dist.calculated * 0.62).toFixed(1);
               return business;
             });
-            // console.log('=====================> 1', sponsoredBusiness);
+
             setTimeout(() => {
               this.setState({
                 business,
@@ -83,12 +86,17 @@ class BusinessProfileScreen extends React.Component {
   }
 
   _redirectToProfile(data) {
-    // console.log('=====================> 1', data);
     this.props.navigation.navigate('SponsoredBusinessProfile', { data });
   }
 
   _redirectToCarousel(coupon) {
-    this.props.navigation.navigate('CouponCarousel', coupon);
+    console.log(this.props.auth);
+    if (this.props.auth) {
+      this.props.navigation.navigate('CouponCarousel', coupon);
+    } else {
+      // this.props.navigation.navigate('Login');
+      this._openModal('login');
+    }
   }
 
   _handleScroll(e) {
@@ -99,9 +107,11 @@ class BusinessProfileScreen extends React.Component {
     });
   }
 
-  _handleMapMoal() {
+  _openModal(modalType) {
+    console.log('type', modalType);
     this.setState({
-      isModalOpen: true
+      isModalOpen: true,
+      modalType
     });
   }
 
@@ -121,6 +131,20 @@ class BusinessProfileScreen extends React.Component {
     } else {
       Linking.openURL(`http://maps.google.com/?daddr=${daddr}`);
     }
+  }
+
+  _switchToSignup() {
+    this._openModal('signup');
+  }
+  _switchToLogin() {
+    this._openModal('login');
+  }
+
+  _redirectToTermsPage() {
+    this.props.navigation.navigate('TermsOfService');
+  }
+  _redirectToPolicyPage() {
+    this.props.navigation.navigate('PrivacyPolicy');
   }
 
   _renderSponsores() {
@@ -252,9 +276,17 @@ class BusinessProfileScreen extends React.Component {
     const businessHours = `Mon-Thu ${business.hours[0]}, Fri-Sat ${business.hours[1]}, Sun ${
       business.hours[2]
     }`;
-    let sponsores = null;
+    let sponsores = null,
+      distance = null;
     if (type === 'nonAdvertiser') {
       sponsores = this._renderSponsores();
+    }
+    if (this.props.navigation.state.params.data.dist) {
+      distance = (
+        <Text style={[styles.detailsFont, { fontSize: 12 }]}>{`${
+          this.props.navigation.state.params.data.dist.calculated
+        }mi`}</Text>
+      );
     }
     return (
       <View style={type === 'nonAdvertiser' ? [styles.details, styles.paddingTop] : styles.details}>
@@ -275,7 +307,7 @@ class BusinessProfileScreen extends React.Component {
           />
         </ScrollView>
         <GoogleMap
-          handleMapMoal={this._handleMapMoal.bind(this)}
+          handleMapMoal={e => this._openModal.bind(this)('map')}
           location={this.state.coordinates}
           title={business.businessName}
         />
@@ -295,7 +327,7 @@ class BusinessProfileScreen extends React.Component {
             <Text style={[styles.detailsFont, { fontSize: 12, fontWeight: 'bold' }]}>
               Directions
             </Text>
-            <Text style={[styles.detailsFont, { fontSize: 12 }]}>{`${this.state.dist}mi`}</Text>
+            {distance}
           </View>
         </View>
         <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 20 }}>
@@ -342,78 +374,300 @@ class BusinessProfileScreen extends React.Component {
     }
 
     if (this.state.isModalOpen) {
-      const business = this.state.business;
-      const addressOne = `${business.addressStreet}`;
-      const addressTwo = `${business.addressCity}, ${business.addressState} ${
-        business.addressZipcode
-      }`;
-      return (
-        <View style={styles.modalContainer}>
-          <Modal
-            animationType="slide"
-            transparent={false}
-            visible={this.state.modalVisible}
-            onRequestClose={() => {
-              Alert.alert('Modal has been closed.');
-            }}
-          >
-            <View style={{ paddingTop: Constants.statusBarHeight }} />
-            <View
-              style={Platform.OS === 'ios' ? styles.topMenuModalIos : styles.topMenuModalAndroid}
+      if (this.state.modalType === 'map') {
+        const business = this.state.business;
+        const addressOne = `${business.addressStreet}`;
+        const addressTwo = `${business.addressCity}, ${business.addressState} ${
+          business.addressZipcode
+        }`;
+        let distance = null;
+
+        if (this.props.navigation.state.params.data.dist) {
+          distance = (
+            <Text style={[styles.detailsFont, { fontSize: 12 }]}>{`${
+              this.props.navigation.state.params.data.dist.calculated
+            }mi`}</Text>
+          );
+        }
+        return (
+          <View style={styles.modalContainer}>
+            <Modal
+              animationType="slide"
+              transparent={false}
+              visible={this.state.modalVisible}
+              onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+              }}
             >
-              <TouchableOpacity
-                onPress={this._closeModal.bind(this)}
-                style={[
-                  styles.topMenuOne,
-                  {
-                    flex: 1,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'flex-start'
-                  }
-                ]}
+              <View style={{ paddingTop: Constants.statusBarHeight }} />
+              <View
+                style={Platform.OS === 'ios' ? styles.topMenuModalIos : styles.topMenuModalAndroid}
               >
-                <Ionicons name="ios-arrow-back" color={'#444'} size={30} />
-                <Text style={{ color: '#444', fontSize: 18, fontWeight: 'bold', paddingLeft: 20 }}>
-                  Location
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <GoogleMap
-              handleMapMoal={this._handleMapMoal.bind(this)}
-              location={this.state.coordinates}
-              title={business.businessName}
-              type="modal"
-            />
-            <View style={{ flex: 1, paddingTop: 10, paddingLeft: 10, paddingRight: 10 }}>
-              <View style={[styles.detailsContent, styles.addressContainer]}>
-                <View style={styles.addressLeft}>
-                  <Text style={[styles.detailsFont, { fontWeight: 'bold', paddingBottom: 5 }]}>{`${
-                    business.businessName
-                  }`}</Text>
-                  <Text style={styles.detailsFont}>{`${addressOne}`}</Text>
-                  <Text style={styles.detailsFont}>{`${addressTwo}`}</Text>
-                </View>
-                <View style={styles.addressRight}>
-                  {/* <Text style={styles.detailsFont}>Get direction button.</Text> */}
-                  <TouchableOpacity
-                    onPress={this._handleDirection.bind(this)}
-                    style={styles.directionIconContainer}
+                <TouchableOpacity
+                  onPress={this._closeModal.bind(this)}
+                  style={[
+                    styles.topMenuOne,
+                    {
+                      flex: 1,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'flex-start'
+                    }
+                  ]}
+                >
+                  <Ionicons name="ios-arrow-back" color={'#444'} size={30} />
+                  <Text
+                    style={{ color: '#444', fontSize: 18, fontWeight: 'bold', paddingLeft: 20 }}
                   >
-                    <MaterialIcons name="directions" size={35} color="#f96a00" />
-                  </TouchableOpacity>
-                  <Text style={[styles.detailsFont, { fontSize: 12, fontWeight: 'bold' }]}>
-                    Directions
+                    Location
                   </Text>
-                  <Text style={[styles.detailsFont, { fontSize: 12 }]}>{`${
-                    this.state.dist
-                  }mi`}</Text>
+                </TouchableOpacity>
+              </View>
+              <GoogleMap
+                handleMapMoal={this._openModal.bind(this)}
+                location={this.state.coordinates}
+                title={business.businessName}
+                type="modal"
+              />
+              <View style={{ flex: 1, paddingTop: 10, paddingLeft: 10, paddingRight: 10 }}>
+                <View style={[styles.detailsContent, styles.addressContainer]}>
+                  <View style={styles.addressLeft}>
+                    <Text
+                      style={[styles.detailsFont, { fontWeight: 'bold', paddingBottom: 5 }]}
+                    >{`${business.businessName}`}</Text>
+                    <Text style={styles.detailsFont}>{`${addressOne}`}</Text>
+                    <Text style={styles.detailsFont}>{`${addressTwo}`}</Text>
+                  </View>
+                  <View style={styles.addressRight}>
+                    {/* <Text style={styles.detailsFont}>Get direction button.</Text> */}
+                    <TouchableOpacity
+                      onPress={this._handleDirection.bind(this)}
+                      style={styles.directionIconContainer}
+                    >
+                      <MaterialIcons name="directions" size={35} color="#f96a00" />
+                    </TouchableOpacity>
+                    <Text style={[styles.detailsFont, { fontSize: 12, fontWeight: 'bold' }]}>
+                      Directions
+                    </Text>
+                    {distance}
+                  </View>
                 </View>
               </View>
-            </View>
-          </Modal>
-        </View>
-      );
+            </Modal>
+          </View>
+        );
+      } else if (this.state.modalType === 'login') {
+        return (
+          <View style={styles.modalContainer}>
+            <Modal
+              animationType="slide"
+              transparent={false}
+              visible={this.state.modalVisible}
+              onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+              }}
+            >
+              <View style={{ paddingTop: Constants.statusBarHeight }} />
+              <View
+                style={Platform.OS === 'ios' ? styles.topMenuModalIos : styles.topMenuModalAndroid}
+              >
+                <TouchableOpacity
+                  onPress={this._closeModal.bind(this)}
+                  style={[
+                    styles.topMenuOne,
+                    {
+                      flex: 1,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'flex-start'
+                    }
+                  ]}
+                >
+                  <Ionicons name="ios-close" color={'#444'} size={40} />
+                </TouchableOpacity>
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  justifyContent: 'center'
+                }}
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: 'flex-start',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <Text style={{ fontSize: 24, marginBottom: 5 }}>Log In</Text>
+                  <Text style={{ fontSize: 14 }}>Log in to use this coupon</Text>
+                </View>
+                <View
+                  style={{
+                    flex: 4
+                  }}
+                >
+                  <FacebookLoginButton
+                  // handleWebAuth={this._handleWebAuth.bind(this)}
+                  // handleLoading={this._handleLoading.bind(this)}
+                  />
+                  <GoogleLoginButton
+                  // handleWebAuth={this._handleWebAuth.bind(this)}
+                  // handleLoading={this._handleLoading.bind(this)}
+                  />
+                  <View
+                    style={[
+                      {
+                        display: 'flex',
+                        justifyContent: 'center',
+                        paddingLeft: 30,
+                        paddingRight: 30
+                      }
+                    ]}
+                  >
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center'
+                      }}
+                    >
+                      <Text style={[{ width: '100%', fontSize: 14, textAlign: 'center' }]}>
+                        Don't have an account?{' '}
+                        <Text
+                          onPress={this._switchToSignup.bind(this)}
+                          style={{
+                            color: '#337ab7'
+                          }}
+                        >
+                          Sign up
+                        </Text>
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </Modal>
+          </View>
+        );
+      } else if (this.state.modalType === 'signup') {
+        return (
+          <View style={styles.modalContainer}>
+            <Modal
+              animationType="slide"
+              transparent={false}
+              visible={this.state.modalVisible}
+              onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+              }}
+            >
+              <View style={{ paddingTop: Constants.statusBarHeight }} />
+              <View
+                style={Platform.OS === 'ios' ? styles.topMenuModalIos : styles.topMenuModalAndroid}
+              >
+                <TouchableOpacity
+                  onPress={this._closeModal.bind(this)}
+                  style={[
+                    styles.topMenuOne,
+                    {
+                      flex: 1,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'flex-start'
+                    }
+                  ]}
+                >
+                  <Ionicons name="ios-close" color={'#444'} size={40} />
+                </TouchableOpacity>
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  justifyContent: 'center'
+                }}
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: 'flex-start',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <Text style={{ fontSize: 24, marginBottom: 5 }}>Sign Up</Text>
+                  <Text style={{ fontSize: 14 }}>Sign up to use this coupon</Text>
+                </View>
+                <View
+                  style={{
+                    flex: 4
+                  }}
+                >
+                  <FacebookLoginButton
+                  // handleWebAuth={this._handleWebAuth.bind(this)}
+                  // handleLoading={this._handleLoading.bind(this)}
+                  />
+                  <GoogleLoginButton
+                  // handleWebAuth={this._handleWebAuth.bind(this)}
+                  // handleLoading={this._handleLoading.bind(this)}
+                  />
+                  <View
+                    // onPress={e => this._redirecToLoginPage()}
+                    style={[
+                      {
+                        display: 'flex',
+                        justifyContent: 'center',
+                        paddingLeft: 30,
+                        paddingRight: 30
+                      }
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        { fontSize: 14, textAlign: 'center' },
+                        { color: '#777', marginBottom: 15 }
+                      ]}
+                    >
+                      By using Veeh Coupon, you agree to our
+                      <Text
+                        style={{
+                          color: '#337ab7'
+                        }}
+                        onPress={this._redirectToTermsPage.bind(this)}
+                      >
+                        {' '}
+                        Terms
+                      </Text>{' '}
+                      &
+                      <Text
+                        style={{
+                          color: '#337ab7'
+                        }}
+                        onPress={this._redirectToPolicyPage.bind(this)}
+                      >
+                        {' '}
+                        Privacy Policy
+                      </Text>
+                    </Text>
+                    <Text style={[{ fontSize: 14, textAlign: 'center' }, { color: '#444' }]}>
+                      Already have a Veeh account?{' '}
+                      <Text
+                        onPress={e => this._switchToLogin()}
+                        style={{
+                          color: '#337ab7'
+                        }}
+                      >
+                        Log in
+                      </Text>
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </Modal>
+          </View>
+        );
+      }
     }
     if (this.state.type === 'Advertiser') {
       const uri = this.props.navigation.state.params.data.photos[0];

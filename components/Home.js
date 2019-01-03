@@ -34,7 +34,8 @@ class Home extends React.Component {
     if (Platform.OS === 'android' && !Constants.isDevice) {
       this.setState({
         errorMessage:
-          'Oops, this will not work on Sketch in an Android emulator. Try it on your device!'
+          'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+        location: {}
       });
     } else {
       this._getLocationAsync();
@@ -42,6 +43,7 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
+    // console.log('================================================================ 1');
     this._checkAuthentication();
   }
 
@@ -49,7 +51,7 @@ class Home extends React.Component {
     const token = await SecureStore.getItemAsync('token');
     const user = await SecureStore.getItemAsync('user');
     const url = URL + '/auth';
-
+    // console.log('================================================================ 2');
     if (token && user) {
       axios({
         method: 'post',
@@ -59,6 +61,7 @@ class Home extends React.Component {
           token
         }
       }).then(res => {
+        // console.log('================================================================ 3');
         setTimeout(() => {
           this.setState(
             {
@@ -71,6 +74,7 @@ class Home extends React.Component {
         }, 1000);
       });
     } else {
+      console.log('================================================================ 4');
       setTimeout(() => {
         this.setState(
           {
@@ -94,7 +98,8 @@ class Home extends React.Component {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
       this.setState({
-        errorMessage: 'Permission to access location was denied'
+        errorMessage: 'Permission to access location was denied',
+        location
       });
     }
 

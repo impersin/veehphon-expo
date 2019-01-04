@@ -48,7 +48,7 @@ class UserProfile extends React.Component {
   _logOut = async () => {
     this._handleLoading(true);
     const url = URL + '/logout';
-
+    console.log(url);
     await SecureStore.deleteItemAsync('token');
     await SecureStore.deleteItemAsync('email');
 

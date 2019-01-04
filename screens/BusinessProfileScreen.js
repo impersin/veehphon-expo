@@ -32,19 +32,20 @@ class BusinessProfileScreen extends React.Component {
     yOffset: 0,
     type: this.props.navigation.state.params.data.type,
     coordinates: this.props.navigation.state.params.data.coordinates,
-    dist: this.props.navigation.state.params.data.dist.calculated,
+    // dist: this.props.navigation.state.params.data.dist.calculated,
     isModalOpen: false
   };
 
   componentDidMount() {
-    const id = this.props.navigation.state.params.data.id,
-      dist = this.props.navigation.state.params.data.dist.calculated;
+    const id = this.props.navigation.state.params.data.id;
     const url = URL + `/business?id=${id}`;
     const sponsoredUrl = URL + `/sponsored/businesses?`;
-
+    console.log(URL);
     axios.get(url).then(res => {
       const business = res.data;
-      business.dist = dist;
+      if (this.props.navigation.state.params.data.dist) {
+        business.dist = this.props.navigation.state.params.data.dist.calculated;
+      }
       if (business.type === 'Non-advertiser') {
         axios
           .get(
@@ -88,7 +89,12 @@ class BusinessProfileScreen extends React.Component {
   }
 
   _redirectToCarousel(coupon) {
-    this.props.navigation.navigate('CouponCarousel', coupon);
+    if (this.props.auth) {
+      this.props.navigation.navigate('CouponCarousel', coupon);
+    } else {
+      console.log(this.state.business);
+      this.props.navigation.navigate('BusinessProfileLogin', { type: 'login' });
+    }
   }
 
   _handleScroll(e) {
@@ -252,10 +258,21 @@ class BusinessProfileScreen extends React.Component {
     const businessHours = `Mon-Thu ${business.hours[0]}, Fri-Sat ${business.hours[1]}, Sun ${
       business.hours[2]
     }`;
-    let sponsores = null;
+    let sponsores = null,
+      distance = null;
+
     if (type === 'nonAdvertiser') {
       sponsores = this._renderSponsores();
     }
+
+    if (this.props.navigation.state.params.data.dist) {
+      distance = (
+        <Text style={[styles.detailsFont, { fontSize: 12 }]}>{`${
+          this.props.navigation.state.params.data.dist.calculated
+        }mi`}</Text>
+      );
+    }
+
     return (
       <View style={type === 'nonAdvertiser' ? [styles.details, styles.paddingTop] : styles.details}>
         <View style={[styles.detailsContent]}>
@@ -295,7 +312,7 @@ class BusinessProfileScreen extends React.Component {
             <Text style={[styles.detailsFont, { fontSize: 12, fontWeight: 'bold' }]}>
               Directions
             </Text>
-            <Text style={[styles.detailsFont, { fontSize: 12 }]}>{`${this.state.dist}mi`}</Text>
+            {distance}
           </View>
         </View>
         <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 20 }}>
@@ -347,6 +364,17 @@ class BusinessProfileScreen extends React.Component {
       const addressTwo = `${business.addressCity}, ${business.addressState} ${
         business.addressZipcode
       }`;
+
+      let distance = null;
+
+      if (this.props.navigation.state.params.data.dist) {
+        distance = (
+          <Text style={[styles.detailsFont, { fontSize: 12 }]}>{`${
+            this.props.navigation.state.params.data.dist.calculated
+          }mi`}</Text>
+        );
+      }
+
       return (
         <View style={styles.modalContainer}>
           <Modal
@@ -405,9 +433,7 @@ class BusinessProfileScreen extends React.Component {
                   <Text style={[styles.detailsFont, { fontSize: 12, fontWeight: 'bold' }]}>
                     Directions
                   </Text>
-                  <Text style={[styles.detailsFont, { fontSize: 12 }]}>{`${
-                    this.state.dist
-                  }mi`}</Text>
+                  {distance}
                 </View>
               </View>
             </View>

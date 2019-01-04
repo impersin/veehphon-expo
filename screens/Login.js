@@ -7,20 +7,14 @@ import { Constants, SecureStore } from 'expo';
 import FacebookLoginButton from '../components/FacebookLoginButton';
 import GoogleLoginButton from '../components/GoogleLoginButton';
 
-class Signup extends React.Component {
+class Login extends React.Component {
   state = {
     data: [],
     isLoading: false
   };
 
-  _redirectToLoginPage() {
-    this.props.navigation.navigate('Login');
-  }
-  _redirectToTermsPage() {
-    this.props.navigation.navigate('TermsOfService');
-  }
-  _redirectToPolicyPage() {
-    this.props.navigation.navigate('PrivacyPolicy');
+  _redirecToLoginPage() {
+    this.props.navigation.navigate('Signup');
   }
 
   _handleLoading(isLoading) {
@@ -47,8 +41,9 @@ class Signup extends React.Component {
         profileImage: data.picture.data.url
       };
     }
+
     const url = URL + `/signup`;
-    console.log(url);
+
     axios({
       method: 'post',
       url,
@@ -57,6 +52,7 @@ class Signup extends React.Component {
       .then(res => {
         SecureStore.setItemAsync('token', res.data.token);
         SecureStore.setItemAsync('user', JSON.stringify(res.data.userInfo));
+
         setTimeout(() => {
           this.props.updateAuth({ auth: true, user: res.data.userInfo });
           this._handleLoading(false);
@@ -84,11 +80,12 @@ class Signup extends React.Component {
         </View>
       );
     }
+
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={{ fontSize: 24, marginBottom: 5 }}>Sign Up</Text>
-          {/* <Text style={{ fontSize: 14 }}>Sign in to use this coupon</Text> */}
+          <Text style={{ fontSize: 24, marginBottom: 5 }}>Log In</Text>
+          {/* <Text style={{ fontSize: 14 }}>Log in to use this coupon</Text> */}
         </View>
         <View style={styles.body}>
           <FacebookLoginButton
@@ -99,26 +96,16 @@ class Signup extends React.Component {
             handleWebAuth={this._handleWebAuth.bind(this)}
             handleLoading={this._handleLoading.bind(this)}
           />
-          <View style={[styles.buttonWrapper]}>
-            <Text style={[styles.buttonText, { color: '#777', marginBottom: 15 }]}>
-              By using Veeh Coupon, you agree to our
-              <Text style={styles.innerFont} onPress={this._redirectToTermsPage.bind(this)}>
-                {' '}
-                Terms
-              </Text>{' '}
-              &
-              <Text style={styles.innerFont} onPress={this._redirectToPolicyPage.bind(this)}>
-                {' '}
-                Privacy Policy
+          <TouchableOpacity
+            onPress={e => this._redirecToLoginPage()}
+            style={[styles.buttonWrapper]}
+          >
+            <View style={styles.buttonTextWrapper}>
+              <Text style={[styles.buttonText]}>
+                Don't have an account? <Text style={styles.innerFont}>Sign up</Text>
               </Text>
-            </Text>
-            <Text style={[styles.buttonText, { color: '#444' }]}>
-              Already have a Veeh account?{' '}
-              <Text onPress={e => this._redirectToLoginPage()} style={styles.innerFont}>
-                Log in
-              </Text>
-            </Text>
-          </View>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -138,7 +125,7 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Signup);
+)(Login);
 
 const styles = StyleSheet.create({
   container: {
@@ -164,16 +151,18 @@ const styles = StyleSheet.create({
   },
   buttonWrapper: {
     display: 'flex',
-    justifyContent: 'center'
-    // height: 50,
-    // marginBottom: 10,
-    // borderRadius: 5
+    justifyContent: 'center',
+    height: 50,
+    marginBottom: 10,
+    paddingLeft: 30,
+    paddingRight: 30,
+    borderRadius: 5
   },
   buttonTextWrapper: {
-    // flexDirection: 'row',
+    flexDirection: 'row',
     justifyContent: 'center'
   },
-  buttonText: { fontSize: 14, textAlign: 'center' },
+  buttonText: { width: '100%', fontSize: 14, textAlign: 'center' },
   facebookButtonFont: {
     color: 'white',
     paddingTop: 2
@@ -181,7 +170,6 @@ const styles = StyleSheet.create({
   googleButtonFont: {
     paddingTop: 2
   },
-  icons: {},
   facebook: {
     backgroundColor: '#4267b2'
   },

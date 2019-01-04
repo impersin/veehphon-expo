@@ -11,8 +11,10 @@ import BusinessProfileScreen from '../screens/BusinessProfileScreen';
 import SponsoredBusinessProfileScreen from '../screens/SponsoredBusinessProfileScreen';
 import CouponCarousel from '../screens/CouponCarousel';
 import Signup from '../screens/Signup';
+import BusinessProfileSignup from '../screens/BusinessProfileSignup';
 import UserProfile from '../screens/UserProfileScreen';
-import Login from '../tabs/login';
+import Login from '../screens/Login';
+import BusinessProfileLogin from '../screens/BusinessProfileLogin';
 import PrivacyPolicyScreen from '../screens/PrivacyPolicyScreen';
 import TermsOfServiceScreen from '../screens/TermsOfServiceScreen';
 // const headerOption = {
@@ -34,7 +36,8 @@ class Home extends React.Component {
     if (Platform.OS === 'android' && !Constants.isDevice) {
       this.setState({
         errorMessage:
-          'Oops, this will not work on Sketch in an Android emulator. Try it on your device!'
+          'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+        location: {}
       });
     } else {
       this._getLocationAsync();
@@ -49,7 +52,7 @@ class Home extends React.Component {
     const token = await SecureStore.getItemAsync('token');
     const user = await SecureStore.getItemAsync('user');
     const url = URL + '/auth';
-
+    console.log(url);
     if (token && user) {
       axios({
         method: 'post',
@@ -94,7 +97,8 @@ class Home extends React.Component {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
       this.setState({
-        errorMessage: 'Permission to access location was denied'
+        errorMessage: 'Permission to access location was denied',
+        location: {}
       });
     }
 
@@ -190,6 +194,14 @@ const AppStackNavigator = createStackNavigator({
       title: 'Coupons',
       header: null //this will hide the header
     }
+  },
+  BusinessProfileLogin: {
+    screen: BusinessProfileLogin,
+    navigationOptions: { title: 'Profile', header: null }
+  },
+  BusinessProfileSignup: {
+    screen: BusinessProfileSignup,
+    navigationOptions: { title: 'Profile', header: null }
   }
 });
 

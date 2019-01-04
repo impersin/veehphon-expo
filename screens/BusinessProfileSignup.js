@@ -4,6 +4,7 @@ import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity, Modal } fr
 import { NODE_ENV, URL } from 'react-native-dotenv';
 import axios from 'axios';
 import { Constants, SecureStore } from 'expo';
+import { Ionicons } from '@expo/vector-icons/';
 import FacebookLoginButton from '../components/FacebookLoginButton';
 import GoogleLoginButton from '../components/GoogleLoginButton';
 
@@ -14,11 +15,17 @@ class Signup extends React.Component {
   };
 
   _redirectToLoginPage() {
-    this.props.navigation.navigate('Login');
+    this.props.navigation.navigate('BusinessProfileLogin');
   }
+
+  _goToPrevious() {
+    this.props.navigation.goBack();
+  }
+
   _redirectToTermsPage() {
     this.props.navigation.navigate('TermsOfService');
   }
+
   _redirectToPolicyPage() {
     this.props.navigation.navigate('PrivacyPolicy');
   }
@@ -86,8 +93,19 @@ class Signup extends React.Component {
     }
     return (
       <View style={styles.container}>
+        <View style={styles.topMenu}>
+          <TouchableOpacity onPress={this._goToPrevious.bind(this)} style={styles.topMenuOne}>
+            <Ionicons name="ios-arrow-back" color={'#444'} size={30} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.topMenuTwo}>
+            {/* <Ionicons name="ios-share-alt" color={'white'} size={30} /> */}
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.topMenuThree}>
+            {/* <Ionicons name="ios-heart-empty" color={'white'} size={30} /> */}
+          </TouchableOpacity>
+        </View>
         <View style={styles.header}>
-          <Text style={{ fontSize: 24, marginBottom: 5 }}>Sign Up</Text>
+          <Text style={{ fontSize: 24, marginBottom: 5 }}>Sign Up from profile</Text>
           {/* <Text style={{ fontSize: 14 }}>Sign in to use this coupon</Text> */}
         </View>
         <View style={styles.body}>
@@ -153,6 +171,37 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white'
+  },
+  topMenu: {
+    display: 'flex',
+    alignSelf: 'stretch',
+    position: 'absolute',
+    top: 0,
+    height: 200,
+    zIndex: 1,
+    flexDirection: 'row',
+    width: '100%',
+    height: 50,
+    justifyContent: 'center'
+    // backgroundColor: 'black'
+  },
+  topMenuOne: {
+    flex: 6,
+    // borderWidth: 1,
+    justifyContent: 'center',
+    paddingLeft: 20
+  },
+  topMenuTwo: {
+    flex: 1,
+    // borderWidth: 1,
+    justifyContent: 'center',
+    paddingLeft: 20
+  },
+  topMenuThree: {
+    flex: 1,
+    // borderWidth: 1,
+    justifyContent: 'center',
+    paddingLeft: 20
   },
   header: {
     flex: 1,

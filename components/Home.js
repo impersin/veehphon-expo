@@ -52,7 +52,7 @@ class Home extends React.Component {
     const token = await SecureStore.getItemAsync('token');
     const user = await SecureStore.getItemAsync('user');
     const url = URL + '/auth';
-    console.log(url);
+    // console.log(url);
     if (token && user) {
       axios({
         method: 'post',
@@ -127,7 +127,7 @@ class Home extends React.Component {
     } else if (this.state.location) {
       text = JSON.stringify(this.state.location);
     }
-    if (this.state.isLoading || !this.state.location) {
+    if (this.state.isLoading) {
       return (
         <View style={[styles.container, styles.ActivityIndicatorContainer]}>
           <ActivityIndicator size="large" color="#f96a00" />

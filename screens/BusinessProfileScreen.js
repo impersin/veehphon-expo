@@ -40,7 +40,7 @@ class BusinessProfileScreen extends React.Component {
     const id = this.props.navigation.state.params.data.id;
     const url = URL + `/business?id=${id}`;
     const sponsoredUrl = URL + `/sponsored/businesses?`;
-    console.log(URL);
+
     axios.get(url).then(res => {
       const business = res.data;
       if (this.props.navigation.state.params.data.dist) {
@@ -59,22 +59,52 @@ class BusinessProfileScreen extends React.Component {
               business.dist.calculated = (business.dist.calculated * 0.62).toFixed(1);
               return business;
             });
-            // console.log('=====================> 1', sponsoredBusiness);
-            setTimeout(() => {
-              this.setState({
-                business,
-                sponsoredBusiness,
-                isLoading: false
-              });
-            }, 1000);
+
+            if (this.props.navigation.state.params.couponData) {
+              this.setState(
+                {
+                  business,
+                  isLoading: false
+                },
+                () => {
+                  this.props.navigation.navigate(
+                    'CouponCarousel',
+                    this.props.navigation.state.params.couponData
+                  );
+                }
+              );
+            } else {
+              setTimeout(() => {
+                this.setState({
+                  business,
+                  sponsoredBusiness,
+                  isLoading: false
+                });
+              }, 1000);
+            }
           });
       } else {
-        setTimeout(() => {
-          this.setState({
-            business,
-            isLoading: false
-          });
-        }, 1000);
+        if (this.props.navigation.state.params.couponData) {
+          this.setState(
+            {
+              business,
+              isLoading: false
+            },
+            () => {
+              this.props.navigation.navigate(
+                'CouponCarousel',
+                this.props.navigation.state.params.couponData
+              );
+            }
+          );
+        } else {
+          setTimeout(() => {
+            this.setState({
+              business,
+              isLoading: false
+            });
+          }, 1000);
+        }
       }
     });
   }
@@ -84,7 +114,6 @@ class BusinessProfileScreen extends React.Component {
   }
 
   _redirectToProfile(data) {
-    // console.log('=====================> 1', data);
     this.props.navigation.navigate('SponsoredBusinessProfile', { data });
   }
 
@@ -92,8 +121,11 @@ class BusinessProfileScreen extends React.Component {
     if (this.props.auth) {
       this.props.navigation.navigate('CouponCarousel', coupon);
     } else {
-      console.log(this.state.business);
-      this.props.navigation.navigate('BusinessProfileLogin', { type: 'login' });
+      this.props.navigation.navigate('BusinessProfileLogin', {
+        business: this.props.navigation.state.params.data,
+        coupon,
+        type: 'login'
+      });
     }
   }
 

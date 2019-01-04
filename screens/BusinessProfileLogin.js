@@ -15,7 +15,6 @@ class Login extends React.Component {
   };
 
   _redirectToSignupPage() {
-    console.log('=======================');
     this.props.navigation.navigate('BusinessProfileLogin', { type: 'signup' });
   }
 
@@ -70,18 +69,24 @@ class Login extends React.Component {
       .then(res => {
         SecureStore.setItemAsync('token', res.data.token);
         SecureStore.setItemAsync('user', JSON.stringify(res.data.userInfo));
+        SecureStore.setItemAsync(
+          'business',
+          JSON.stringify(this.props.navigation.state.params.business)
+        );
+        SecureStore.setItemAsync(
+          'coupon',
+          JSON.stringify(this.props.navigation.state.params.coupon)
+        );
 
         setTimeout(() => {
           this.props.updateAuth({ auth: true, user: res.data.userInfo });
           this._handleLoading(false);
-          console.log('redirecting...... to business detail page');
         }, 1500);
       })
       .catch(err => {});
   }
 
   render() {
-    console.log(this.props);
     if (this.state.isLoading) {
       return (
         <View style={styles.container}>
@@ -207,6 +212,9 @@ const mapDispatchToProps = dispatch => {
   return {
     updateAuth: status => {
       dispatch({ type: 'AUTH', payload: status });
+    },
+    storePendingData: data => {
+      dispatch({ type: 'PENDING_DATA', payload: data });
     }
   };
 };

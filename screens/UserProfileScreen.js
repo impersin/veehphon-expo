@@ -48,12 +48,12 @@ class UserProfile extends React.Component {
   _logOut = async () => {
     this._handleLoading(true);
     const url = URL + '/logout';
-    console.log(url);
+    // console.log(url);
     await SecureStore.deleteItemAsync('token');
     await SecureStore.deleteItemAsync('email');
 
     axios
-      .get(url)
+      .get('http://10.0.0.166:3000/api/logout')
       .then(res => {
         setTimeout(() => {
           return this.props.updateAuth(false);
@@ -72,7 +72,6 @@ class UserProfile extends React.Component {
   }
 
   _closeModal() {
-    console.log('closing modal..........');
     this.setState({
       modalType: null,
       isModalOpen: false

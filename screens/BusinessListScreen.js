@@ -10,6 +10,7 @@ import {
   Dimensions,
   ActivityIndicator
 } from 'react-native';
+import { SecureStore } from 'expo';
 import { NODE_ENV, URL } from 'react-native-dotenv';
 import axios from 'axios';
 import Tags from './../components/Tags';
@@ -25,8 +26,18 @@ class BusinessListScreen extends React.Component {
     refreshing: false
   };
 
-  componentDidMount() {
-    this._initializeData();
+  async componentDidMount() {
+    const business = await SecureStore.getItemAsync('business');
+    const coupon = await SecureStore.getItemAsync('coupon');
+    if (business && coupon) {
+      let data = JSON.parse(business);
+      let couponData = JSON.parse(coupon);
+      this.props.navigation.navigate('BusinessProfile', { data, couponData });
+      await SecureStore.deleteItemAsync('business');
+      await SecureStore.deleteItemAsync('coupon');
+    } else {
+      this._initializeData();
+    }
   }
 
   _fetchData() {
@@ -66,12 +77,11 @@ class BusinessListScreen extends React.Component {
         });
     } else {
       const url = URL + `/businesses`;
-      console.log(url);
+      // console.log(url);
       axios
         .get(url)
         .then(res => {
           const businesses = res.data;
-          console.log(businesses);
           setTimeout(() => {
             this.setState({
               isLoading: false,

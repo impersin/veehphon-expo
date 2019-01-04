@@ -16,6 +16,7 @@ import {
 import { Constants } from 'expo';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons/';
 import axios from 'axios';
+import { NODE_ENV, URL } from 'react-native-dotenv';
 import BackgroundImage from './../components/BackgroundImage';
 import GoogleMap from './../components/GoogleMap';
 import Tags from './../components/Tags';
@@ -23,7 +24,8 @@ import Coupons from './../components/Coupons';
 import BlockMenu from './../components/BlockMenu';
 import FacebookLoginButton from '../components/FacebookLoginButton';
 import GoogleLoginButton from '../components/GoogleLoginButton';
-import { NODE_ENV, URL } from 'react-native-dotenv';
+import TermsModal from '../components/TermsModal';
+import PrivacyModal from '../components/PrivacyModal';
 
 class BusinessProfileScreen extends React.Component {
   // static navigationOptions = {
@@ -36,6 +38,7 @@ class BusinessProfileScreen extends React.Component {
     coordinates: this.props.navigation.state.params.data.coordinates,
     // dist: this.props.navigation.state.params.data.dist.calculated,
     isModalOpen: false
+    // modalType: 'lodaing'
   };
 
   componentDidMount() {
@@ -79,6 +82,47 @@ class BusinessProfileScreen extends React.Component {
         }, 1000);
       }
     });
+  }
+
+  _handleWebAuth(type, data) {
+    this.openModal('loading');
+    let userInfo;
+    if (type === 'google') {
+      userInfo = {
+        firstName: data.user.givenName,
+        lastName: data.user.familyName,
+        email: data.user.email,
+        profileImage: data.user.photoUrl
+      };
+    } else if (type === 'facebook') {
+      userInfo = {
+        firstName: data.first_name,
+        lastName: data.last_name,
+        email: data.email,
+        profileImage: data.picture.data.url
+      };
+    }
+    console.log(type.data);
+    setTimeout(() => {
+      this._closeModal();
+    }, 2000);
+    // const url = URL + `/signup`;
+
+    // axios({
+    //   method: 'post',
+    //   url,
+    //   data: userInfo
+    // })
+    //   .then(res => {
+    //     SecureStore.setItemAsync('token', res.data.token);
+    //     SecureStore.setItemAsync('user', JSON.stringify(res.data.userInfo));
+
+    //     setTimeout(() => {
+    //       this.props.updateAuth({ auth: true, user: res.data.userInfo });
+    //       this._handleLoading(false);
+    //     }, 1500);
+    //   })
+    //   .catch(err => {});
   }
 
   _goToPrevious() {
@@ -464,7 +508,7 @@ class BusinessProfileScreen extends React.Component {
               transparent={false}
               visible={this.state.modalVisible}
               onRequestClose={() => {
-                Alert.alert('Modal has been closed.');
+                this._closeModal();
               }}
             >
               <View style={{ paddingTop: Constants.statusBarHeight }} />
@@ -489,8 +533,8 @@ class BusinessProfileScreen extends React.Component {
               <View
                 style={{
                   flex: 1,
-                  paddingLeft: 10,
-                  paddingRight: 10,
+                  paddingLeft: 20,
+                  paddingRight: 20,
                   justifyContent: 'center'
                 }}
               >
@@ -510,12 +554,12 @@ class BusinessProfileScreen extends React.Component {
                   }}
                 >
                   <FacebookLoginButton
-                  // handleWebAuth={this._handleWebAuth.bind(this)}
-                  // handleLoading={this._handleLoading.bind(this)}
+                    handleWebAuth={this._handleWebAuth.bind(this)}
+                    // handleLoading={this._handleLoading.bind(this)}
                   />
                   <GoogleLoginButton
-                  // handleWebAuth={this._handleWebAuth.bind(this)}
-                  // handleLoading={this._handleLoading.bind(this)}
+                    handleWebAuth={this._handleWebAuth.bind(this)}
+                    // handleLoading={this._handleLoading.bind(this)}
                   />
                   <View
                     style={[
@@ -559,7 +603,7 @@ class BusinessProfileScreen extends React.Component {
               transparent={false}
               visible={this.state.modalVisible}
               onRequestClose={() => {
-                Alert.alert('Modal has been closed.');
+                this._openModal('login');
               }}
             >
               <View style={{ paddingTop: Constants.statusBarHeight }} />
@@ -584,8 +628,8 @@ class BusinessProfileScreen extends React.Component {
               <View
                 style={{
                   flex: 1,
-                  paddingLeft: 10,
-                  paddingRight: 10,
+                  paddingLeft: 20,
+                  paddingRight: 20,
                   justifyContent: 'center'
                 }}
               >
@@ -634,7 +678,7 @@ class BusinessProfileScreen extends React.Component {
                         style={{
                           color: '#337ab7'
                         }}
-                        onPress={this._redirectToTermsPage.bind(this)}
+                        onPress={e => this._openModal.bind(this)('terms')}
                       >
                         {' '}
                         Terms
@@ -644,7 +688,7 @@ class BusinessProfileScreen extends React.Component {
                         style={{
                           color: '#337ab7'
                         }}
-                        onPress={this._redirectToPolicyPage.bind(this)}
+                        onPress={e => this._openModal.bind(this)('privacy')}
                       >
                         {' '}
                         Privacy Policy
@@ -663,6 +707,42 @@ class BusinessProfileScreen extends React.Component {
                     </Text>
                   </View>
                 </View>
+              </View>
+            </Modal>
+          </View>
+        );
+      } else if (this.state.modalType === 'terms') {
+        return <TermsModal openModal={this._openModal.bind(this)} />;
+      } else if (this.state.modalType === 'privacy') {
+        return <PrivacyModal openModal={this._openModal.bind(this)} />;
+      } else if (this.state.modalType === 'lodaing') {
+        return (
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'white',
+              paddingTop: Constants.statusBarHeight,
+              paddingLeft: 20,
+              paddingRight: 20
+            }}
+          >
+            <Modal
+              animationType="none"
+              transparent={false}
+              visible={this.state.modalVisible}
+              onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+              }}
+            >
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: 'white'
+                }}
+              >
+                <ActivityIndicator size="large" color="#f96a00" />
               </View>
             </Modal>
           </View>

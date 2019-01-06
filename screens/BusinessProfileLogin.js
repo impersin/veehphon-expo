@@ -74,9 +74,10 @@ class Login extends React.Component {
           JSON.stringify(this.props.navigation.state.params.business)
         );
         SecureStore.setItemAsync(
-          'coupon',
-          JSON.stringify(this.props.navigation.state.params.coupon)
+          'coupons',
+          JSON.stringify(this.props.navigation.state.params.coupons)
         );
+        SecureStore.setItemAsync('index', JSON.stringify(this.props.navigation.state.params.index));
 
         setTimeout(() => {
           this.props.updateAuth({ auth: true, user: res.data.userInfo });

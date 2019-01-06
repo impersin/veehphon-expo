@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
   Modal,
   Image,
-  FlatList
+  Button
 } from 'react-native';
 import { Constants } from 'expo';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons/';
@@ -84,17 +84,21 @@ class BusinessProfileScreen extends React.Component {
             }
           });
       } else {
-        if (this.props.navigation.state.params.couponData) {
+        if (this.props.navigation.state.params.coupons) {
           this.setState(
             {
               business,
               isLoading: false
             },
             () => {
-              this.props.navigation.navigate(
-                'CouponCarousel',
-                this.props.navigation.state.params.couponData
-              );
+              // this.props.navigation.navigate(
+              //   'CouponCarousel',
+              //   this.props.navigation.state.params.couponData
+              // );
+              this.props.navigation.navigate('CouponCarousel', {
+                coupons: this.props.navigation.state.params.coupons,
+                index: this.props.navigation.state.params.index
+              });
             }
           );
         } else {
@@ -117,13 +121,17 @@ class BusinessProfileScreen extends React.Component {
     this.props.navigation.navigate('SponsoredBusinessProfile', { data });
   }
 
-  _redirectToCarousel(coupon) {
+  _redirectToCarousel(index) {
     if (this.props.auth) {
-      this.props.navigation.navigate('CouponCarousel', coupon);
+      this.props.navigation.navigate('CouponCarousel', {
+        index,
+        coupons: this.state.business.coupons
+      });
     } else {
       this.props.navigation.navigate('BusinessProfileLogin', {
         business: this.props.navigation.state.params.data,
-        coupon,
+        coupons: this.state.business.coupons,
+        index,
         type: 'login'
       });
     }
@@ -347,7 +355,7 @@ class BusinessProfileScreen extends React.Component {
             {distance}
           </View>
         </View>
-        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 20 }}>
+        <View style={{ display: 'flex', flexDirection: 'row' }}>
           <BlockMenu icon={'phone'} title={business.phoneNumber} subTitle={'Subtitle'} />
           <BlockMenu icon={'home'} title={business.website} subTitle={'Subtitle'} />
         </View>
@@ -478,6 +486,7 @@ class BusinessProfileScreen extends React.Component {
       adImage = <BackgroundImage uri={uri} goToPrevious={this._goToPrevious.bind(this)} />;
 
       if (this.state.isLoading) {
+        // if (true) {
         details = (
           <View style={[styles.details, styles.ActivityIndicatorContainer]}>
             <ActivityIndicator size="large" color="#f96a00" />
@@ -494,6 +503,26 @@ class BusinessProfileScreen extends React.Component {
             {adImage}
             {details}
           </ScrollView>
+          <View
+            style={{
+              display: 'flex',
+              width: '100%',
+              height: 70,
+              backgroundColor: 'white',
+              position: 'absolute',
+              bottom: 0,
+              borderTopColor: '#ccc',
+              borderTopWidth: 0.5,
+              justifyContent: 'center'
+            }}
+          >
+            <Button
+              onPress={e => this._redirectToCarousel.bind(this)(0)}
+              title="Use Coupons"
+              color="#f96a00"
+              accessibilityLabel="Learn more about this purple button"
+            />
+          </View>
         </View>
       );
     } else {
@@ -602,12 +631,13 @@ const styles = StyleSheet.create({
   },
   details: {
     flex: 1,
-    minHeight: 500,
+    minHeight: 550,
     padding: 10,
     // justifyContent: 'center'
     // alignSelf: 'stretch',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
     // paddingBottom: 50
+    paddingBottom: 100
   },
   detailsContent: {
     marginBottom: 20

@@ -27,14 +27,18 @@ class BusinessListScreen extends React.Component {
   };
 
   async componentDidMount() {
-    const business = await SecureStore.getItemAsync('business');
-    const coupon = await SecureStore.getItemAsync('coupon');
-    if (business && coupon) {
-      let data = JSON.parse(business);
-      let couponData = JSON.parse(coupon);
-      this.props.navigation.navigate('BusinessProfile', { data, couponData });
+    let business = await SecureStore.getItemAsync('business');
+    let coupons = await SecureStore.getItemAsync('coupons');
+    let index = await SecureStore.getItemAsync('index');
+    if (business && coupons && index) {
+      data = JSON.parse(business);
+      coupons = JSON.parse(coupons);
+      index = JSON.parse(index);
+      this.props.navigation.navigate('BusinessProfile', { data, coupons, index });
       await SecureStore.deleteItemAsync('business');
-      await SecureStore.deleteItemAsync('coupon');
+      await SecureStore.deleteItemAsync('coupons');
+      await SecureStore.deleteItemAsync('index');
+      this._initializeData();
     } else {
       this._initializeData();
     }

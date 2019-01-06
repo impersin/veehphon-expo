@@ -11,18 +11,23 @@ import {
 } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons/';
 import { Constants } from 'expo';
+import Coupons from '../components/Coupons';
 
 const { width } = Dimensions.get('window');
 const height = width * 0.8;
 
 export default class Carousel extends Component {
+  componentDidMount() {
+    setTimeout(() => {
+      this.scroller.scrollTo({ x: width * this.props.navigation.state.params.index });
+    }, 0);
+  }
   _goToPrevious() {
     this.props.navigation.goBack();
   }
   render() {
-    // const { images } = this.props;
-    const coupon = this.props.navigation.state.params;
-    if (coupon) {
+    const coupons = this.props.navigation.state.params.coupons;
+    if (coupons) {
       return (
         <View style={styles.container}>
           <View style={styles.topMenuWhite}>
@@ -32,12 +37,35 @@ export default class Carousel extends Component {
                 {/* Coupon */}
               </Text>
             </TouchableOpacity>
-            {/* <TouchableOpacity onPress={this._goToPrevious.bind(this)} style={styles.topMenuTwo}>
-            </TouchableOpacity> */}
           </View>
           <View style={{ flex: 1, backgroundColor: 'black' }}>
-            <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
-              <View style={{ justifyContent: 'center', flexWrap: 'wrap' }}>
+            <ScrollView
+              ref={scroller => {
+                this.scroller = scroller;
+              }}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+            >
+              {coupons.map((coupon, index) => {
+                return (
+                  <View key={index} style={{ justifyContent: 'center', flexWrap: 'wrap' }}>
+                    <View style={{ width, padding: 10, alignItems: 'center' }}>
+                      <Text style={{ fontSize: 24, color: 'white', fontWeight: 'bold' }}>
+                        {coupon.dealName}
+                      </Text>
+                    </View>
+                    <Image
+                      style={{ width, height, resizeMode: 'contain' }}
+                      source={{ uri: coupon.photoUri }}
+                    />
+                    <View style={{ width, padding: 10 }}>
+                      <Text style={{ color: 'white' }}>{coupon.dealDetails}</Text>
+                    </View>
+                  </View>
+                );
+              })}
+              {/* <View style={{ justifyContent: 'center', flexWrap: 'wrap' }}>
                 <View style={{ width, padding: 10, alignItems: 'center' }}>
                   <Text style={{ fontSize: 24, color: 'white', fontWeight: 'bold' }}>
                     {coupon.dealName}
@@ -50,7 +78,7 @@ export default class Carousel extends Component {
                 <View style={{ width, padding: 10 }}>
                   <Text style={{ color: 'white' }}>{coupon.dealDetails}</Text>
                 </View>
-              </View>
+              </View> */}
             </ScrollView>
           </View>
         </View>

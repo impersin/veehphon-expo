@@ -24,7 +24,7 @@ export default class Coupons extends React.Component {
               borderBottomColor: '#ccc',
               borderBottomWidth: 0.1
             }}
-            onPress={e => this.props.redirectToCarousel(coupon)}
+            onPress={e => this.props.redirectToCarousel(index)}
           >
             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
               <MaterialIcons name="redeem" color="#444" size={20} />

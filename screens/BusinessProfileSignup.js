@@ -64,6 +64,15 @@ class Signup extends React.Component {
       .then(res => {
         SecureStore.setItemAsync('token', res.data.token);
         SecureStore.setItemAsync('user', JSON.stringify(res.data.userInfo));
+        SecureStore.setItemAsync(
+          'business',
+          JSON.stringify(this.props.navigation.state.params.business)
+        );
+        SecureStore.setItemAsync(
+          'coupons',
+          JSON.stringify(this.props.navigation.state.params.coupons)
+        );
+        SecureStore.setItemAsync('index', JSON.stringify(this.props.navigation.state.params.index));
         setTimeout(() => {
           this.props.updateAuth({ auth: true, user: res.data.userInfo });
           this._handleLoading(false);

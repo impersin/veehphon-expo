@@ -43,7 +43,7 @@ class Login extends React.Component {
     }
 
     const url = URL + `/signup`;
-
+    console.log(url);
     axios({
       method: 'post',
       url,

@@ -52,7 +52,7 @@ class Home extends React.Component {
     const token = await SecureStore.getItemAsync('token');
     const user = await SecureStore.getItemAsync('user');
     const url = URL + '/auth';
-    // console.log(url);
+    console.log(url);
     if (token && user) {
       axios({
         method: 'post',

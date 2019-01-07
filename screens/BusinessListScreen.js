@@ -19,11 +19,14 @@ const { height, width } = Dimensions.get('window');
 
 class BusinessListScreen extends React.Component {
   state = {
+    initialData: [],
     address: null,
     location: null,
     errorMessage: null,
     isLoading: true,
-    refreshing: false
+    refreshing: false,
+    page: 1,
+    seed: 1
   };
 
   async componentDidMount() {
@@ -47,6 +50,7 @@ class BusinessListScreen extends React.Component {
   _fetchData() {
     this.setState(
       {
+        page: 1,
         refreshing: true
       },
       () => {
@@ -59,8 +63,9 @@ class BusinessListScreen extends React.Component {
     if (Object.keys(this.props.screenProps.location).length !== 0) {
       const lat = this.props.screenProps.location.coords.latitude;
       const lng = this.props.screenProps.location.coords.longitude;
-      const url = URL + `/businesses?lat=${lat}&lng=${lng}`;
-      // console.log(url);
+      const { page, seed } = this.state;
+      const url = URL + `/businesses?lat=${lat}&lng=${lng}&page=${page}&seed=${seed}`;
+      console.log(url);
       axios
         .get(url)
         .then(res => {
@@ -71,7 +76,7 @@ class BusinessListScreen extends React.Component {
           setTimeout(() => {
             this.setState({
               isLoading: false,
-              initialData: businesses,
+              initialData: [...this.state.initialData, ...businesses],
               refreshing: false
             });
           }, 500);
@@ -81,7 +86,7 @@ class BusinessListScreen extends React.Component {
         });
     } else {
       const url = URL + `/businesses`;
-      // console.log(url);
+      console.log(url);
       axios
         .get(url)
         .then(res => {
@@ -104,6 +109,18 @@ class BusinessListScreen extends React.Component {
 
   _redirectToProfile(data) {
     this.props.navigation.navigate('BusinessProfile', { data });
+  }
+
+  _handleLoadMore() {
+    console.log('loading more data..................');
+    this.setState(
+      {
+        page: this.state.page + 1
+      },
+      () => {
+        this._initializeData();
+      }
+    );
   }
 
   _renderItem = ({ item }) => {
@@ -163,6 +180,8 @@ class BusinessListScreen extends React.Component {
           // data={this.props.screenProps.initialData}
           data={this.state.initialData}
           renderItem={this._renderItem}
+          // onEndReached={this._handleLoadMore.bind(this)}
+          // onEndReachedThreshold={0}
         />
       </View>
     );

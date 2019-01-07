@@ -48,12 +48,12 @@ class UserProfile extends React.Component {
   _logOut = async () => {
     this._handleLoading(true);
     const url = URL + '/logout';
-    // console.log(url);
+    console.log(url);
     await SecureStore.deleteItemAsync('token');
     await SecureStore.deleteItemAsync('email');
 
     axios
-      .get('http://10.0.0.166:3000/api/logout')
+      .get('http://192.168.0.102:3000/api/logout')
       .then(res => {
         setTimeout(() => {
           return this.props.updateAuth(false);
@@ -72,10 +72,12 @@ class UserProfile extends React.Component {
   }
 
   _closeModal() {
-    this.setState({
-      modalType: null,
-      isModalOpen: false
-    });
+    if (!this.state.isLoading) {
+      this.setState({
+        modalType: null,
+        isModalOpen: false
+      });
+    }
   }
   _clickInnerBox() {}
   _handleModal() {

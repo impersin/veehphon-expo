@@ -40,7 +40,7 @@ class BusinessProfileScreen extends React.Component {
     const id = this.props.navigation.state.params.data.id;
     const url = URL + `/business?id=${id}`;
     const sponsoredUrl = URL + `/sponsored/businesses?`;
-
+    console.log(url);
     axios.get(url).then(res => {
       const business = res.data;
       if (this.props.navigation.state.params.data.dist) {

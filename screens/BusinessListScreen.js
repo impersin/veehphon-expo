@@ -64,8 +64,8 @@ class BusinessListScreen extends React.Component {
       const lat = this.props.screenProps.location.coords.latitude;
       const lng = this.props.screenProps.location.coords.longitude;
       const { page, seed } = this.state;
-      const url = URL + `/businesses?lat=${lat}&lng=${lng}&page=${page}&seed=${seed}`;
-      console.log(url);
+      const url = process.env.URL + `/businesses?lat=${lat}&lng=${lng}&page=${page}&seed=${seed}`;
+
       axios
         .get(url)
         .then(res => {
@@ -85,8 +85,8 @@ class BusinessListScreen extends React.Component {
           console.log(err);
         });
     } else {
-      const url = URL + `/businesses`;
-      console.log(url);
+      const url = process.env.URL + `/businesses`;
+
       axios
         .get(url)
         .then(res => {
@@ -112,7 +112,6 @@ class BusinessListScreen extends React.Component {
   }
 
   _handleLoadMore() {
-    console.log('loading more data..................');
     this.setState(
       {
         page: this.state.page + 1
@@ -136,7 +135,13 @@ class BusinessListScreen extends React.Component {
       <TouchableWithoutFeedback id={item.userid} onPress={e => this._redirectToProfile(item)}>
         <View style={item.type === 'Advertiser' ? styles.listContainer : styles.listContainer}>
           {adImage}
-          <View style={styles.summaryContainer}>
+          <View
+            style={
+              item.type === 'Advertiser'
+                ? styles.summaryContainer
+                : [styles.summaryContainer, { marginTop: 0 }]
+            }
+          >
             <Text style={styles.summaryHeader}>{`${item.businessName} - ${item.addressCity}, ${
               item.addressState
             }`}</Text>
@@ -171,6 +176,7 @@ class BusinessListScreen extends React.Component {
       );
     }
 
+    console.log(width);
     return (
       <View style={styles.container}>
         <FlatList
@@ -214,19 +220,20 @@ const styles = StyleSheet.create({
     width: width,
     padding: 10,
     borderTopWidth: 1,
-    borderTopColor: '#ccc'
-    // backgroundColor: 'green'
+    borderTopColor: '#ccc',
+    paddingBottom: 0
+    // backgroundColor: 'green',
   },
   imgStyle: {
     // flex: 3,
-    height: 200,
+    height: 175,
     width: null,
     resizeMode: 'cover'
   },
   summaryContainer: {
     // flex: 1,
-    marginTop: 20,
-    marginBottom: 20,
+    marginTop: 10,
+    marginBottom: 10,
     justifyContent: 'center'
     // backgroundColor: 'red'
     // height: '100%'
@@ -235,7 +242,7 @@ const styles = StyleSheet.create({
     color: '#444',
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 20
+    marginBottom: 10
   },
   circles: {
     flexDirection: 'row',
@@ -267,7 +274,8 @@ const styles = StyleSheet.create({
   summaryFooter: {
     display: 'flex',
     flexDirection: 'row',
-    marginTop: 10
+    marginTop: 0
+    // backgroundColor: 'yellow'
   },
   footerLeft: {
     flex: 5

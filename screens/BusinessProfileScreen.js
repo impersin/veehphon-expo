@@ -38,9 +38,9 @@ class BusinessProfileScreen extends React.Component {
 
   componentDidMount() {
     const id = this.props.navigation.state.params.data.id;
-    const url = URL + `/business?id=${id}`;
-    const sponsoredUrl = URL + `/sponsored/businesses?`;
-    console.log(url);
+    const url = process.env.URL + `/business?id=${id}`;
+    const sponsoredUrl = process.env.URL + `/sponsored/businesses?`;
+
     axios.get(url).then(res => {
       const business = res.data;
       if (this.props.navigation.state.params.data.dist) {
@@ -550,6 +550,26 @@ class BusinessProfileScreen extends React.Component {
           <ScrollView scrollEventThrottle={16} onScroll={e => this._handleScroll(e)}>
             <View style={styles.paddingTop}>{details}</View>
           </ScrollView>
+          <View
+            style={{
+              display: 'flex',
+              width: '100%',
+              height: 70,
+              backgroundColor: 'white',
+              position: 'absolute',
+              bottom: 0,
+              borderTopColor: '#ccc',
+              borderTopWidth: 0.5,
+              justifyContent: 'center'
+            }}
+          >
+            <Button
+              onPress={e => this._redirectToCarousel.bind(this)(0)}
+              title="Use Coupons"
+              color="#f96a00"
+              accessibilityLabel="Learn more about this purple button"
+            />
+          </View>
         </View>
       );
     }

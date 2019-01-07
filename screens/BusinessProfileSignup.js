@@ -54,8 +54,8 @@ class Signup extends React.Component {
         profileImage: data.picture.data.url
       };
     }
-    const url = URL + `/signup`;
-    // console.log(url);
+    const url = process.env.URL + `/signup`;
+
     axios({
       method: 'post',
       url,

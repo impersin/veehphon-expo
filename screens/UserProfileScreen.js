@@ -47,13 +47,13 @@ class UserProfile extends React.Component {
 
   _logOut = async () => {
     this._handleLoading(true);
-    const url = URL + '/logout';
-    console.log(url);
+    const url = process.env.URL + '/logout';
+
     await SecureStore.deleteItemAsync('token');
     await SecureStore.deleteItemAsync('email');
 
     axios
-      .get('http://192.168.0.102:3000/api/logout')
+      .get(url)
       .then(res => {
         setTimeout(() => {
           return this.props.updateAuth(false);

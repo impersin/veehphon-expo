@@ -33,7 +33,8 @@ class BusinessProfileScreen extends React.Component {
     type: this.props.navigation.state.params.data.type,
     coordinates: this.props.navigation.state.params.data.coordinates,
     // dist: this.props.navigation.state.params.data.dist.calculated,
-    isModalOpen: false
+    isModalOpen: false,
+    modalType: null
   };
 
   componentDidMount() {
@@ -60,7 +61,7 @@ class BusinessProfileScreen extends React.Component {
               return business;
             });
 
-            if (this.props.navigation.state.params.couponData) {
+            if (this.props.navigation.state.params.coupons) {
               this.setState(
                 {
                   business,
@@ -73,6 +74,12 @@ class BusinessProfileScreen extends React.Component {
                   );
                 }
               );
+              // this.setState({
+              //   modalType: 'coupons',
+              //   isLoading: false,
+              //   isModalOpen: true,
+              //   business
+              // });
             } else {
               setTimeout(() => {
                 this.setState({
@@ -91,16 +98,18 @@ class BusinessProfileScreen extends React.Component {
               isLoading: false
             },
             () => {
-              // this.props.navigation.navigate(
-              //   'CouponCarousel',
-              //   this.props.navigation.state.params.couponData
-              // );
               this.props.navigation.navigate('CouponCarousel', {
                 coupons: this.props.navigation.state.params.coupons,
                 index: this.props.navigation.state.params.index
               });
             }
           );
+          // this.setState({
+          //   modalType: 'coupons',
+          //   isLoading: false,
+          //   isModalOpen: true,
+          //   business
+          // });
         } else {
           setTimeout(() => {
             this.setState({
@@ -364,6 +373,9 @@ class BusinessProfileScreen extends React.Component {
     );
   }
   render() {
+    // if (this.props.navigation.state.params.coupons) {
+    //   return <View style={{ flex: 1, backgroundColor: 'white' }} />;
+    // }
     let business = this.props.navigation.state.params.data,
       topMenu = null,
       adImage = null,
@@ -399,87 +411,136 @@ class BusinessProfileScreen extends React.Component {
     }
 
     if (this.state.isModalOpen) {
-      const business = this.state.business;
-      const addressOne = `${business.addressStreet}`;
-      const addressTwo = `${business.addressCity}, ${business.addressState} ${
-        business.addressZipcode
-      }`;
+      if (this.state.modalType !== 'coupons') {
+        const business = this.state.business;
+        const addressOne = `${business.addressStreet}`;
+        const addressTwo = `${business.addressCity}, ${business.addressState} ${
+          business.addressZipcode
+        }`;
 
-      let distance = null;
+        let distance = null;
 
-      if (this.props.navigation.state.params.data.dist) {
-        distance = (
-          <Text style={[styles.detailsFont, { fontSize: 12 }]}>{`${
-            this.props.navigation.state.params.data.dist.calculated
-          }mi`}</Text>
-        );
-      }
+        if (this.props.navigation.state.params.data.dist) {
+          distance = (
+            <Text style={[styles.detailsFont, { fontSize: 12 }]}>{`${
+              this.props.navigation.state.params.data.dist.calculated
+            }mi`}</Text>
+          );
+        }
 
-      return (
-        <View style={styles.modalContainer}>
-          <Modal
-            animationType="slide"
-            transparent={false}
-            visible={this.state.modalVisible}
-            onRequestClose={() => {
-              Alert.alert('Modal has been closed.');
-            }}
-          >
-            <View style={{ paddingTop: Constants.statusBarHeight }} />
-            <View
-              style={Platform.OS === 'ios' ? styles.topMenuModalIos : styles.topMenuModalAndroid}
+        return (
+          <View style={[styles.modalContainer]}>
+            <Modal
+              animationType="slide"
+              transparent={false}
+              visible={this.state.modalVisible}
+              onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+              }}
             >
-              <TouchableOpacity
-                onPress={this._closeModal.bind(this)}
-                style={[
-                  styles.topMenuOne,
-                  {
-                    flex: 1,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'flex-start'
-                  }
-                ]}
+              <View
+              // style={{ paddingTop: Constants.statusBarHeight }}
+              />
+              <View
+                style={Platform.OS === 'ios' ? styles.topMenuModalIos : styles.topMenuModalAndroid}
               >
-                <Ionicons name="ios-arrow-back" color={'#444'} size={30} />
-                <Text style={{ color: '#444', fontSize: 18, fontWeight: 'bold', paddingLeft: 20 }}>
-                  Location
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <GoogleMap
-              handleMapMoal={this._handleMapMoal.bind(this)}
-              location={this.state.coordinates}
-              title={business.businessName}
-              type="modal"
-            />
-            <View style={{ flex: 1, paddingTop: 10, paddingLeft: 10, paddingRight: 10 }}>
-              <View style={[styles.detailsContent, styles.addressContainer]}>
-                <View style={styles.addressLeft}>
-                  <Text style={[styles.detailsFont, { fontWeight: 'bold', paddingBottom: 5 }]}>{`${
-                    business.businessName
-                  }`}</Text>
-                  <Text style={styles.detailsFont}>{`${addressOne}`}</Text>
-                  <Text style={styles.detailsFont}>{`${addressTwo}`}</Text>
-                </View>
-                <View style={styles.addressRight}>
-                  {/* <Text style={styles.detailsFont}>Get direction button.</Text> */}
-                  <TouchableOpacity
-                    onPress={this._handleDirection.bind(this)}
-                    style={styles.directionIconContainer}
+                <TouchableOpacity
+                  onPress={this._closeModal.bind(this)}
+                  style={[
+                    styles.topMenuOne,
+                    {
+                      flex: 1,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'flex-start'
+                    }
+                  ]}
+                >
+                  <Ionicons name="ios-arrow-back" color={'#444'} size={30} />
+                  <Text
+                    style={{ color: '#444', fontSize: 18, fontWeight: 'bold', paddingLeft: 20 }}
                   >
-                    <MaterialIcons name="directions" size={35} color="#f96a00" />
-                  </TouchableOpacity>
-                  <Text style={[styles.detailsFont, { fontSize: 12, fontWeight: 'bold' }]}>
-                    Directions
+                    Location
                   </Text>
-                  {distance}
+                </TouchableOpacity>
+              </View>
+              <GoogleMap
+                handleMapMoal={this._handleMapMoal.bind(this)}
+                location={this.state.coordinates}
+                title={business.businessName}
+                type="modal"
+              />
+              <View style={{ flex: 1, paddingTop: 10, paddingLeft: 10, paddingRight: 10 }}>
+                <View style={[styles.detailsContent, styles.addressContainer]}>
+                  <View style={styles.addressLeft}>
+                    <Text
+                      style={[styles.detailsFont, { fontWeight: 'bold', paddingBottom: 5 }]}
+                    >{`${business.businessName}`}</Text>
+                    <Text style={styles.detailsFont}>{`${addressOne}`}</Text>
+                    <Text style={styles.detailsFont}>{`${addressTwo}`}</Text>
+                  </View>
+                  <View style={styles.addressRight}>
+                    {/* <Text style={styles.detailsFont}>Get direction button.</Text> */}
+                    <TouchableOpacity
+                      onPress={this._handleDirection.bind(this)}
+                      style={styles.directionIconContainer}
+                    >
+                      <MaterialIcons name="directions" size={35} color="#f96a00" />
+                    </TouchableOpacity>
+                    <Text style={[styles.detailsFont, { fontSize: 12, fontWeight: 'bold' }]}>
+                      Directions
+                    </Text>
+                    {distance}
+                  </View>
                 </View>
               </View>
-            </View>
-          </Modal>
-        </View>
-      );
+            </Modal>
+          </View>
+        );
+      } else {
+        return (
+          <View style={styles.modalContainer}>
+            <Modal
+              animationType="none"
+              transparent={false}
+              visible={this.state.modalVisible}
+              onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+              }}
+            >
+              <View style={{ paddingTop: Constants.statusBarHeight }}>
+                <View
+                  style={
+                    Platform.OS === 'ios'
+                      ? [styles.topMenuModalIos, { backgroundColor: 'black' }]
+                      : styles.topMenuModalAndroid
+                  }
+                >
+                  <TouchableOpacity
+                    onPress={this._closeModal.bind(this)}
+                    style={[
+                      styles.topMenuOne,
+                      {
+                        flex: 1,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'flex-start'
+                      }
+                    ]}
+                  >
+                    <Ionicons name="ios-arrow-back" color={'white'} size={30} />
+                    <Text
+                      style={{ color: 'white', fontSize: 18, fontWeight: 'bold', paddingLeft: 20 }}
+                    >
+                      Location
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+          </View>
+        );
+      }
     }
     if (this.state.type === 'Advertiser') {
       const uri = this.props.navigation.state.params.data.photos[0];
@@ -497,13 +558,13 @@ class BusinessProfileScreen extends React.Component {
       }
 
       return (
-        <View>
+        <View style={{ backgroundColor: 'white' }}>
           {topMenu}
           <ScrollView scrollEventThrottle={16} onScroll={e => this._handleScroll(e)}>
             {adImage}
             {details}
           </ScrollView>
-          <View
+          {/* <View
             style={{
               display: 'flex',
               width: '100%',
@@ -515,14 +576,18 @@ class BusinessProfileScreen extends React.Component {
               borderTopWidth: 0.5,
               justifyContent: 'center'
             }}
+          > */}
+          <TouchableOpacity
+            style={styles.stickyButtonContainer}
+            onPress={e => this._redirectToCarousel.bind(this)(0)}
           >
-            <Button
-              onPress={e => this._redirectToCarousel.bind(this)(0)}
-              title="Use Coupons"
-              color="#f96a00"
-              accessibilityLabel="Learn more about this purple button"
-            />
-          </View>
+            <View style={styles.stickyButton}>
+              <Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}>
+                Use Coupons
+              </Text>
+            </View>
+          </TouchableOpacity>
+          {/* </View> */}
         </View>
       );
     } else {
@@ -566,7 +631,8 @@ class BusinessProfileScreen extends React.Component {
             <Button
               onPress={e => this._redirectToCarousel.bind(this)(0)}
               title="Use Coupons"
-              color="#f96a00"
+              // color="#f96a00",
+              style={style.stickyButton}
               accessibilityLabel="Learn more about this purple button"
             />
           </View>
@@ -626,9 +692,8 @@ const styles = StyleSheet.create({
   topMenuModalAndroid: {
     display: 'flex',
     alignSelf: 'stretch',
-    position: 'absolute',
+    // position: 'absolute',
     // top: 44,
-    height: 200,
     zIndex: 1,
     flexDirection: 'row',
     width: '100%',
@@ -639,9 +704,8 @@ const styles = StyleSheet.create({
   topMenuModalIos: {
     display: 'flex',
     alignSelf: 'stretch',
-    position: 'absolute',
+    // position: 'absolute',
     top: Constants.statusBarHeight,
-    height: 200,
     zIndex: 1,
     flexDirection: 'row',
     width: '100%',
@@ -720,6 +784,27 @@ const styles = StyleSheet.create({
   },
   paddingTop: {
     paddingTop: 30
+  },
+  stickyButtonContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    height: 70,
+    backgroundColor: 'white',
+    position: 'absolute',
+    bottom: 0,
+    borderTopColor: '#ccc',
+    borderTopWidth: 0.5
+  },
+  stickyButton: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: 150,
+    height: 30,
+    color: '#f96a00',
+    backgroundColor: '#f96a00',
+    marginTop: 13,
+    borderRadius: 5
   }
 });
 

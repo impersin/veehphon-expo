@@ -142,15 +142,16 @@ class BusinessListScreen extends React.Component {
                 : [styles.summaryContainer, { marginTop: 0 }]
             }
           >
-            <Text style={styles.summaryHeader}>{`${item.businessName} - ${item.addressCity}, ${
+            <Text style={styles.summaryHeader}>{`${item.coupons[0].dealName}`}</Text>
+            <Text style={styles.summarySubHeader}>{`${item.businessName} - ${item.addressCity}, ${
               item.addressState
             }`}</Text>
-            <Tags tags={item.tags} />
             <View style={styles.summaryFooter}>
               <View style={styles.footerLeft}>
-                <Text>
+                {/* <Text>
                   <Text style={styles.innerText}>{`${item.coupons[0].dealName}`}</Text>
-                </Text>
+                </Text> */}
+                <Tags tags={item.tags} />
               </View>
               <View style={styles.footerRight}>{distance}</View>
             </View>
@@ -242,7 +243,15 @@ const styles = StyleSheet.create({
     color: '#444',
     fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 5
+    // backgroundColor: 'yellow'
+  },
+  summarySubHeader: {
+    color: '#444',
+    fontSize: 14,
+    fontWeight: 'bold',
     marginBottom: 10
+    // backgroundColor: 'red'
   },
   circles: {
     flexDirection: 'row',
@@ -282,7 +291,9 @@ const styles = StyleSheet.create({
     // backgroundColor: 'red'
   },
   footerRight: {
-    flex: 1
-    // backgroundColor: 'blue'
+    flex: 1,
+    // backgroundColor: 'blue',
+    justifyContent: 'flex-end',
+    paddingBottom: 12
   }
 });

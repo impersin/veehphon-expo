@@ -39,15 +39,17 @@ const styles = StyleSheet.create({
   tag: {
     display: 'flex',
     justifyContent: 'center',
-    backgroundColor: '#f96a00',
+    // backgroundColor: '#00abd3',
     padding: 5,
     marginRight: 5,
     marginBottom: 5,
-    borderRadius: 5
+    // borderRadius: 5,
+    borderWidth: 0.5,
+    borderColor: '#00abd3'
   },
   tagFont: {
     fontSize: 12,
-    color: 'white',
+    color: '#00abd3',
     fontWeight: 'bold'
   }
 });

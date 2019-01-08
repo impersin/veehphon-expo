@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Platform, ActivityIndicator, StyleSheet, View } from 'react-native';
+import { Platform, Animated, ActivityIndicator, Easing, StyleSheet, View } from 'react-native';
 import { NODE_ENV, URL } from 'react-native-dotenv';
 import { Constants, SecureStore, Location, Permissions } from 'expo';
 import { Ionicons, AntDesign, MaterialIcons } from '@expo/vector-icons/';
@@ -166,44 +166,58 @@ export default connect(
   mapDispatchToProps
 )(Home);
 
-const AppStackNavigator = createStackNavigator({
-  BusinessList: {
-    screen: BusinessListScreen,
-    navigationOptions: {
-      title: 'Home',
-      header: null //this will hide the header
+const AppStackNavigatorConfig = {
+  transitionConfig: () => ({
+    transitionSpec: {
+      duration: 500,
+      easing: Easing.out(Easing.step1),
+      timing: Animated.timing,
+      useNativeDriver: true
+    }
+  })
+};
+
+const AppStackNavigator = createStackNavigator(
+  {
+    BusinessList: {
+      screen: BusinessListScreen,
+      navigationOptions: {
+        title: 'Home',
+        header: null //this will hide the header
+      }
+    },
+    BusinessProfile: {
+      screen: BusinessProfileScreen,
+      navigationOptions:
+        Platform.OS === 'ios'
+          ? { title: 'Profile', header: null }
+          : { title: 'Profile', header: null }
+    },
+    SponsoredBusinessProfile: {
+      screen: SponsoredBusinessProfileScreen,
+      navigationOptions:
+        Platform.OS === 'ios'
+          ? { title: 'Profile', header: null }
+          : { title: 'Profile', header: null }
+    },
+    CouponCarousel: {
+      screen: CouponCarousel,
+      navigationOptions: {
+        title: 'Coupons',
+        header: null //this will hide the header
+      }
+    },
+    BusinessProfileLogin: {
+      screen: BusinessProfileLogin,
+      navigationOptions: { title: 'Profile', header: null }
+    },
+    BusinessProfileSignup: {
+      screen: BusinessProfileSignup,
+      navigationOptions: { title: 'Profile', header: null }
     }
   },
-  BusinessProfile: {
-    screen: BusinessProfileScreen,
-    navigationOptions:
-      Platform.OS === 'ios'
-        ? { title: 'Profile', header: null }
-        : { title: 'Profile', header: null }
-  },
-  SponsoredBusinessProfile: {
-    screen: SponsoredBusinessProfileScreen,
-    navigationOptions:
-      Platform.OS === 'ios'
-        ? { title: 'Profile', header: null }
-        : { title: 'Profile', header: null }
-  },
-  CouponCarousel: {
-    screen: CouponCarousel,
-    navigationOptions: {
-      title: 'Coupons',
-      header: null //this will hide the header
-    }
-  },
-  BusinessProfileLogin: {
-    screen: BusinessProfileLogin,
-    navigationOptions: { title: 'Profile', header: null }
-  },
-  BusinessProfileSignup: {
-    screen: BusinessProfileSignup,
-    navigationOptions: { title: 'Profile', header: null }
-  }
-});
+  AppStackNavigatorConfig
+);
 
 const LoginStackNavigator = createStackNavigator({
   Login: {

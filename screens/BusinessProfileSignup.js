@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
-import { NODE_ENV, URL } from 'react-native-dotenv';
 import axios from 'axios';
 import { Constants, SecureStore } from 'expo';
 import { Ionicons } from '@expo/vector-icons/';
@@ -55,7 +54,7 @@ class Signup extends React.Component {
       };
     }
     const url = process.env.URL + `/signup`;
-
+    // console.log(process.env.URL);
     axios({
       method: 'post',
       url,
@@ -76,6 +75,12 @@ class Signup extends React.Component {
         setTimeout(() => {
           this.props.updateAuth({ auth: true, user: res.data.userInfo });
           this._handleLoading(false);
+          this.props.navigation.navigate('CouponCarousel', {
+            coupons: this.props.navigation.state.params.coupons,
+            index: this.props.navigation.state.params.index,
+            business: this.props.navigation.state.params.business,
+            redirectedFrom: this.props.navigation.state.params.redirectedFrom
+          });
         }, 1500);
       })
       .catch(err => {});
@@ -114,7 +119,7 @@ class Signup extends React.Component {
           </TouchableOpacity>
         </View>
         <View style={styles.header}>
-          <Text style={{ fontSize: 24, marginBottom: 5 }}>Sign Up from profile</Text>
+          <Text style={{ fontSize: 24, marginBottom: 5 }}>Sign Up</Text>
           {/* <Text style={{ fontSize: 14 }}>Sign in to use this coupon</Text> */}
         </View>
         <View style={styles.body}>

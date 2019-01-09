@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
-import { NODE_ENV, URL } from 'react-native-dotenv';
 import axios from 'axios';
 import { Constants, SecureStore } from 'expo';
 import { Ionicons } from '@expo/vector-icons/';
@@ -60,7 +59,7 @@ class Login extends React.Component {
     }
 
     const url = process.env.URL + `/signup`;
-
+    // console.log(process.env.URL);
     axios({
       method: 'post',
       url,
@@ -82,6 +81,12 @@ class Login extends React.Component {
         setTimeout(() => {
           this.props.updateAuth({ auth: true, user: res.data.userInfo });
           this._handleLoading(false);
+          this.props.navigation.navigate('CouponCarousel', {
+            coupons: this.props.navigation.state.params.coupons,
+            index: this.props.navigation.state.params.index,
+            business: this.props.navigation.state.params.business,
+            redirectedFrom: this.props.navigation.state.params.redirectedFrom
+          });
         }, 1500);
       })
       .catch(err => {});
@@ -122,7 +127,7 @@ class Login extends React.Component {
             </TouchableOpacity>
           </View>
           <View style={styles.header}>
-            <Text style={{ fontSize: 24, marginBottom: 5 }}>Log In from profile</Text>
+            <Text style={{ fontSize: 24, marginBottom: 5 }}>Log In</Text>
             {/* <Text style={{ fontSize: 14 }}>Log in to use this coupon</Text> */}
           </View>
           <View style={styles.body}>
@@ -162,7 +167,7 @@ class Login extends React.Component {
             </TouchableOpacity>
           </View>
           <View style={styles.header}>
-            <Text style={{ fontSize: 24, marginBottom: 5 }}>Sign Up from profile</Text>
+            <Text style={{ fontSize: 24, marginBottom: 5 }}>Sign Up </Text>
             {/* <Text style={{ fontSize: 14 }}>Sign in to use this coupon</Text> */}
           </View>
           <View style={styles.body}>
@@ -250,23 +255,19 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 50,
     justifyContent: 'center'
-    // backgroundColor: 'black'
   },
   topMenuOne: {
     flex: 6,
-    // borderWidth: 1,
     justifyContent: 'center',
     paddingLeft: 20
   },
   topMenuTwo: {
     flex: 1,
-    // borderWidth: 1,
     justifyContent: 'center',
     paddingLeft: 20
   },
   topMenuThree: {
     flex: 1,
-    // borderWidth: 1,
     justifyContent: 'center',
     paddingLeft: 20
   },

@@ -9,19 +9,15 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
-  Modal,
-  Image,
-  FlatList
+  Modal
 } from 'react-native';
 import { Constants } from 'expo';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons/';
-import axios from 'axios';
 import BackgroundImage from './../components/BackgroundImage';
 import GoogleMap from './../components/GoogleMap';
 import Tags from './../components/Tags';
 import Coupons from './../components/Coupons';
 import BlockMenu from './../components/BlockMenu';
-import { NODE_ENV, URL } from 'react-native-dotenv';
 
 class SponsoredBusinessProfileScreen extends React.Component {
   // static navigationOptions = {
@@ -42,8 +38,21 @@ class SponsoredBusinessProfileScreen extends React.Component {
     this.props.navigation.navigate('BusinessProfile', { data });
   }
 
-  _redirectToCarousel(coupon) {
-    this.props.navigation.navigate('CouponCarousel', coupon);
+  _redirectToCarousel(index) {
+    if (this.props.auth) {
+      this.props.navigation.navigate('CouponCarousel', {
+        index,
+        coupons: this.state.business.coupons
+      });
+    } else {
+      this.props.navigation.navigate('BusinessProfileLogin', {
+        business: this.state.business,
+        coupons: this.state.business.coupons,
+        index,
+        type: 'login',
+        redirectedFrom: 'SponsoredBusinessProfile'
+      });
+    }
   }
 
   _handleScroll(e) {
@@ -98,8 +107,10 @@ class SponsoredBusinessProfileScreen extends React.Component {
           <Text style={styles.detailsFont}>{businessHours}</Text>
         </View>
         <Tags tags={this.state.business.tags} />
-        <Text style={[styles.detailsFont, styles.detialsSubtitle]}>Coupons</Text>
-        <ScrollView horizontal={true}>
+        <Text style={[styles.detailsFont, styles.detialsSubtitle, { marginBottom: 0 }]}>
+          Coupons
+        </Text>
+        <ScrollView style={{ marginBottom: 20 }} horizontal={false}>
           <Coupons
             coupons={business.coupons}
             goToPrevious={this._goToPrevious.bind(this)}
@@ -127,10 +138,12 @@ class SponsoredBusinessProfileScreen extends React.Component {
             <Text style={[styles.detailsFont, { fontSize: 12, fontWeight: 'bold' }]}>
               Directions
             </Text>
-            <Text style={[styles.detailsFont, { fontSize: 12 }]}>{`${this.state.dist}mi`}</Text>
+            <Text style={[styles.detailsFont, { fontSize: 12 }]}>{`${
+              business.dist.calculated
+            }mi`}</Text>
           </View>
         </View>
-        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 20 }}>
+        <View style={{ display: 'flex' }}>
           <BlockMenu icon={'phone'} title={business.phoneNumber} subTitle={'Subtitle'} />
           <BlockMenu icon={'home'} title={business.website} subTitle={'Subtitle'} />
         </View>
@@ -142,18 +155,19 @@ class SponsoredBusinessProfileScreen extends React.Component {
     let business = this.state.business,
       topMenu = null,
       adImage = null,
-      details;
-    if (this.state.yOffset < 250) {
+      details,
+      stickyButton;
+    if (this.state.yOffset < 200) {
       topMenu = (
         <View style={styles.topMenu}>
           <TouchableOpacity onPress={this._goToPrevious.bind(this)} style={styles.topMenuOne}>
             <Ionicons name="ios-arrow-back" color={'white'} size={30} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.topMenuTwo}>
-            <Ionicons name="ios-share-alt" color={'white'} size={30} />
+            {/* <Ionicons name="ios-share-alt" color={'white'} size={30} /> */}
           </TouchableOpacity>
           <TouchableOpacity style={styles.topMenuThree}>
-            <Ionicons name="ios-heart-empty" color={'white'} size={30} />
+            {/* <Ionicons name="ios-heart-empty" color={'white'} size={30} /> */}
           </TouchableOpacity>
         </View>
       );
@@ -164,14 +178,27 @@ class SponsoredBusinessProfileScreen extends React.Component {
             <Ionicons name="ios-arrow-back" color={'#444'} size={30} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.topMenuTwo}>
-            <Ionicons name="ios-share-alt" color={'#444'} size={30} />
+            {/* <Ionicons name="ios-share-alt" color={'#444'} size={30} /> */}
           </TouchableOpacity>
           <TouchableOpacity style={styles.topMenuThree}>
-            <Ionicons name="ios-heart-empty" color={'#444'} size={30} />
+            {/* <Ionicons name="ios-heart-empty" color={'#444'} size={30} /> */}
           </TouchableOpacity>
         </View>
       );
     }
+
+    stickyButton = (
+      <TouchableOpacity
+        style={styles.stickyButtonContainer}
+        onPress={e => this._redirectToCarousel.bind(this)(0)}
+      >
+        <View style={styles.stickyButton}>
+          <Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}>
+            Use Coupons
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
 
     if (this.state.isModalOpen) {
       const addressOne = `${business.addressStreet}`;
@@ -212,7 +239,7 @@ class SponsoredBusinessProfileScreen extends React.Component {
             </View>
             <GoogleMap
               handleMapMoal={this._handleMapMoal.bind(this)}
-              location={this.state.coordinates}
+              location={business.geometry.coordinates}
               title={business.businessName}
               type="modal"
             />
@@ -236,7 +263,7 @@ class SponsoredBusinessProfileScreen extends React.Component {
                     Directions
                   </Text>
                   <Text style={[styles.detailsFont, { fontSize: 12 }]}>{`${
-                    this.state.dist
+                    business.dist.calculated
                   }mi`}</Text>
                 </View>
               </View>
@@ -265,6 +292,7 @@ class SponsoredBusinessProfileScreen extends React.Component {
           {adImage}
           {details}
         </ScrollView>
+        {stickyButton}
       </View>
     );
   }
@@ -345,12 +373,10 @@ const styles = StyleSheet.create({
   },
   details: {
     flex: 1,
-    minHeight: 500,
+    minHeight: 550,
     padding: 10,
-    // justifyContent: 'center'
-    // alignSelf: 'stretch',
-    backgroundColor: 'white'
-    // paddingBottom: 50
+    backgroundColor: 'white',
+    paddingBottom: 100
   },
   detailsContent: {
     marginBottom: 20
@@ -413,6 +439,27 @@ const styles = StyleSheet.create({
   },
   paddingTop: {
     paddingTop: 30
+  },
+  stickyButtonContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    height: 70,
+    backgroundColor: 'white',
+    position: 'absolute',
+    bottom: 0,
+    borderTopColor: '#ccc',
+    borderTopWidth: 0.5
+  },
+  stickyButton: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: 150,
+    height: 30,
+    color: '#f96a00',
+    backgroundColor: '#f96a00',
+    marginTop: 13,
+    borderRadius: 5
   }
 });
 

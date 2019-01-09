@@ -30,21 +30,10 @@ class BusinessListScreen extends React.Component {
   };
 
   async componentDidMount() {
-    let business = await SecureStore.getItemAsync('business');
-    let coupons = await SecureStore.getItemAsync('coupons');
-    let index = await SecureStore.getItemAsync('index');
-    if (business && coupons && index) {
-      data = JSON.parse(business);
-      coupons = JSON.parse(coupons);
-      index = JSON.parse(index);
-      this.props.navigation.navigate('BusinessProfile', { data, coupons, index });
-      await SecureStore.deleteItemAsync('business');
-      await SecureStore.deleteItemAsync('coupons');
-      await SecureStore.deleteItemAsync('index');
-      this._initializeData();
-    } else {
-      this._initializeData();
-    }
+    await SecureStore.deleteItemAsync('business');
+    await SecureStore.deleteItemAsync('coupons');
+    await SecureStore.deleteItemAsync('index');
+    this._initializeData();
   }
 
   _fetchData() {
@@ -65,7 +54,8 @@ class BusinessListScreen extends React.Component {
       const lng = this.props.screenProps.location.coords.longitude;
       const { page, seed } = this.state;
       const url = process.env.URL + `/businesses?lat=${lat}&lng=${lng}&page=${page}&seed=${seed}`;
-
+      // console.log(url);
+      console.log(process.env.URL);
       axios
         .get(url)
         .then(res => {
@@ -76,7 +66,8 @@ class BusinessListScreen extends React.Component {
           setTimeout(() => {
             this.setState({
               isLoading: false,
-              initialData: [...this.state.initialData, ...businesses],
+              // initialData: [...this.state.initialData, ...businesses],
+              initialData: businesses,
               refreshing: false
             });
           }, 500);
@@ -124,9 +115,11 @@ class BusinessListScreen extends React.Component {
 
   _renderItem = ({ item }) => {
     let adImage = null,
-      distance = null;
+      distance = null,
+      Spondsored = null;
     if (item.type === 'Advertiser') {
       adImage = <Image style={styles.imgStyle} source={{ uri: item.photos[0] }} />;
+      Spondsored = <Text style={{ fontSize: 12, color: '#777' }}>Sponsored</Text>;
     }
     if (item.dist) {
       distance = <Text style={styles.innerText}>{item.dist.calculated}mi</Text>;
@@ -142,15 +135,17 @@ class BusinessListScreen extends React.Component {
                 : [styles.summaryContainer, { marginTop: 0 }]
             }
           >
-            <Text style={styles.summaryHeader}>{`${item.coupons[0].dealName}`}</Text>
+            <View style={styles.summaryHeaderContainer}>
+              <View style={styles.summaryHeaderLeft}>
+                <Text style={styles.summaryHeader}>{`${item.coupons[0].dealName}`}</Text>
+              </View>
+              <View style={styles.summaryHeaderRight}>{Spondsored}</View>
+            </View>
             <Text style={styles.summarySubHeader}>{`${item.businessName} - ${item.addressCity}, ${
               item.addressState
             }`}</Text>
             <View style={styles.summaryFooter}>
               <View style={styles.footerLeft}>
-                {/* <Text>
-                  <Text style={styles.innerText}>{`${item.coupons[0].dealName}`}</Text>
-                </Text> */}
                 <Tags tags={item.tags} />
               </View>
               <View style={styles.footerRight}>{distance}</View>
@@ -177,7 +172,6 @@ class BusinessListScreen extends React.Component {
       );
     }
 
-    console.log(width);
     return (
       <View style={styles.container}>
         <FlatList
@@ -239,14 +233,27 @@ const styles = StyleSheet.create({
     // backgroundColor: 'red'
     // height: '100%'
   },
-  summaryHeader: {
-    color: '#444',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 5
+  summaryHeaderContainer: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  summaryHeaderLeft: {
+    flex: 1
+    // backgroundColor: 'yellow'
+  },
+  summaryHeaderRight: {
+    flex: 1,
+    alignItems: 'flex-end'
     // backgroundColor: 'yellow'
   },
   summarySubHeader: {
+    color: '#444',
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 10
+    // backgroundColor: 'red'
+  },
+  summaryHeader: {
     color: '#444',
     fontSize: 14,
     fontWeight: 'bold',

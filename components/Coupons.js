@@ -20,14 +20,12 @@ export default class Coupons extends React.Component {
               alignItems: 'center',
               justifyContent: 'space-between',
               height: 40,
-              flexDirection: 'row',
-              borderBottomColor: '#ccc',
-              borderBottomWidth: 0.1
+              flexDirection: 'row'
             }}
             onPress={e => this.props.redirectToCarousel(index)}
           >
             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialIcons name="redeem" color="#444" size={20} />
+              {/* <MaterialIcons name="redeem" color="#444" size={20} /> */}
               <Text style={styles.couponFont}>{coupon.dealName}</Text>
             </View>
             <View>

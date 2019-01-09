@@ -135,11 +135,12 @@ class Home extends React.Component {
       );
     }
 
-    if (this.props.auth) {
-      tabNav = <AppBottomTabNavigatorLoggedin screenProps={this.state} />;
-    } else {
-      tabNav = <AppBottomTabNavigator screenProps={this.state} />;
-    }
+    // if (this.props.auth) {
+    //   tabNav = <AppBottomTabNavigatorLoggedin screenProps={this.state} />;
+    // } else {
+    //   tabNav = <AppBottomTabNavigator screenProps={this.state} />;
+    // }
+    tabNav = <AppBottomTabNavigator screenProps={this.state} />;
     return (
       <View style={styles.container}>
         {/* <View style={styles.topMenu}>
@@ -166,117 +167,98 @@ export default connect(
   mapDispatchToProps
 )(Home);
 
-const AppStackNavigatorConfig = {
-  transitionConfig: () => ({
-    transitionSpec: {
-      duration: 500,
-      easing: Easing.out(Easing.step1),
-      timing: Animated.timing,
-      useNativeDriver: true
-    }
-  })
-};
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: Constants.statusBarHeight,
+    backgroundColor: 'white'
+  },
+  ActivityIndicatorContainer: { alignItems: 'center', justifyContent: 'center' },
+  topMenu: { flex: 1, backgroundColor: 'yellow' },
+  main: {
+    flex: 11
+  }
+});
 
-const AppStackNavigator = createStackNavigator(
-  {
-    BusinessList: {
-      screen: BusinessListScreen,
-      navigationOptions: {
-        title: 'Home',
-        header: null //this will hide the header
-      }
-    },
-    BusinessProfile: {
-      screen: BusinessProfileScreen,
-      navigationOptions:
-        Platform.OS === 'ios'
-          ? { title: 'Profile', header: null }
-          : { title: 'Profile', header: null }
-    },
-    SponsoredBusinessProfile: {
-      screen: SponsoredBusinessProfileScreen,
-      navigationOptions:
-        Platform.OS === 'ios'
-          ? { title: 'Profile', header: null }
-          : { title: 'Profile', header: null }
-    },
-    CouponCarousel: {
-      screen: CouponCarousel,
-      navigationOptions: {
-        title: 'Coupons',
-        header: null //this will hide the header
-      }
-    },
-    BusinessProfileLogin: {
-      screen: BusinessProfileLogin,
-      navigationOptions: { title: 'Profile', header: null }
-    },
-    BusinessProfileSignup: {
-      screen: BusinessProfileSignup,
-      navigationOptions: { title: 'Profile', header: null }
+// const AppStackNavigatorConfig = {
+//   transitionConfig: () => ({
+//     transitionSpec: {
+//       duration: 500,
+//       easing: Easing.out(Easing.step1),
+//       timing: Animated.timing,
+//       useNativeDriver: true
+//     }
+//   })
+// };
+
+const AppStackNavigator = createStackNavigator({
+  BusinessList: {
+    screen: BusinessListScreen,
+    navigationOptions: {
+      title: 'Home',
+      header: null //this will hide the header
     }
   },
-  AppStackNavigatorConfig
+  BusinessProfile: {
+    screen: BusinessProfileScreen,
+    navigationOptions:
+      Platform.OS === 'ios'
+        ? { title: 'Profile', header: null }
+        : { title: 'Profile', header: null }
+  },
+  SponsoredBusinessProfile: {
+    screen: SponsoredBusinessProfileScreen,
+    navigationOptions:
+      Platform.OS === 'ios'
+        ? { title: 'Profile', header: null }
+        : { title: 'Profile', header: null }
+  },
+  CouponCarousel: {
+    screen: CouponCarousel,
+    navigationOptions: {
+      title: 'Coupons',
+      header: null //this will hide the header
+    }
+  },
+  BusinessProfileLogin: {
+    screen: BusinessProfileLogin,
+    navigationOptions: { title: 'Profile', header: null }
+  },
+  BusinessProfileSignup: {
+    screen: BusinessProfileSignup,
+    navigationOptions: { title: 'Profile', header: null }
+  }
+});
+
+const LoginStackNavigator = createStackNavigator(
+  {
+    UserProfile: {
+      screen: UserProfile,
+      navigationOptions:
+        Platform.OS === 'ios'
+          ? { title: 'Profile', header: null }
+          : { title: 'Profile', header: null }
+    },
+    PrivacyPolicy: {
+      screen: PrivacyPolicyScreen,
+      navigationOptions:
+        Platform.OS === 'ios'
+          ? { title: 'Profile', header: null }
+          : { title: 'Profile', header: null }
+    },
+    TermsOfService: {
+      screen: TermsOfServiceScreen,
+      navigationOptions:
+        Platform.OS === 'ios'
+          ? { title: 'Profile', header: null }
+          : { title: 'Profile', header: null }
+    }
+  },
+  { initialRouteName: 'UserProfile' }
 );
 
-const LoginStackNavigator = createStackNavigator({
-  Login: {
-    screen: Login,
-    navigationOptions: { title: 'Profile', header: null }
-  },
-  Signup: {
-    screen: Signup,
-    navigationOptions: { title: 'Profile', header: null }
-  },
-  PrivacyPolicy: {
-    screen: PrivacyPolicyScreen,
-    navigationOptions:
-      Platform.OS === 'ios'
-        ? { title: 'Profile', header: null }
-        : { title: 'Profile', header: null }
-  },
-  TermsOfService: {
-    screen: TermsOfServiceScreen,
-    navigationOptions:
-      Platform.OS === 'ios'
-        ? { title: 'Profile', header: null }
-        : { title: 'Profile', header: null }
-  }
-});
-
-const ProfileStackNavigator = createStackNavigator({
-  UserProfile: {
-    screen: UserProfile,
-    navigationOptions:
-      Platform.OS === 'ios'
-        ? { title: 'Profile', header: null }
-        : { title: 'Profile', header: null }
-  },
-  PrivacyPolicy: {
-    screen: PrivacyPolicyScreen,
-    navigationOptions:
-      Platform.OS === 'ios'
-        ? { title: 'Profile', header: null }
-        : { title: 'Profile', header: null }
-  },
-  TermsOfService: {
-    screen: TermsOfServiceScreen,
-    navigationOptions:
-      Platform.OS === 'ios'
-        ? { title: 'Profile', header: null }
-        : { title: 'Profile', header: null }
-  }
-  // Logout: {
-  //   screen: Logout,
-  //   navigationOptions:
-  //     Platform.OS === 'ios'
-  //       ? { title: 'Profile', header: null }
-  //       : { title: 'Profile', header: null }
-  // }
-});
-
 AppStackNavigator.navigationOptions = ({ navigation }) => {
-  if (navigation.state.index === 1 || navigation.state.index === 2) {
+  if (navigation.state.index > 0) {
     return {
       tabBarVisible: false
     };
@@ -298,37 +280,6 @@ const AppBottomTabNavigator = createBottomTabNavigator(
     Login: {
       screen: LoginStackNavigator,
       navigationOptions: {
-        tabBarLabel: 'LOG IN',
-        tabBarIcon: () => <AntDesign name="user" color="#444" size={25} />
-      }
-    }
-  },
-  {
-    tabBarOptions: {
-      activeTintColor: '#f96a00',
-      labelStyle: {
-        fontSize: 10
-      },
-      style: {
-        backgroundColor: 'white',
-        paddingTop: 10
-      }
-    }
-  }
-);
-
-const AppBottomTabNavigatorLoggedin = createBottomTabNavigator(
-  {
-    Home: {
-      screen: AppStackNavigator,
-      navigationOptions: {
-        tabBarLabel: 'EXPLORE',
-        tabBarIcon: () => <Ionicons name="ios-search" color="#444" size={25} />
-      }
-    },
-    Login: {
-      screen: ProfileStackNavigator,
-      navigationOptions: {
         tabBarLabel: 'MY PAGE',
         tabBarIcon: () => <AntDesign name="user" color="#444" size={25} />
       }
@@ -348,15 +299,57 @@ const AppBottomTabNavigatorLoggedin = createBottomTabNavigator(
   }
 );
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: Constants.statusBarHeight,
-    backgroundColor: 'white'
-  },
-  ActivityIndicatorContainer: { alignItems: 'center', justifyContent: 'center' },
-  topMenu: { flex: 1, backgroundColor: 'yellow' },
-  main: {
-    flex: 11
-  }
-});
+// const AppBottomTabNavigatorLoggedin = createBottomTabNavigator(
+//   {
+//     Home: {
+//       screen: AppStackNavigator,
+//       navigationOptions: {
+//         tabBarLabel: 'EXPLORE',
+//         tabBarIcon: () => <Ionicons name="ios-search" color="#444" size={25} />
+//       }
+//     },
+//     Login: {
+//       screen: ProfileStackNavigator,
+//       navigationOptions: {
+//         tabBarLabel: 'MY PAGE',
+//         tabBarIcon: () => <AntDesign name="user" color="#444" size={25} />
+//       }
+//     }
+//   },
+//   {
+//     tabBarOptions: {
+//       activeTintColor: '#f96a00',
+//       labelStyle: {
+//         fontSize: 10
+//       },
+//       style: {
+//         backgroundColor: 'white',
+//         paddingTop: 10
+//       }
+//     }
+//   }
+// );
+
+// const ProfileStackNavigator = createStackNavigator({
+//   UserProfile: {
+//     screen: UserProfile,
+//     navigationOptions:
+//       Platform.OS === 'ios'
+//         ? { title: 'Profile', header: null }
+//         : { title: 'Profile', header: null }
+//   },
+//   PrivacyPolicy: {
+//     screen: PrivacyPolicyScreen,
+//     navigationOptions:
+//       Platform.OS === 'ios'
+//         ? { title: 'Profile', header: null }
+//         : { title: 'Profile', header: null }
+//   },
+//   TermsOfService: {
+//     screen: TermsOfServiceScreen,
+//     navigationOptions:
+//       Platform.OS === 'ios'
+//         ? { title: 'Profile', header: null }
+//         : { title: 'Profile', header: null }
+//   }
+// });

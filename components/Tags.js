@@ -27,23 +27,20 @@ const styles = StyleSheet.create({
   tagsWrapper: {
     display: 'flex',
     flexDirection: 'row',
-    marginBottom: 5
+    marginBottom: 10
   },
   tagsContainer: {
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    // backgroundColor: 'yellow',
     width: '90%'
   },
   tag: {
     display: 'flex',
     justifyContent: 'center',
-    // backgroundColor: '#00abd3',
     padding: 5,
     marginRight: 5,
     marginBottom: 5,
-    // borderRadius: 5,
     borderWidth: 0.5,
     borderColor: '#00abd3'
   },

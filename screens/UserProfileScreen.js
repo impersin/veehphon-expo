@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { NODE_ENV, URL } from 'react-native-dotenv';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -14,9 +13,9 @@ import {
   Dimensions
 } from 'react-native';
 import axios from 'axios';
-import { Constants, SecureStore } from 'expo';
+import { SecureStore } from 'expo';
 import { MaterialCommunityIcons } from '@expo/vector-icons/';
-import Logout from './Logout';
+import Login from './Login';
 
 const { height, width } = Dimensions.get('window');
 const logoutContainerWidth = (width * 2) / 3;
@@ -26,15 +25,33 @@ class UserProfile extends React.Component {
     data: [],
     isLoading: false,
     isModalOpen: false,
-    modalType: null
+    modalType: null,
+    authMethod: 'login'
   };
 
   componentWillMount() {
     const user = SecureStore.getItemAsync('user');
   }
-  _redirecToLoginPage(screen) {
-    this.props.navigation.navigate(screen);
+
+  _redirecToSignupPage() {
+    this.setState({
+      authMethod: 'signup'
+    });
   }
+
+  _redirecToLoginPage() {
+    this.setState({
+      authMethod: 'login'
+    });
+  }
+
+  _redirecToTermsPage() {
+    this.props.navigation.navigate('TermsOfService');
+  }
+  _redirecToPrivacyPage() {
+    this.props.navigation.navigate('PrivacyPolicy');
+  }
+
   _pressEmail = () => {
     Linking.openURL(`mailto:support@veeh.co`);
   };
@@ -48,25 +65,33 @@ class UserProfile extends React.Component {
   _logOut = async () => {
     this._handleLoading(true);
     const url = process.env.URL + '/logout';
-
+    // console.log(process.env.URL);
     await SecureStore.deleteItemAsync('token');
     await SecureStore.deleteItemAsync('email');
 
     axios
       .get(url)
       .then(res => {
-        setTimeout(() => {
-          return this.props.updateAuth(false);
-        }, 1000);
+        this.setState(
+          {
+            modalType: null,
+            isModalOpen: false,
+            isLoading: false
+          },
+          () => {
+            this.props.updateAuth({ auth: false, user: null });
+            this.props.navigation.navigate('Home');
+          }
+        );
       })
       .catch(err => {
         console.log(err);
       });
   };
 
-  _openModal() {
+  _openModal(modalType) {
     this.setState({
-      modalType: 'logout',
+      modalType,
       isModalOpen: true
     });
   }
@@ -75,14 +100,15 @@ class UserProfile extends React.Component {
     if (!this.state.isLoading) {
       this.setState({
         modalType: null,
-        isModalOpen: false
+        isModalOpen: false,
+        isLoading: false
       });
     }
   }
   _clickInnerBox() {}
   _handleModal() {
+    let body;
     if (this.state.modalType === 'logout') {
-      let body;
       if (this.state.isLoading) {
         body = (
           <View style={styles.ActivityIndicatorContainer}>
@@ -119,7 +145,7 @@ class UserProfile extends React.Component {
               <TouchableOpacity onPress={this._closeModal.bind(this)}>
                 <Text style={[styles.userProfileFont, { fontSize: 12 }]}>CANCEL</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={this._logOut}>
+              <TouchableOpacity onPress={this._logOut.bind(this)}>
                 <Text style={[styles.userProfileFont, { color: '#f96a00', fontSize: 12 }]}>
                   LOG OUT
                 </Text>
@@ -163,103 +189,115 @@ class UserProfile extends React.Component {
   render() {
     const user = this.props.user;
     let modal = this._handleModal();
-    return (
-      <View style={styles.container}>
-        <View style={[styles.header]}>
-          <Image
-            style={{ width: 100, height: 100, borderRadius: 50, marginBottom: 10 }}
-            source={{ uri: user.profileImage }}
-          />
-          <Text style={[styles.userProfileFont, { fontSize: 18 }]}>{`${user.firstName} ${
-            user.lastName
-          }`}</Text>
-        </View>
-        <View style={[styles.body]}>
-          <View
-            style={{
-              borderBottomColor: '#ccc',
-              borderBottomWidth: 1
-            }}
-          >
+
+    if (!this.props.auth) {
+      return (
+        <Login
+          authMethod={this.state.authMethod}
+          navigation={this.props.navigation}
+          redirecToLoginPage={this._redirecToLoginPage.bind(this)}
+          redirecToSignupPage={this._redirecToSignupPage.bind(this)}
+        />
+      );
+    } else {
+      return (
+        <View style={styles.container}>
+          <View style={[styles.header]}>
+            <Image
+              style={{ width: 100, height: 100, borderRadius: 50, marginBottom: 10 }}
+              source={{ uri: user.profileImage }}
+            />
+            <Text style={[styles.userProfileFont, { fontSize: 18 }]}>{`${user.firstName} ${
+              user.lastName
+            }`}</Text>
+          </View>
+          <View style={[styles.body]}>
+            <View
+              style={{
+                borderBottomColor: '#ccc',
+                borderBottomWidth: 1
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  height: 50,
+                  flexDirection: 'row'
+                }}
+                onPress={this._redirecToPrivacyPage.bind(this)}
+              >
+                <View>
+                  <Text style={[styles.userProfileFont]}>Privacy Policy</Text>
+                </View>
+                <View>
+                  <MaterialCommunityIcons name="security" color="#444" size={25} />
+                </View>
+              </TouchableOpacity>
+            </View>
             <TouchableOpacity
               style={{
                 display: 'flex',
+                flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 height: 50,
-                flexDirection: 'row'
+                borderBottomColor: '#ccc',
+                borderBottomWidth: 1
               }}
-              onPress={e => this._redirecToLoginPage('PrivacyPolicy')}
+              onPress={this._redirecToTermsPage.bind(this)}
             >
               <View>
-                <Text style={[styles.userProfileFont]}>Privacy Policy</Text>
+                <Text style={[styles.userProfileFont]}>Terms Of Service</Text>
               </View>
               <View>
-                <MaterialCommunityIcons name="security" color="#444" size={25} />
+                <MaterialCommunityIcons name="file-document-outline" color="#444" size={25} />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                height: 50,
+                borderBottomColor: '#ccc',
+                borderBottomWidth: 1
+              }}
+              onPress={this._pressEmail.bind(this)}
+            >
+              <View>
+                <Text style={[styles.userProfileFont]}>Contact Us</Text>
+              </View>
+              <View>
+                <MaterialCommunityIcons name="email-open-outline" color="#444" size={25} />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={e => this._openModal('logout')}
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                height: 50,
+                borderBottomColor: '#ccc',
+                borderBottomWidth: 1
+              }}
+            >
+              <View>
+                <Text style={[styles.userProfileFont]}>Log out</Text>
+              </View>
+              <View>
+                <MaterialCommunityIcons name="logout" color="#444" size={25} />
               </View>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              height: 50,
-              borderBottomColor: '#ccc',
-              borderBottomWidth: 1
-            }}
-            onPress={e => this._redirecToLoginPage('TermsOfService')}
-          >
-            <View>
-              <Text style={[styles.userProfileFont]}>Terms Of Service</Text>
-            </View>
-            <View>
-              <MaterialCommunityIcons name="file-document-outline" color="#444" size={25} />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              height: 50,
-              borderBottomColor: '#ccc',
-              borderBottomWidth: 1
-            }}
-            onPress={this._pressEmail.bind(this)}
-          >
-            <View>
-              <Text style={[styles.userProfileFont]}>Contact Us</Text>
-            </View>
-            <View>
-              <MaterialCommunityIcons name="email-open-outline" color="#444" size={25} />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={e => this._openModal()}
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              height: 50,
-              borderBottomColor: '#ccc',
-              borderBottomWidth: 1
-            }}
-          >
-            <View>
-              <Text style={[styles.userProfileFont]}>Log out</Text>
-            </View>
-            <View>
-              <MaterialCommunityIcons name="logout" color="#444" size={25} />
-            </View>
-          </TouchableOpacity>
+          {modal}
         </View>
-        {modal}
-      </View>
-    );
+      );
+    }
   }
 }
 

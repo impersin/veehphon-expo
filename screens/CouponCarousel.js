@@ -23,7 +23,13 @@ export default class Carousel extends Component {
     }, 0);
   }
   _goToPrevious() {
-    this.props.navigation.goBack();
+    if (!this.props.navigation.state.params.business) {
+      this.props.navigation.goBack();
+    } else {
+      this.props.navigation.navigate(this.props.navigation.state.params.redirectedFrom, {
+        data: this.props.navigation.state.params.business
+      });
+    }
   }
   render() {
     const coupons = this.props.navigation.state.params.coupons;

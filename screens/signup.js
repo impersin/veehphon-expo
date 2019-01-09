@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
-import { NODE_ENV, URL } from 'react-native-dotenv';
+import { ActivityIndicator, StyleSheet, Text, View, Modal } from 'react-native';
 import axios from 'axios';
 import { Constants, SecureStore } from 'expo';
 import FacebookLoginButton from '../components/FacebookLoginButton';
@@ -14,7 +13,7 @@ class Signup extends React.Component {
   };
 
   _redirectToLoginPage() {
-    this.props.navigation.navigate('Login');
+    this.props.navigation.goBack();
   }
   _redirectToTermsPage() {
     this.props.navigation.navigate('TermsOfService');
@@ -48,7 +47,7 @@ class Signup extends React.Component {
       };
     }
     const url = process.env.URL + `/signup`;
-
+    // console.log(process.env.URL);
     axios({
       method: 'post',
       url,
@@ -60,6 +59,7 @@ class Signup extends React.Component {
         setTimeout(() => {
           this.props.updateAuth({ auth: true, user: res.data.userInfo });
           this._handleLoading(false);
+          this.props.navigation.navigate('Home');
         }, 1500);
       })
       .catch(err => {});

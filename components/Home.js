@@ -1,19 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Platform, Animated, ActivityIndicator, Easing, StyleSheet, View } from 'react-native';
-import { NODE_ENV, URL } from 'react-native-dotenv';
+import { Platform, ActivityIndicator, StyleSheet, View } from 'react-native';
 import { Constants, SecureStore, Location, Permissions } from 'expo';
-import { Ionicons, AntDesign, MaterialIcons } from '@expo/vector-icons/';
+import { Ionicons, AntDesign } from '@expo/vector-icons/';
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
 import axios from 'axios';
 import BusinessListScreen from '../screens/BusinessListScreen';
 import BusinessProfileScreen from '../screens/BusinessProfileScreen';
 import SponsoredBusinessProfileScreen from '../screens/SponsoredBusinessProfileScreen';
 import CouponCarousel from '../screens/CouponCarousel';
-import Signup from '../screens/Signup';
 import BusinessProfileSignup from '../screens/BusinessProfileSignup';
 import UserProfile from '../screens/UserProfileScreen';
-import Login from '../screens/Login';
 import BusinessProfileLogin from '../screens/BusinessProfileLogin';
 import PrivacyPolicyScreen from '../screens/PrivacyPolicyScreen';
 import TermsOfServiceScreen from '../screens/TermsOfServiceScreen';
@@ -52,7 +49,7 @@ class Home extends React.Component {
     const token = await SecureStore.getItemAsync('token');
     const user = await SecureStore.getItemAsync('user');
     const url = process.env.URL + '/auth';
-
+    // console.log(process.env.URL);
     if (token && user) {
       axios({
         method: 'post',

@@ -11,7 +11,6 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { SecureStore } from 'expo';
-import { NODE_ENV, URL } from 'react-native-dotenv';
 import axios from 'axios';
 import Tags from './../components/Tags';
 
@@ -54,7 +53,6 @@ class BusinessListScreen extends React.Component {
       const lng = this.props.screenProps.location.coords.longitude;
       const { page, seed } = this.state;
       const url = process.env.URL + `/businesses?lat=${lat}&lng=${lng}&page=${page}&seed=${seed}`;
-      // console.log(url);
       console.log(process.env.URL);
       axios
         .get(url)

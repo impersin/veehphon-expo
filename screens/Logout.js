@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { NODE_ENV, URL } from 'react-native-dotenv';
 import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
 import axios from 'axios';
 import { Constants, SecureStore } from 'expo';
@@ -24,7 +23,7 @@ class Logout extends React.Component {
   _logOut = async () => {
     this._handleLoading(true);
     const url = process.env.URL + '/logout';
-
+    // console.log(process.env.URL);
     await SecureStore.deleteItemAsync('token');
     await SecureStore.deleteItemAsync('email');
 

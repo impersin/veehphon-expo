@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
-import { NODE_ENV, URL } from 'react-native-dotenv';
 import axios from 'axios';
 import { Constants, SecureStore } from 'expo';
 import FacebookLoginButton from '../components/FacebookLoginButton';
@@ -43,7 +42,7 @@ class Login extends React.Component {
     }
 
     const url = process.env.URL + `/signup`;
-
+    console.log(url);
     axios({
       method: 'post',
       url,
@@ -52,10 +51,10 @@ class Login extends React.Component {
       .then(res => {
         SecureStore.setItemAsync('token', res.data.token);
         SecureStore.setItemAsync('user', JSON.stringify(res.data.userInfo));
-
         setTimeout(() => {
           this.props.updateAuth({ auth: true, user: res.data.userInfo });
           this._handleLoading(false);
+          this.props.navigation.navigate('Home');
         }, 1500);
       })
       .catch(err => {});
@@ -79,36 +78,83 @@ class Login extends React.Component {
           </Modal>
         </View>
       );
-    }
-
-    return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={{ fontSize: 24, marginBottom: 5 }}>Log In</Text>
-          {/* <Text style={{ fontSize: 14 }}>Log in to use this coupon</Text> */}
-        </View>
-        <View style={styles.body}>
-          <FacebookLoginButton
-            handleWebAuth={this._handleWebAuth.bind(this)}
-            handleLoading={this._handleLoading.bind(this)}
-          />
-          <GoogleLoginButton
-            handleWebAuth={this._handleWebAuth.bind(this)}
-            handleLoading={this._handleLoading.bind(this)}
-          />
-          <TouchableOpacity
-            onPress={e => this._redirecToLoginPage()}
-            style={[styles.buttonWrapper]}
-          >
-            <View style={styles.buttonTextWrapper}>
-              <Text style={[styles.buttonText]}>
-                Don't have an account? <Text style={styles.innerFont}>Sign up</Text>
-              </Text>
+    } else {
+      if (this.props.authMethod === 'login') {
+        return (
+          <View style={styles.container}>
+            <View style={styles.header}>
+              <Text style={{ fontSize: 24, marginBottom: 5 }}>Log In</Text>
+              {/* <Text style={{ fontSize: 14 }}>Log in to use this coupon</Text> */}
             </View>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
+            <View style={styles.body}>
+              <FacebookLoginButton
+                handleWebAuth={this._handleWebAuth.bind(this)}
+                handleLoading={this._handleLoading.bind(this)}
+              />
+              <GoogleLoginButton
+                handleWebAuth={this._handleWebAuth.bind(this)}
+                handleLoading={this._handleLoading.bind(this)}
+              />
+              <TouchableOpacity
+                onPress={e => this.props.redirecToSignupPage()}
+                style={[styles.buttonWrapper]}
+              >
+                <View style={styles.buttonTextWrapper}>
+                  <Text style={[styles.buttonText]}>
+                    Don't have an account? <Text style={styles.innerFont}>Sign up</Text>
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+        );
+      } else {
+        return (
+          <View style={styles.container}>
+            <View style={styles.header}>
+              <Text style={{ fontSize: 24, marginBottom: 5 }}>Sign Up</Text>
+              {/* <Text style={{ fontSize: 14 }}>Sign in to use this coupon</Text> */}
+            </View>
+            <View style={styles.body}>
+              <FacebookLoginButton
+                handleWebAuth={this._handleWebAuth.bind(this)}
+                handleLoading={this._handleLoading.bind(this)}
+              />
+              <GoogleLoginButton
+                handleWebAuth={this._handleWebAuth.bind(this)}
+                handleLoading={this._handleLoading.bind(this)}
+              />
+              <View style={[styles.buttonWrapper, { marginTop: 10 }]}>
+                <Text style={[styles.buttonText, { color: '#777', marginBottom: 15 }]}>
+                  By using Veeh Coupon, you agree to our
+                  <Text
+                    style={styles.innerFont}
+                    // onPress={this._redirectToTermsPage.bind(this)}
+                  >
+                    {' '}
+                    Terms
+                  </Text>{' '}
+                  &
+                  <Text
+                    style={styles.innerFont}
+                    // onPress={this._redirectToPolicyPage.bind(this)}
+                  >
+                    {' '}
+                    Privacy Policy
+                  </Text>
+                </Text>
+                <Text style={[styles.buttonText, { color: '#444' }]}>
+                  Already have a Veeh account?{' '}
+                  <Text onPress={this.props.redirecToLoginPage.bind(this)} style={styles.innerFont}>
+                    Log in
+                  </Text>
+                </Text>
+              </View>
+            </View>
+          </View>
+        );
+      }
+    }
   }
 }
 

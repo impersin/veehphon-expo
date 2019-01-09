@@ -18,18 +18,30 @@ export default class BlockMenu extends React.Component {
       const middleNumber = this.props.title.slice(3, 6);
       const lastNumber = this.props.title.slice(6);
       return (
-        <TouchableOpacity style={styles.blockWrapper}>
-          <View style={styles.blockLeft}>
-            <View style={styles.iconContainer}>
-              <AntDesign name={this.props.icon} size={25} color="#444" />
+        <View
+          style={{
+            borderBottomColor: '#ccc',
+            borderBottomWidth: 1
+          }}
+        >
+          <TouchableOpacity onPress={this._pressCall.bind(this)} style={styles.blockWrapper}>
+            <View style={styles.blockLeft}>
+              <View style={styles.iconContainer}>
+                <AntDesign name={this.props.icon} size={25} color="#444" />
+              </View>
+              <View style={styles.titleContainer}>
+                <Text onPress={this._pressCall} style={styles.blockFont}>
+                  {`Call (${areaCode})${middleNumber}-${lastNumber}`}
+                </Text>
+              </View>
             </View>
-            <View style={styles.titleContainer}>
-              <Text onPress={this._pressCall} style={styles.blockFont}>
-                {`Call (${areaCode})${middleNumber}-${lastNumber}`}
-              </Text>
+            <View style={styles.blockRight}>
+              <View style={styles.iconContainer}>
+                <AntDesign name="right" color="#444" size={20} />
+              </View>
             </View>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
       );
     } else if (this.props.icon === 'home') {
       if (this.props.title === '') {
@@ -47,18 +59,30 @@ export default class BlockMenu extends React.Component {
         );
       }
       return (
-        <TouchableOpacity style={styles.blockWrapper}>
-          <View style={styles.blockLeft}>
-            <View style={styles.iconContainer}>
-              <AntDesign name={this.props.icon} size={25} color="#444" />
+        <View
+          style={{
+            borderBottomColor: '#ccc',
+            borderBottomWidth: 1
+          }}
+        >
+          <TouchableOpacity onPress={this._pressHomepage.bind(this)} style={styles.blockWrapper}>
+            <View style={styles.blockLeft}>
+              <View style={styles.iconContainer}>
+                <AntDesign name={this.props.icon} size={25} color="#444" />
+              </View>
+              <View style={styles.titleContainer}>
+                <Text onPress={this._pressHomepage} style={styles.blockFont}>
+                  {`Visit Website`}
+                </Text>
+              </View>
             </View>
-            <View style={styles.titleContainer}>
-              <Text onPress={this._pressHomepage} style={styles.blockFont}>
-                {`Visit Website`}
-              </Text>
+            <View style={styles.blockRight}>
+              <View style={styles.iconContainer}>
+                <AntDesign name="right" color="#444" size={20} />
+              </View>
             </View>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
       );
     }
   }
@@ -68,7 +92,8 @@ const styles = StyleSheet.create({
   blockWrapper: {
     flex: 1,
     flexWrap: 'wrap',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    height: 40
   },
   blockWrapperDisabled: {
     flex: 1,
@@ -81,7 +106,8 @@ const styles = StyleSheet.create({
   },
   blockRight: {
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent: 'flex-end'
   },
   iconContainer: {
     justifyContent: 'center',

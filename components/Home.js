@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Platform, ActivityIndicator, StyleSheet, View } from 'react-native';
+import { Platform, ActivityIndicator, StyleSheet, View, Text } from 'react-native';
 import { Constants, SecureStore, Location, Permissions } from 'expo';
 import { Ionicons, AntDesign } from '@expo/vector-icons/';
-import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
+import { createBottomTabNavigator, createStackNavigator, BottomTabBar } from 'react-navigation';
 import axios from 'axios';
 import BusinessListScreen from '../screens/BusinessListScreen';
 import BusinessProfileScreen from '../screens/BusinessProfileScreen';
@@ -25,15 +25,15 @@ class Home extends React.Component {
     isLoading: true,
     initialData: [],
     address: null,
-    location: null,
+    location: {},
     errorMessage: null
   };
 
   async componentWillMount() {
-    if (Platform.OS === 'android' && !Constants.isDevice) {
+    if (Platform.OS === 'android' && !Constants.isURLice) {
       this.setState({
         errorMessage:
-          'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+          'Oops, this will not work on Sketch in an Android emulator. Try it on your URLice!',
         location: {}
       });
     } else {
@@ -48,8 +48,8 @@ class Home extends React.Component {
   _checkAuthentication = async () => {
     const token = await SecureStore.getItemAsync('token');
     const user = await SecureStore.getItemAsync('user');
-    const url = process.env.URL + '/auth';
-    // console.log(process.env.URL);
+    const url = 'https://veeh-coupon.herokuapp.com/api' + '/auth';
+
     if (token && user) {
       axios({
         method: 'post',
@@ -131,21 +131,7 @@ class Home extends React.Component {
         </View>
       );
     }
-
-    // if (this.props.auth) {
-    //   tabNav = <AppBottomTabNavigatorLoggedin screenProps={this.state} />;
-    // } else {
-    //   tabNav = <AppBottomTabNavigator screenProps={this.state} />;
-    // }
-    tabNav = <AppBottomTabNavigator screenProps={this.state} />;
-    return (
-      <View style={styles.container}>
-        {/* <View style={styles.topMenu}>
-          <Text>Top menu</Text>
-        </View> */}
-        <View style={styles.main}>{tabNav}</View>
-      </View>
-    );
+    return <AppBottomTabNavigator screenProps={this.state} />;
   }
 }
 
@@ -167,7 +153,6 @@ export default connect(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Constants.statusBarHeight,
     backgroundColor: 'white'
   },
   ActivityIndicatorContainer: { alignItems: 'center', justifyContent: 'center' },
@@ -188,44 +173,34 @@ const styles = StyleSheet.create({
 //   })
 // };
 
-const AppStackNavigator = createStackNavigator({
-  BusinessList: {
-    screen: BusinessListScreen,
-    navigationOptions: {
-      title: 'Home',
-      header: null //this will hide the header
+const AppStackNavigator = createStackNavigator(
+  {
+    BusinessList: {
+      screen: BusinessListScreen
+    },
+    BusinessProfile: {
+      screen: BusinessProfileScreen
+    },
+    SponsoredBusinessProfile: {
+      screen: SponsoredBusinessProfileScreen
+    },
+    CouponCarousel: {
+      screen: CouponCarousel
+    },
+    BusinessProfileLogin: {
+      screen: BusinessProfileLogin
+    },
+    BusinessProfileSignup: {
+      screen: BusinessProfileSignup
     }
   },
-  BusinessProfile: {
-    screen: BusinessProfileScreen,
-    navigationOptions:
-      Platform.OS === 'ios'
-        ? { title: 'Profile', header: null }
-        : { title: 'Profile', header: null }
-  },
-  SponsoredBusinessProfile: {
-    screen: SponsoredBusinessProfileScreen,
-    navigationOptions:
-      Platform.OS === 'ios'
-        ? { title: 'Profile', header: null }
-        : { title: 'Profile', header: null }
-  },
-  CouponCarousel: {
-    screen: CouponCarousel,
+  {
+    headerMode: 'none',
     navigationOptions: {
-      title: 'Coupons',
-      header: null //this will hide the header
+      headerVisible: false
     }
-  },
-  BusinessProfileLogin: {
-    screen: BusinessProfileLogin,
-    navigationOptions: { title: 'Profile', header: null }
-  },
-  BusinessProfileSignup: {
-    screen: BusinessProfileSignup,
-    navigationOptions: { title: 'Profile', header: null }
   }
-});
+);
 
 const LoginStackNavigator = createStackNavigator(
   {
@@ -251,7 +226,13 @@ const LoginStackNavigator = createStackNavigator(
           : { title: 'Profile', header: null }
     }
   },
-  { initialRouteName: 'UserProfile' }
+  {
+    initialRouteName: 'UserProfile',
+    headerMode: 'none',
+    navigationOptions: {
+      headerVisible: false
+    }
+  }
 );
 
 AppStackNavigator.navigationOptions = ({ navigation }) => {
@@ -279,6 +260,7 @@ const AppBottomTabNavigator = createBottomTabNavigator(
       navigationOptions: {
         tabBarLabel: 'MY PAGE',
         tabBarIcon: () => <AntDesign name="user" color="#444" size={25} />
+        // tabBarOptions: { activeTintColor: '#f96a00' }
       }
     }
   },
@@ -289,8 +271,12 @@ const AppBottomTabNavigator = createBottomTabNavigator(
         fontSize: 10
       },
       style: {
+        display: 'flex',
+        justifyContent: 'center',
         backgroundColor: 'white',
-        paddingTop: 10
+        borderTopWidth: 0.5,
+        borderTopColor: '#ccc',
+        paddingTop: 5
       }
     }
   }

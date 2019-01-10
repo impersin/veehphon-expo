@@ -427,13 +427,13 @@ const styles = StyleSheet.create({
     borderColor: '#ccc'
   },
   topMenuOne: {
-    flex: 6,
+    flex: 1,
     // borderWidth: 1,
     justifyContent: 'center',
     paddingLeft: 20
   },
   topMenuTwo: {
-    flex: 1,
+    flex: 2,
     // borderWidth: 1,
     justifyContent: 'center'
     // paddingLeft: 20

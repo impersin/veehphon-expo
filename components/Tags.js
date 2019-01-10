@@ -26,8 +26,7 @@ export default class Tags extends React.Component {
 const styles = StyleSheet.create({
   tagsWrapper: {
     display: 'flex',
-    flexDirection: 'row',
-    marginBottom: 10
+    flexDirection: 'row'
   },
   tagsContainer: {
     display: 'flex',
@@ -46,7 +45,6 @@ const styles = StyleSheet.create({
   },
   tagFont: {
     fontSize: 12,
-    color: '#00abd3',
-    fontWeight: 'bold'
+    color: '#00abd3'
   }
 });

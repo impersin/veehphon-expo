@@ -19,7 +19,7 @@ export default class Coupons extends React.Component {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              height: 40,
+              height: 60,
               flexDirection: 'row'
             }}
             onPress={e => this.props.redirectToCarousel(index)}
@@ -70,8 +70,7 @@ const styles = StyleSheet.create({
   },
   couponFont: {
     color: '#444',
-    fontSize: 14,
-    marginLeft: 10
+    fontSize: 14
     // fontWeight: 'bold'
   },
   blockWrapper: {

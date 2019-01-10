@@ -22,8 +22,8 @@ class Logout extends React.Component {
 
   _logOut = async () => {
     this._handleLoading(true);
-    const url = process.env.URL + '/logout';
-    // console.log(process.env.URL);
+    const url = 'https://veeh-coupon.herokuapp.com/api' + '/logout';
+
     await SecureStore.deleteItemAsync('token');
     await SecureStore.deleteItemAsync('email');
 

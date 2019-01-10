@@ -10,7 +10,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Modal,
-  Image
+  Image,
+  Dimensions
 } from 'react-native';
 import { Constants } from 'expo';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons/';
@@ -20,6 +21,7 @@ import GoogleMap from './../components/GoogleMap';
 import Tags from './../components/Tags';
 import Coupons from './../components/Coupons';
 import BlockMenu from './../components/BlockMenu';
+const { height, width } = Dimensions.get('window');
 
 class BusinessProfileScreen extends React.Component {
   // static navigationOptions = {
@@ -37,9 +39,9 @@ class BusinessProfileScreen extends React.Component {
 
   componentDidMount() {
     const id = this.props.navigation.state.params.data.id;
-    const url = process.env.URL + `/business?id=${id}`;
-    const sponsoredUrl = process.env.URL + `/sponsored/businesses?`;
-    // console.log(process.env.URL);
+    const url = 'https://veeh-coupon.herokuapp.com/api' + `/business?id=${id}`;
+    const sponsoredUrl = 'https://veeh-coupon.herokuapp.com/api' + `/sponsored/businesses?`;
+
     axios.get(url).then(res => {
       const business = res.data;
       if (this.props.navigation.state.params.data.dist) {
@@ -125,7 +127,6 @@ class BusinessProfileScreen extends React.Component {
   }
 
   _redirectToProfile(data) {
-    console.log(data);
     this.props.navigation.navigate('SponsoredBusinessProfile', { data });
   }
 
@@ -327,12 +328,10 @@ class BusinessProfileScreen extends React.Component {
         <View style={[styles.detailsContent]}>
           <Text style={[styles.detailsFont, styles.detailsTitle]}>{business.businessName}</Text>
         </View>
-        <View style={[styles.detailsContent]}>
-          <Text style={[styles.detailsFont, styles.detialsSubtitle]}>Business Hours</Text>
-          <Text style={styles.detailsFont}>{businessHours}</Text>
-        </View>
         <Tags tags={this.state.business.tags} />
-        <Text style={[styles.detailsFont, styles.detialsSubtitle, { marginBottom: 0 }]}>
+        <Text
+          style={[styles.detailsFont, styles.detialsSubtitle, { marginTop: 10, marginBottom: 0 }]}
+        >
           Coupons
         </Text>
         <ScrollView style={{ marginBottom: 20 }} horizontal={false}>
@@ -342,6 +341,10 @@ class BusinessProfileScreen extends React.Component {
             redirectToCarousel={this._redirectToCarousel.bind(this)}
           />
         </ScrollView>
+        <View style={[styles.detailsContent]}>
+          <Text style={[styles.detailsFont, styles.detialsSubtitle]}>Business Hours</Text>
+          <Text style={styles.detailsFont}>{businessHours}</Text>
+        </View>
         <GoogleMap
           handleMapMoal={this._handleMapMoal.bind(this)}
           location={this.state.coordinates}
@@ -434,6 +437,13 @@ class BusinessProfileScreen extends React.Component {
             <Ionicons name="ios-arrow-back" color={'#444'} size={30} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.topMenuTwo}>
+            {this.state.yOffset > 245 ? (
+              <Text
+                style={{ color: '#444', fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}
+              >
+                {this.state.business.businessName}
+              </Text>
+            ) : null}
             {/* <Ionicons name="ios-share-alt" color={'#444'} size={30} /> */}
           </TouchableOpacity>
           <TouchableOpacity style={styles.topMenuThree}>
@@ -618,7 +628,13 @@ class BusinessProfileScreen extends React.Component {
               <Ionicons name="ios-arrow-back" color={'#444'} size={30} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.topMenuTwo}>
-              {/* <Ionicons name="ios-share-alt" color={'#444'} size={30} /> */}
+              {this.state.yOffset > 40 ? (
+                <Text
+                  style={{ color: '#444', fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}
+                >
+                  {this.state.business.businessName}
+                </Text>
+              ) : null}
             </TouchableOpacity>
             <TouchableOpacity style={styles.topMenuThree}>
               {/* <Ionicons name="ios-heart-empty" color={'#444'} size={30} /> */}
@@ -707,7 +723,7 @@ const styles = StyleSheet.create({
   },
   details: {
     flex: 1,
-    minHeight: 550,
+    minHeight: height - 250,
     padding: 10,
     backgroundColor: 'white',
     paddingBottom: 100
@@ -754,16 +770,16 @@ const styles = StyleSheet.create({
     borderColor: '#ccc'
   },
   topMenuOne: {
-    flex: 6,
+    flex: 1,
     // borderWidth: 1,
     justifyContent: 'center',
     paddingLeft: 20
   },
   topMenuTwo: {
-    flex: 1,
+    flex: 2,
     // borderWidth: 1,
-    justifyContent: 'center',
-    paddingLeft: 20
+    justifyContent: 'center'
+    // paddingLeft: 20
   },
   topMenuThree: {
     flex: 1,
@@ -781,9 +797,7 @@ const styles = StyleSheet.create({
     height: 70,
     backgroundColor: '#f96a00',
     position: 'absolute',
-    bottom: 0,
-    borderTopColor: '#ccc',
-    borderTopWidth: 0.5
+    bottom: 0
   },
   stickyButton: {
     display: 'flex',

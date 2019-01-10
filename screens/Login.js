@@ -41,8 +41,8 @@ class Login extends React.Component {
       };
     }
 
-    const url = process.env.URL + `/signup`;
-    console.log(url);
+    const url = 'https://veeh-coupon.herokuapp.com/api' + `/signup`;
+
     axios({
       method: 'post',
       url,

@@ -52,8 +52,10 @@ class BusinessListScreen extends React.Component {
       const lat = this.props.screenProps.location.coords.latitude;
       const lng = this.props.screenProps.location.coords.longitude;
       const { page, seed } = this.state;
-      const url = process.env.URL + `/businesses?lat=${lat}&lng=${lng}&page=${page}&seed=${seed}`;
-      console.log(process.env.URL);
+      const url =
+        'https://veeh-coupon.herokuapp.com/api' +
+        `/businesses?lat=${lat}&lng=${lng}&page=${page}&seed=${seed}`;
+
       axios
         .get(url)
         .then(res => {
@@ -74,7 +76,7 @@ class BusinessListScreen extends React.Component {
           console.log(err);
         });
     } else {
-      const url = process.env.URL + `/businesses`;
+      const url = 'https://veeh-coupon.herokuapp.com/api' + `/businesses`;
 
       axios
         .get(url)
@@ -120,7 +122,7 @@ class BusinessListScreen extends React.Component {
       Spondsored = <Text style={{ fontSize: 12, color: '#777' }}>Sponsored</Text>;
     }
     if (item.dist) {
-      distance = <Text style={styles.innerText}>{item.dist.calculated}mi</Text>;
+      distance = <Text style={{ color: '#444' }}>{item.dist.calculated}mi</Text>;
     }
     return (
       <TouchableWithoutFeedback id={item.userid} onPress={e => this._redirectToProfile(item)}>
@@ -212,8 +214,8 @@ const styles = StyleSheet.create({
   listContainer: {
     width: width,
     padding: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#ccc',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
     paddingBottom: 0
     // backgroundColor: 'green',
   },
@@ -253,7 +255,7 @@ const styles = StyleSheet.create({
   },
   summaryHeader: {
     color: '#444',
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10
     // backgroundColor: 'red'
@@ -299,6 +301,7 @@ const styles = StyleSheet.create({
     flex: 1,
     // backgroundColor: 'blue',
     justifyContent: 'flex-end',
+    alignItems: 'flex-end',
     paddingBottom: 12
   }
 });

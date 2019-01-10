@@ -178,6 +178,13 @@ class SponsoredBusinessProfileScreen extends React.Component {
             <Ionicons name="ios-arrow-back" color={'#444'} size={30} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.topMenuTwo}>
+            {this.state.yOffset > 245 ? (
+              <Text
+                style={{ color: '#444', fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}
+              >
+                {this.state.business.businessName}
+              </Text>
+            ) : null}
             {/* <Ionicons name="ios-share-alt" color={'#444'} size={30} /> */}
           </TouchableOpacity>
           <TouchableOpacity style={styles.topMenuThree}>
@@ -428,8 +435,8 @@ const styles = StyleSheet.create({
   topMenuTwo: {
     flex: 1,
     // borderWidth: 1,
-    justifyContent: 'center',
-    paddingLeft: 20
+    justifyContent: 'center'
+    // paddingLeft: 20
   },
   topMenuThree: {
     flex: 1,
@@ -445,7 +452,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: 70,
-    backgroundColor: 'white',
+    backgroundColor: '#f96a00',
     position: 'absolute',
     bottom: 0,
     borderTopColor: '#ccc',

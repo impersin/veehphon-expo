@@ -167,7 +167,7 @@ class Login extends React.Component {
             </TouchableOpacity>
           </View>
           <View style={styles.header}>
-            <Text style={{ fontSize: 24, marginBottom: 5 }}>Sign Up </Text>
+            <Text style={{ fontSize: 24, marginBottom: 5 }}>Sign up to use this coupon</Text>
             {/* <Text style={{ fontSize: 14 }}>Sign in to use this coupon</Text> */}
           </View>
           <View style={styles.body}>

@@ -141,7 +141,7 @@ class BusinessProfileScreen extends React.Component {
         business: this.props.navigation.state.params.data,
         coupons: this.state.business.coupons,
         index,
-        type: 'login',
+        type: 'signup',
         redirectedFrom: 'BusinessProfile'
       });
     }
@@ -184,7 +184,7 @@ class BusinessProfileScreen extends React.Component {
     return (
       <View style={{ marginTop: 20 }}>
         <Text style={[styles.detailsFont, styles.detialsSubtitle]}>Sponsored businesses</Text>
-        <ScrollView horizontal={true}>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           {businesses.map((business, index) => {
             return (
               <TouchableOpacity onPress={e => this._redirectToProfile(business)} key={index}>
@@ -603,7 +603,11 @@ class BusinessProfileScreen extends React.Component {
       return (
         <View style={{ backgroundColor: 'white' }}>
           {topMenu}
-          <ScrollView scrollEventThrottle={16} onScroll={e => this._handleScroll(e)}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            scrollEventThrottle={16}
+            onScroll={e => this._handleScroll(e)}
+          >
             {adImage}
             {details}
           </ScrollView>
@@ -640,7 +644,11 @@ class BusinessProfileScreen extends React.Component {
               {/* <Ionicons name="ios-heart-empty" color={'#444'} size={30} /> */}
             </TouchableOpacity>
           </View>
-          <ScrollView scrollEventThrottle={16} onScroll={e => this._handleScroll(e)}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            scrollEventThrottle={16}
+            onScroll={e => this._handleScroll(e)}
+          >
             <View style={styles.paddingTop}>{details}</View>
           </ScrollView>
           {stickyButton}

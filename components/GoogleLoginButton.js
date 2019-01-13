@@ -64,12 +64,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center'
   },
-  buttonText: { width: '100%', fontSize: 14, textAlign: 'center' },
+  buttonText: {
+    color: '#444',
+    width: '100%',
+    fontSize: 14,
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
   googleButtonFont: {
     paddingTop: 2
   },
   google: {
     backgroundColor: 'white',
-    borderWidth: 1
+    borderWidth: 1,
+    borderColor: '#ccc'
   }
 });

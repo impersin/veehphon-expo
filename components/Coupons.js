@@ -29,7 +29,7 @@ export default class Coupons extends React.Component {
               <Text style={styles.couponFont}>{coupon.dealName}</Text>
             </View>
             <View>
-              <AntDesign name="right" color="#444" size={20} />
+              <AntDesign name="right" color="#444" size={25} />
             </View>
           </TouchableOpacity>
         </View>

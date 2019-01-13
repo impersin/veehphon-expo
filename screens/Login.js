@@ -83,7 +83,7 @@ class Login extends React.Component {
         return (
           <View style={styles.container}>
             <View style={styles.header}>
-              <Text style={{ fontSize: 24, marginBottom: 5 }}>Log In</Text>
+              <Text style={{ color: '#444', fontSize: 24, marginBottom: 5 }}>Log In</Text>
               {/* <Text style={{ fontSize: 14 }}>Log in to use this coupon</Text> */}
             </View>
             <View style={styles.body}>
@@ -112,7 +112,9 @@ class Login extends React.Component {
         return (
           <View style={styles.container}>
             <View style={styles.header}>
-              <Text style={{ fontSize: 24, marginBottom: 5 }}>Sign Up</Text>
+              <Text style={{ color: '#444', fontSize: 24, marginBottom: 5 }}>
+                Create an account
+              </Text>
               {/* <Text style={{ fontSize: 14 }}>Sign in to use this coupon</Text> */}
             </View>
             <View style={styles.body}>

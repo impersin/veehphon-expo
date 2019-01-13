@@ -72,7 +72,8 @@ const styles = StyleSheet.create({
   buttonText: { width: '100%', fontSize: 14, textAlign: 'center' },
   facebookButtonFont: {
     color: 'white',
-    paddingTop: 2
+    paddingTop: 2,
+    fontWeight: 'bold'
   },
   facebook: {
     backgroundColor: '#4267b2'

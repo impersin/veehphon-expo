@@ -181,6 +181,7 @@ class BusinessListScreen extends React.Component {
           // data={this.props.screenProps.initialData}
           data={this.state.initialData}
           renderItem={this._renderItem}
+          showsVerticalScrollIndicator={false}
           // onEndReached={this._handleLoadMore.bind(this)}
           // onEndReachedThreshold={0}
         />

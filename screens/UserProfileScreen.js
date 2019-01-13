@@ -21,16 +21,28 @@ const { height, width } = Dimensions.get('window');
 const logoutContainerWidth = (width * 2) / 3;
 
 class UserProfile extends React.Component {
+  // static navigationProps = {
+  //   header: ({ state }) => {
+  //     return {
+  //       title: state.params.myTitle
+  //     };
+  //   }
+  // };
+
   state = {
     data: [],
     isLoading: false,
     isModalOpen: false,
     modalType: null,
-    authMethod: 'login'
+    authMethod: 'signup'
   };
 
   componentWillMount() {
     const user = SecureStore.getItemAsync('user');
+    // console.log(this.props);
+    // this.props.navigation.setParams({
+    //   auth: this.props.auth
+    // });
   }
 
   _redirecToSignupPage() {

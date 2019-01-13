@@ -252,15 +252,21 @@ const AppBottomTabNavigator = createBottomTabNavigator(
       screen: AppStackNavigator,
       navigationOptions: {
         tabBarLabel: 'EXPLORE',
-        tabBarIcon: () => <Ionicons name="ios-search" color="#444" size={25} />
+        tabBarIcon: ({ focused, tintColor }) => {
+          // const iconName = `ios-search${focused ? '' : '-outline'}`;
+          return <Ionicons name={'ios-search'} color={tintColor} size={25} />;
+        }
+        // tabBarIcon: () => <Ionicons name="ios-search" color="#444" size={25} />
       }
     },
     Login: {
       screen: LoginStackNavigator,
       navigationOptions: {
         tabBarLabel: 'MY PAGE',
-        tabBarIcon: () => <AntDesign name="user" color="#444" size={25} />
-        // tabBarOptions: { activeTintColor: '#f96a00' }
+        tabBarIcon: ({ focused, tintColor }) => {
+          // const iconName = `ios-search${focused ? '' : '-outline'}`;
+          return <AntDesign name="user" color={tintColor} size={25} />;
+        }
       }
     }
   },

@@ -17,7 +17,7 @@ export default class TermsOfService extends React.Component {
             </Text>
           </TouchableOpacity>
         </View>
-        <ScrollView style={{ padding: 20 }}>
+        <ScrollView style={{ padding: 20 }} showsVerticalScrollIndicator={false}>
           <Text style={{ color: '#444' }}>{`Terms of Use January 5th, 2018\n`}</Text>
           <Text style={{ color: '#444' }}>
             This Terms of Use Agreement ("Terms"), govern your access to, use of, and participation

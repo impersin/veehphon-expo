@@ -20,7 +20,16 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
-    }
+      "bundleIdentifier": "com.veeh.veehcoupon",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Veeh needs to access your location to show coupons available near you."
+      }
+    },
+    "android": {
+      "package": "com.veeh.veehcoupon"
+    },
+    "description": "Veeh coupon app prototype",
+    "githubUrl": "https://github.com/impersin/veehphon-expo"
   }
 }

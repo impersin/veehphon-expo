@@ -13,11 +13,11 @@ export default class PrivacyPolicy extends React.Component {
           <TouchableOpacity onPress={this._goToPrevious.bind(this)} style={styles.topMenuOne}>
             <Ionicons name="ios-arrow-back" color={'#444'} size={30} />
             <Text style={{ color: '#444', fontSize: 18, fontWeight: 'bold', paddingLeft: 20 }}>
-              Terms of service
+              Privacy Policy
             </Text>
           </TouchableOpacity>
         </View>
-        <ScrollView style={{ padding: 20 }}>
+        <ScrollView style={{ padding: 20 }} showsVerticalScrollIndicator={false}>
           <Text style={{ color: '#444' }}>{`Privacy Policy January 5th, 2018\n`}</Text>
           <Text style={{ color: '#444' }}>
             VEEH Corporation. ("VEEH," "we," "our," or "us") values your privacy. In this Privacy

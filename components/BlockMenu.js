@@ -52,7 +52,7 @@ export default class BlockMenu extends React.Component {
                 <AntDesign name={this.props.icon} size={25} color="#444" />
               </View>
               <View style={styles.titleContainer}>
-                <Text style={styles.blockFont}>{`No website`}</Text>
+                <Text style={styles.blockFont}>{`Visit Website`}</Text>
               </View>
             </View>
           </View>
@@ -98,7 +98,8 @@ const styles = StyleSheet.create({
   blockWrapperDisabled: {
     flex: 1,
     flexWrap: 'wrap',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    height: 40
   },
   blockLeft: {
     flex: 1,

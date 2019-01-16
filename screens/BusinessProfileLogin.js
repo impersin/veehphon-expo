@@ -21,13 +21,13 @@ class Login extends React.Component {
     this.props.navigation.navigate('BusinessProfileLogin', { type: 'login' });
   }
 
-  // _redirectToTermsPage() {
-  //   this.props.navigation.navigate('TermsOfService');
-  // }
+  _redirectToTermsPage() {
+    this.props.navigation.navigate('TermsOfService');
+  }
 
-  // _redirectToPolicyPage() {
-  //   this.props.navigation.navigate('PrivacyPolicy');
-  // }
+  _redirectToPolicyPage() {
+    this.props.navigation.navigate('PrivacyPolicy');
+  }
 
   _goToPrevious() {
     this.props.navigation.goBack();
@@ -182,18 +182,12 @@ class Login extends React.Component {
             <View style={[styles.buttonWrapper, { marginTop: 10 }]}>
               <Text style={[styles.buttonText, { color: '#777', marginBottom: 15 }]}>
                 By using Veeh Coupon, you agree to our
-                <Text
-                  style={styles.innerFont}
-                  // onPress={this._redirectToTermsPage.bind(this)}
-                >
+                <Text style={styles.innerFont} onPress={this._redirectToTermsPage.bind(this)}>
                   {' '}
                   Terms
                 </Text>{' '}
                 &
-                <Text
-                  style={styles.innerFont}
-                  // onPress={this._redirectToPolicyPage.bind(this)}
-                >
+                <Text style={styles.innerFont} onPress={this._redirectToPolicyPage.bind(this)}>
                   {' '}
                   Privacy Policy
                 </Text>

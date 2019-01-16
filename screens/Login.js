@@ -22,6 +22,13 @@ class Login extends React.Component {
     });
   }
 
+  _redirecToTermsPage() {
+    this.props.navigation.navigate('TermsOfService');
+  }
+  _redirecToPrivacyPage() {
+    this.props.navigation.navigate('PrivacyPolicy');
+  }
+
   _handleWebAuth(type, data) {
     this._handleLoading(true);
     let userInfo;
@@ -129,18 +136,12 @@ class Login extends React.Component {
               <View style={[styles.buttonWrapper, { marginTop: 10 }]}>
                 <Text style={[styles.buttonText, { color: '#777', marginBottom: 15 }]}>
                   By using Veeh Coupon, you agree to our
-                  <Text
-                    style={styles.innerFont}
-                    // onPress={this._redirectToTermsPage.bind(this)}
-                  >
+                  <Text style={styles.innerFont} onPress={this._redirecToTermsPage.bind(this)}>
                     {' '}
                     Terms
                   </Text>{' '}
                   &
-                  <Text
-                    style={styles.innerFont}
-                    // onPress={this._redirectToPolicyPage.bind(this)}
-                  >
+                  <Text style={styles.innerFont} onPress={this._redirecToPrivacyPage.bind(this)}>
                     {' '}
                     Privacy Policy
                   </Text>

@@ -233,10 +233,10 @@ class UserProfile extends React.Component {
               <TouchableOpacity
                 style={{
                   display: 'flex',
+                  flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  height: 50,
-                  flexDirection: 'row'
+                  height: 50
                 }}
                 onPress={this._redirecToPrivacyPage.bind(this)}
               >
@@ -248,63 +248,78 @@ class UserProfile extends React.Component {
                 </View>
               </TouchableOpacity>
             </View>
-            <TouchableOpacity
+            <View
               style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                height: 50,
-                borderBottomColor: '#ccc',
-                borderBottomWidth: 1
-              }}
-              onPress={this._redirecToTermsPage.bind(this)}
-            >
-              <View>
-                <Text style={[styles.userProfileFont]}>Terms Of Service</Text>
-              </View>
-              <View>
-                <MaterialCommunityIcons name="file-document-outline" color="#444" size={25} />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                height: 50,
-                borderBottomColor: '#ccc',
-                borderBottomWidth: 1
-              }}
-              onPress={this._pressEmail.bind(this)}
-            >
-              <View>
-                <Text style={[styles.userProfileFont]}>Contact Us</Text>
-              </View>
-              <View>
-                <MaterialCommunityIcons name="email-open-outline" color="#444" size={25} />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={e => this._openModal('logout')}
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                height: 50,
                 borderBottomColor: '#ccc',
                 borderBottomWidth: 1
               }}
             >
-              <View>
-                <Text style={[styles.userProfileFont]}>Log out</Text>
-              </View>
-              <View>
-                <MaterialCommunityIcons name="logout" color="#444" size={25} />
-              </View>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  height: 50
+                }}
+                onPress={this._redirecToTermsPage.bind(this)}
+              >
+                <View>
+                  <Text style={[styles.userProfileFont]}>Terms Of Service</Text>
+                </View>
+                <View>
+                  <MaterialCommunityIcons name="file-document-outline" color="#444" size={25} />
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                borderBottomColor: '#ccc',
+                borderBottomWidth: 1
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  height: 50
+                }}
+                onPress={this._pressEmail.bind(this)}
+              >
+                <View>
+                  <Text style={[styles.userProfileFont]}>Contact Us</Text>
+                </View>
+                <View>
+                  <MaterialCommunityIcons name="email-open-outline" color="#444" size={25} />
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                borderBottomColor: '#ccc',
+                borderBottomWidth: 1
+              }}
+            >
+              <TouchableOpacity
+                onPress={e => this._openModal('logout')}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  height: 50
+                }}
+              >
+                <View>
+                  <Text style={[styles.userProfileFont]}>Log out</Text>
+                </View>
+                <View>
+                  <MaterialCommunityIcons name="logout" color="#444" size={25} />
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
           {modal}
         </View>

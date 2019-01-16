@@ -6,7 +6,10 @@
     "sdkVersion": "31.0.0",
     "facebookScheme": "fb313650029360284",
     "facebookDisplayName": "veeh coupon dev",
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,7 +21,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "bundleIdentifier": "com.veeh.veehcoupon",
       "supportsTablet": true,

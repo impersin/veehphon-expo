@@ -87,7 +87,7 @@ class Home extends React.Component {
   _getLocationAsync = async () => {
     const GEOLOCATION_OPTIONS = {
       enableHighAccuracy: true,
-      timeInterval: 1000,
+      timeInterval: 600000,
       distanceInterval: 10
     };
 

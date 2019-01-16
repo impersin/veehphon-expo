@@ -151,12 +151,43 @@ class SponsoredBusinessProfileScreen extends React.Component {
       </View>
     );
   }
+
+  _renderStickyButton() {
+    if (Constants.deviceName.includes('iPhone X')) {
+      return (
+        <TouchableOpacity
+          style={[styles.stickyButtonContainer, { paddingTop: 13 }]}
+          onPress={e => this._redirectToCarousel.bind(this)(0)}
+        >
+          <View style={styles.stickyButton}>
+            <Text style={{ color: 'white', fontSize: 18, textAlign: 'center', fontWeight: 'bold' }}>
+              Use Coupons
+            </Text>
+          </View>
+        </TouchableOpacity>
+      );
+    } else {
+      return (
+        <TouchableOpacity
+          style={[styles.stickyButtonContainer, { justifyContent: 'center' }]}
+          onPress={e => this._redirectToCarousel.bind(this)(0)}
+        >
+          {/* <View style={styles.stickyButton}> */}
+          <Text style={{ color: 'white', fontSize: 18, textAlign: 'center', fontWeight: 'bold' }}>
+            Use Coupons
+          </Text>
+          {/* </View> */}
+        </TouchableOpacity>
+      );
+    }
+  }
+
   render() {
     let business = this.state.business,
       topMenu = null,
       adImage = null,
       details,
-      stickyButton;
+      stickyButton = this._renderStickyButton();
     if (this.state.yOffset < 200) {
       topMenu = (
         <View style={styles.topMenu}>
@@ -193,19 +224,6 @@ class SponsoredBusinessProfileScreen extends React.Component {
         </View>
       );
     }
-
-    stickyButton = (
-      <TouchableOpacity
-        style={styles.stickyButtonContainer}
-        onPress={e => this._redirectToCarousel.bind(this)(0)}
-      >
-        <View style={styles.stickyButton}>
-          <Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}>
-            Use Coupons
-          </Text>
-        </View>
-      </TouchableOpacity>
-    );
 
     if (this.state.isModalOpen) {
       const addressOne = `${business.addressStreet}`;
@@ -454,9 +472,7 @@ const styles = StyleSheet.create({
     height: 70,
     backgroundColor: '#f96a00',
     position: 'absolute',
-    bottom: 0,
-    borderTopColor: '#ccc',
-    borderTopWidth: 0.5
+    bottom: 0
   },
   stickyButton: {
     display: 'flex',
@@ -465,7 +481,6 @@ const styles = StyleSheet.create({
     height: 30,
     color: '#f96a00',
     backgroundColor: '#f96a00',
-    marginTop: 13,
     borderRadius: 5
   }
 });

@@ -30,7 +30,7 @@ class Home extends React.Component {
   };
 
   async componentWillMount() {
-    if (Platform.OS === 'android' && !Constants.isURLice) {
+    if (Platform.OS === 'android' && !Constants.isDevice) {
       this.setState({
         errorMessage:
           'Oops, this will not work on Sketch in an Android emulator. Try it on your URLice!',
@@ -104,6 +104,8 @@ class Home extends React.Component {
     //   maximumAge: 1000
     // });
 
+    // console.log('Initial Location =>', location);
+
     Location.watchPositionAsync(GEOLOCATION_OPTIONS, this._locationChanged);
   };
 
@@ -114,6 +116,7 @@ class Home extends React.Component {
       latitudeDelta: 0.1,
       longitudeDelta: 0.05
     };
+
     this.setState({ location, region });
   };
 
@@ -185,13 +188,30 @@ const AppStackNavigator = createStackNavigator(
       screen: SponsoredBusinessProfileScreen
     },
     CouponCarousel: {
-      screen: CouponCarousel
+      screen: CouponCarousel,
+      navigationOptions: {
+        gesturesEnabled: false
+      }
     },
     BusinessProfileLogin: {
       screen: BusinessProfileLogin
     },
     BusinessProfileSignup: {
       screen: BusinessProfileSignup
+    },
+    PrivacyPolicy: {
+      screen: PrivacyPolicyScreen,
+      navigationOptions:
+        Platform.OS === 'ios'
+          ? { title: 'Profile', header: null }
+          : { title: 'Profile', header: null }
+    },
+    TermsOfService: {
+      screen: TermsOfServiceScreen,
+      navigationOptions:
+        Platform.OS === 'ios'
+          ? { title: 'Profile', header: null }
+          : { title: 'Profile', header: null }
     }
   },
   {

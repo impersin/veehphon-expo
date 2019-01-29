@@ -1,6 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Modal,
+  StatusBar
+} from 'react-native';
 import axios from 'axios';
 import { Constants, SecureStore } from 'expo';
 import { Ionicons } from '@expo/vector-icons/';
@@ -115,6 +123,7 @@ class Login extends React.Component {
     if (this.props.navigation.state.params.type === 'login') {
       return (
         <View style={styles.container}>
+          <StatusBar backgroundColor="blue" barStyle={'dark-content'} />
           <View style={styles.topMenu}>
             <TouchableOpacity onPress={this._goToPrevious.bind(this)} style={styles.topMenuOne}>
               <Ionicons name="ios-arrow-back" color={'#444'} size={30} />
@@ -155,6 +164,7 @@ class Login extends React.Component {
     } else {
       return (
         <View style={styles.container}>
+          <StatusBar backgroundColor="blue" barStyle={'dark-content'} />
           <View style={styles.topMenu}>
             <TouchableOpacity onPress={this._goToPrevious.bind(this)} style={styles.topMenuOne}>
               <Ionicons name="ios-arrow-back" color={'#444'} size={30} />
@@ -241,7 +251,6 @@ const styles = StyleSheet.create({
   topMenu: {
     display: 'flex',
     alignSelf: 'stretch',
-    position: 'absolute',
     top: 0,
     height: 200,
     zIndex: 1,
@@ -252,8 +261,7 @@ const styles = StyleSheet.create({
   },
   topMenuOne: {
     flex: 6,
-    justifyContent: 'center',
-    paddingLeft: 20
+    justifyContent: 'center'
   },
   topMenuTwo: {
     flex: 1,

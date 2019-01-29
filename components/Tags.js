@@ -40,8 +40,9 @@ const styles = StyleSheet.create({
     padding: 5,
     marginRight: 5,
     marginBottom: 5,
-    borderWidth: 0.5,
-    borderColor: '#00abd3'
+    borderWidth: 1,
+    borderColor: '#00abd3',
+    borderRadius: 2
   },
   tagFont: {
     fontSize: 12,

@@ -155,7 +155,7 @@ class BusinessProfileScreen extends React.Component {
     });
   }
 
-  _handleMapMoal() {
+  _handleMapModal() {
     this.setState({
       isModalOpen: true
     });
@@ -346,16 +346,19 @@ class BusinessProfileScreen extends React.Component {
           <Text style={styles.detailsFont}>{businessHours}</Text>
         </View>
         <GoogleMap
-          handleMapMoal={this._handleMapMoal.bind(this)}
+          handleMapMoal={this._handleMapModal.bind(this)}
           location={this.state.coordinates}
           title={business.businessName}
         />
         <View style={[styles.detailsContent, styles.addressContainer]}>
           <View style={styles.addressLeft}>
-            <Text style={styles.detailsFont}>{`${addressOne}`}</Text>
-            <Text style={styles.detailsFont}>{`${addressTwo}`}</Text>
+            <Text
+              onPress={this._handleMapModal.bind(this)}
+              style={styles.detailsFont}
+            >{`${addressOne}, ${addressTwo}`}</Text>
+            {/* <Text style={styles.detailsFont}>{`${addressTwo}`}</Text> */}
           </View>
-          <View style={styles.addressRight}>
+          {/* <View style={styles.addressRight}>
             <TouchableOpacity
               onPress={this._handleDirection.bind(this)}
               style={styles.directionIconContainer}
@@ -366,9 +369,15 @@ class BusinessProfileScreen extends React.Component {
               Directions
             </Text>
             {distance}
-          </View>
+          </View> */}
         </View>
         <View style={{ display: 'flex' }}>
+          <BlockMenu
+            icon={'directions'}
+            handleDirection={this._handleDirection.bind(this)}
+            title={''}
+            subTitle={'Subtitle'}
+          />
           <BlockMenu icon={'phone'} title={business.phoneNumber} subTitle={'Subtitle'} />
           <BlockMenu icon={'home'} title={business.website} subTitle={'Subtitle'} />
         </View>
@@ -508,7 +517,7 @@ class BusinessProfileScreen extends React.Component {
                 </TouchableOpacity>
               </View>
               <GoogleMap
-                handleMapMoal={this._handleMapMoal.bind(this)}
+                handleMapMoal={this._handleMapModal.bind(this)}
                 location={this.state.coordinates}
                 title={business.businessName}
                 type="modal"
@@ -760,7 +769,8 @@ const styles = StyleSheet.create({
   addressLeft: {
     flex: 5,
     // borderWidth: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    marginTop: 10
   },
   addressRight: {
     flex: 2,

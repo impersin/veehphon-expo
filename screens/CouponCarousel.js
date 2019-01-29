@@ -36,6 +36,7 @@ export default class Carousel extends Component {
     if (coupons) {
       return (
         <View style={styles.container}>
+          <StatusBar backgroundColor="black" barStyle="light-content" />
           <View style={styles.topMenuWhite}>
             <TouchableOpacity onPress={this._goToPrevious.bind(this)} style={styles.topMenuOne}>
               <Ionicons name="ios-close" color={'white'} size={40} />
@@ -98,24 +99,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     // flexDirection: 'row',
-    // backgroundColor: 'black',
+    backgroundColor: 'black',
     // alignItems: 'center',
     justifyContent: 'center',
     // borderWidth: 1,
-    paddingTop: 0
+    paddingTop: Constants.statusBarHeight
   },
   topMenuWhite: {
     display: 'flex',
     alignSelf: 'stretch',
     position: 'absolute',
-    top: 0,
+    top: Constants.statusBarHeight,
     height: 200,
     zIndex: 1,
     flexDirection: 'row',
     width: '100%',
     height: 50,
-    justifyContent: 'center',
-    backgroundColor: 'black'
+    justifyContent: 'center'
   },
   topMenuOne: {
     flex: 1,

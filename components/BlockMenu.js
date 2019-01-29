@@ -27,7 +27,7 @@ export default class BlockMenu extends React.Component {
           <TouchableOpacity onPress={this._pressCall.bind(this)} style={styles.blockWrapper}>
             <View style={styles.blockLeft}>
               <View style={styles.iconContainer}>
-                <Ionicons name={'ios-call'} size={25} color="#444" />
+                <MaterialIcons name={'phone'} size={25} color="#444" />
               </View>
               <View style={styles.titleContainer}>
                 <Text onPress={this._pressCall} style={styles.blockFont}>
@@ -46,13 +46,25 @@ export default class BlockMenu extends React.Component {
     } else if (this.props.icon === 'home') {
       if (this.props.title === '') {
         return (
-          <View opacity={0.5} style={styles.blockWrapperDisabled}>
-            <View style={styles.blockLeft}>
-              <View style={styles.iconContainer}>
-                <MaterialCommunityIcons name={'web'} size={25} color="#444" />
+          <View
+            style={{
+              borderBottomColor: '#ccc',
+              borderBottomWidth: 1
+            }}
+          >
+            <View opacity={0.5} style={styles.blockWrapperDisabled}>
+              <View style={styles.blockLeft}>
+                <View style={styles.iconContainer}>
+                  <MaterialCommunityIcons name={'web'} size={25} color="#444" />
+                </View>
+                <View style={styles.titleContainer}>
+                  <Text style={styles.blockFont}>{`Visit Website`}</Text>
+                </View>
               </View>
-              <View style={styles.titleContainer}>
-                <Text style={styles.blockFont}>{`Visit Website`}</Text>
+              <View style={styles.blockRight}>
+                <View style={styles.iconContainer}>
+                  <AntDesign name="right" color="#444" size={20} />
+                </View>
               </View>
             </View>
           </View>
@@ -85,10 +97,11 @@ export default class BlockMenu extends React.Component {
         </View>
       );
     } else if (this.props.icon === 'directions') {
-      console.log(this.props);
       return (
         <View
           style={{
+            borderTopColor: '#ccc',
+            borderTopWidth: 1,
             borderBottomColor: '#ccc',
             borderBottomWidth: 1
           }}
@@ -121,13 +134,13 @@ const styles = StyleSheet.create({
     flex: 1,
     flexWrap: 'wrap',
     flexDirection: 'row',
-    height: 40
+    height: 60
   },
   blockWrapperDisabled: {
     flex: 1,
     flexWrap: 'wrap',
     flexDirection: 'row',
-    height: 40
+    height: 60
   },
   blockLeft: {
     flex: 1,

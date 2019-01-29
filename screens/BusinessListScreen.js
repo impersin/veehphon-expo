@@ -10,7 +10,7 @@ import {
   Dimensions,
   ActivityIndicator
 } from 'react-native';
-import { SecureStore } from 'expo';
+import { Constants, SecureStore } from 'expo';
 import axios from 'axios';
 import Tags from './../components/Tags';
 
@@ -210,7 +210,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    paddingTop: Constants.statusBarHeight
   },
   listContainer: {
     width: width,
@@ -218,21 +219,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
     paddingBottom: 0
-    // backgroundColor: 'green',
   },
   imgStyle: {
-    // flex: 3,
     height: 175,
     width: null,
     resizeMode: 'cover'
   },
   summaryContainer: {
-    // flex: 1,
     marginTop: 10,
     marginBottom: 10,
     justifyContent: 'center'
-    // backgroundColor: 'red'
-    // height: '100%'
   },
   summaryHeaderContainer: {
     display: 'flex',
@@ -240,26 +236,22 @@ const styles = StyleSheet.create({
   },
   summaryHeaderLeft: {
     flex: 1
-    // backgroundColor: 'yellow'
   },
   summaryHeaderRight: {
     flex: 1,
     alignItems: 'flex-end'
-    // backgroundColor: 'yellow'
   },
   summarySubHeader: {
     color: '#444',
     fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 10
-    // backgroundColor: 'red'
   },
   summaryHeader: {
     color: '#444',
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10
-    // backgroundColor: 'red'
   },
   circles: {
     flexDirection: 'row',
@@ -292,15 +284,12 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     marginTop: 0
-    // backgroundColor: 'yellow'
   },
   footerLeft: {
     flex: 5
-    // backgroundColor: 'red'
   },
   footerRight: {
     flex: 1,
-    // backgroundColor: 'blue',
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
     paddingBottom: 12

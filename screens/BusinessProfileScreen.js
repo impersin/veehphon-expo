@@ -11,7 +11,8 @@ import {
   ActivityIndicator,
   Modal,
   Image,
-  Dimensions
+  Dimensions,
+  StatusBar
 } from 'react-native';
 import { Constants } from 'expo';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons/';
@@ -330,7 +331,7 @@ class BusinessProfileScreen extends React.Component {
         </View>
         <Tags tags={this.state.business.tags} />
         <Text
-          style={[styles.detailsFont, styles.detialsSubtitle, { marginTop: 10, marginBottom: 0 }]}
+          style={[styles.detailsFont, styles.detialsSubtitle, { marginTop: 10, marginBottom: 10 }]}
         >
           Coupons
         </Text>
@@ -425,7 +426,8 @@ class BusinessProfileScreen extends React.Component {
       adImage = null,
       details,
       stickyButton = this._renderStickyButton();
-    if (this.state.yOffset < 200) {
+
+    if (this.state.yOffset < 170) {
       topMenu = (
         <View style={styles.topMenu}>
           <TouchableOpacity onPress={this._goToPrevious.bind(this)} style={styles.topMenuOne}>
@@ -446,7 +448,7 @@ class BusinessProfileScreen extends React.Component {
             <Ionicons name="ios-arrow-back" color={'#444'} size={30} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.topMenuTwo}>
-            {this.state.yOffset > 245 ? (
+            {this.state.yOffset > 210 ? (
               <Text
                 style={{ color: '#444', fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}
               >
@@ -611,6 +613,10 @@ class BusinessProfileScreen extends React.Component {
 
       return (
         <View style={{ backgroundColor: 'white' }}>
+          <StatusBar
+            backgroundColor="blue"
+            barStyle={this.state.yOffset < 170 ? 'light-content' : 'dark-content'}
+          />
           {topMenu}
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -636,12 +642,13 @@ class BusinessProfileScreen extends React.Component {
 
       return (
         <View style={{ backgroundColor: 'white' }}>
+          <StatusBar backgroundColor="blue" barStyle="dark-content" />
           <View style={styles.topMenuWhite}>
             <TouchableOpacity onPress={this._goToPrevious.bind(this)} style={styles.topMenuOne}>
               <Ionicons name="ios-arrow-back" color={'#444'} size={30} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.topMenuTwo}>
-              {this.state.yOffset > 40 ? (
+              {this.state.yOffset > 30 ? (
                 <Text
                   style={{ color: '#444', fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}
                 >
@@ -671,14 +678,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white'
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // backgroundColor: '#ecf0f1',
   },
   modalContainer: {
     flex: 1,
     backgroundColor: 'white'
-    // paddingTop: Constants.statusBarHeight
   },
   ActivityIndicatorContainer: {
     alignItems: 'center',
@@ -689,14 +692,13 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignSelf: 'stretch',
     position: 'absolute',
-    top: 0,
+    top: 35,
     height: 200,
     zIndex: 1,
     flexDirection: 'row',
     width: '100%',
     height: 50,
     justifyContent: 'center'
-    // backgroundColor: 'black'
   },
   topMenuWhite: {
     display: 'flex',
@@ -707,18 +709,20 @@ const styles = StyleSheet.create({
     zIndex: 1,
     flexDirection: 'row',
     width: '100%',
-    height: 50,
+    height: 80,
     justifyContent: 'center',
     backgroundColor: 'white',
     shadowOpacity: 0.5,
     shadowRadius: 4,
-    shadowColor: 'black'
+    shadowColor: 'black',
+    elevation: 3,
+    borderColor: '#ccc',
+    paddingTop: Constants.statusBarHeight
   },
   topMenuModalAndroid: {
     display: 'flex',
     alignSelf: 'stretch',
-    // position: 'absolute',
-    // top: 44,
+
     zIndex: 1,
     flexDirection: 'row',
     width: '100%',
@@ -729,7 +733,6 @@ const styles = StyleSheet.create({
   topMenuModalIos: {
     display: 'flex',
     alignSelf: 'stretch',
-    // position: 'absolute',
     top: Constants.statusBarHeight,
     zIndex: 1,
     flexDirection: 'row',
@@ -789,24 +792,20 @@ const styles = StyleSheet.create({
   },
   topMenuOne: {
     flex: 1,
-    // borderWidth: 1,
     justifyContent: 'center',
     paddingLeft: 20
   },
   topMenuTwo: {
     flex: 2,
-    // borderWidth: 1,
     justifyContent: 'center'
-    // paddingLeft: 20
   },
   topMenuThree: {
     flex: 1,
-    // borderWidth: 1,
     justifyContent: 'center',
     paddingLeft: 20
   },
   paddingTop: {
-    paddingTop: 30
+    paddingTop: 40
   },
   stickyButtonContainer: {
     display: 'flex',

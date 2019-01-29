@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Linking, TouchableOpacity } from 'react-native';
-import { AntDesign } from '@expo/vector-icons/';
+import { AntDesign, Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons/';
 
 export default class BlockMenu extends React.Component {
   _pressHomepage = () => {
@@ -27,7 +27,7 @@ export default class BlockMenu extends React.Component {
           <TouchableOpacity onPress={this._pressCall.bind(this)} style={styles.blockWrapper}>
             <View style={styles.blockLeft}>
               <View style={styles.iconContainer}>
-                <AntDesign name={this.props.icon} size={25} color="#444" />
+                <Ionicons name={'ios-call'} size={25} color="#444" />
               </View>
               <View style={styles.titleContainer}>
                 <Text onPress={this._pressCall} style={styles.blockFont}>
@@ -49,7 +49,7 @@ export default class BlockMenu extends React.Component {
           <View opacity={0.5} style={styles.blockWrapperDisabled}>
             <View style={styles.blockLeft}>
               <View style={styles.iconContainer}>
-                <AntDesign name={this.props.icon} size={25} color="#444" />
+                <MaterialCommunityIcons name={'web'} size={25} color="#444" />
               </View>
               <View style={styles.titleContainer}>
                 <Text style={styles.blockFont}>{`Visit Website`}</Text>
@@ -68,11 +68,39 @@ export default class BlockMenu extends React.Component {
           <TouchableOpacity onPress={this._pressHomepage.bind(this)} style={styles.blockWrapper}>
             <View style={styles.blockLeft}>
               <View style={styles.iconContainer}>
-                <AntDesign name={this.props.icon} size={25} color="#444" />
+                <MaterialCommunityIcons name={'web'} size={25} color="#444" />
               </View>
               <View style={styles.titleContainer}>
                 <Text onPress={this._pressHomepage} style={styles.blockFont}>
                   {`Visit Website`}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.blockRight}>
+              <View style={styles.iconContainer}>
+                <AntDesign name="right" color="#444" size={20} />
+              </View>
+            </View>
+          </TouchableOpacity>
+        </View>
+      );
+    } else if (this.props.icon === 'directions') {
+      console.log(this.props);
+      return (
+        <View
+          style={{
+            borderBottomColor: '#ccc',
+            borderBottomWidth: 1
+          }}
+        >
+          <TouchableOpacity onPress={this.props.handleDirection} style={styles.blockWrapper}>
+            <View style={styles.blockLeft}>
+              <View style={styles.iconContainer}>
+                <MaterialIcons name="directions" size={25} color="#444" />
+              </View>
+              <View style={styles.titleContainer}>
+                <Text onPress={this.props.handleDirection} style={styles.blockFont}>
+                  {`Get Directions`}
                 </Text>
               </View>
             </View>
@@ -111,10 +139,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end'
   },
   iconContainer: {
+    width: 25,
     justifyContent: 'center',
     marginRight: 5
   },
   titleContainer: {
+    borderColor: '#444',
     justifyContent: 'center'
   },
   blockFont: {

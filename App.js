@@ -12,7 +12,7 @@ export default class App extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <View style={{ flex: 1, paddingTop: Constants.statusBarHeight }}>
+        <View style={{ flex: 1 }}>
           <Home />
         </View>
       </Provider>

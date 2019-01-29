@@ -9,10 +9,19 @@ export default class Coupons extends React.Component {
       return (
         <View
           key={index}
-          style={{
-            borderBottomColor: '#ccc',
-            borderBottomWidth: 1
-          }}
+          style={
+            index === 0
+              ? {
+                  borderTopColor: '#ccc',
+                  borderTopWidth: 1,
+                  borderBottomColor: '#ccc',
+                  borderBottomWidth: 1
+                }
+              : {
+                  borderBottomColor: '#ccc',
+                  borderBottomWidth: 1
+                }
+          }
         >
           <TouchableOpacity
             style={{
@@ -25,11 +34,13 @@ export default class Coupons extends React.Component {
             onPress={e => this.props.redirectToCarousel(index)}
           >
             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-              {/* <MaterialIcons name="redeem" color="#444" size={20} /> */}
+              <View style={styles.iconContainer}>
+                <AntDesign name="tag" color="#444" size={25} />
+              </View>
               <Text style={styles.couponFont}>{coupon.dealName}</Text>
             </View>
             <View>
-              <AntDesign name="right" color="#444" size={25} />
+              <AntDesign name="right" color="#444" size={20} />
             </View>
           </TouchableOpacity>
         </View>
@@ -61,9 +72,6 @@ export default class Coupons extends React.Component {
 
 const styles = StyleSheet.create({
   couponWrapper: {
-    // width: 320,
-    // height: 280,
-    // marginRight: 10,
     marginBottom: 10,
     borderWidth: 1,
     borderColor: '#ccc'
@@ -71,7 +79,6 @@ const styles = StyleSheet.create({
   couponFont: {
     color: '#444',
     fontSize: 14
-    // fontWeight: 'bold'
   },
   blockWrapper: {
     flex: 1,
@@ -87,6 +94,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   iconContainer: {
+    width: 25,
     justifyContent: 'center',
     marginRight: 5
   },
